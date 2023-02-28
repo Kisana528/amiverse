@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    tty: true
+    stdin_open: true
+    environment:
+      RAILS_ENV: development
+    working_dir: /app
+    #restart: always
+    volumes:
+      - ./src:/app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    command: >
+      bash -c "rm -f /app/tmp/pids/server.pid &&
+      rm -f /app/tmp/pids/unicorn.pid &&
+      rm -f /app/tmp/sockets/unicorn.sock &&
+      bundle install &&
+      rails db:create &&
+      rails db:migrate &&
+      rails s -b 0.0.0.0"
+    # bundle exec unicorn_rails -p 3000 -c /app/config/unicorn.conf.rb -E production"
+    # 本番ではポート指定なしでRAILS_ENV=productionをつけてdb作成&マイグレーション
+
+  db:
+    image: mariadb:10.9.5
+    environment:
+      TZ: "Asia/Tokyo"
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: dockermdb
+      MARIADB_PASSWORD: dockermdb
+    volumes:
+      - ./db:/var/lib/mysql
+    stdin_open: true
+    tty: true
+    ports:
+      - '3306:3306'
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    environment:
+      PMA_HOSTS: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - '8080:80'
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+
+  minio:
+    image: minio/minio
+    volumes:
+      - ./minio:/data
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioroot
+      MINIO_ROOT_PASSWORD: minioroot
+    stdin_open: true
+    tty: true
+    ports:
+      - '9000:9000'
+      - '9001:9001'
