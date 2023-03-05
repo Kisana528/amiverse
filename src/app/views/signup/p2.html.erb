@@ -1,0 +1,11 @@
+<% provide(:url, signup_create_path) %>
+<% provide(:type, 'new') %>
+<% provide(:submit_button_text, '作成') %>
+
+<div class="signup-container">
+  <h1>Amiverseへ参加</h1>
+  <p>アカウントの作成</p>
+  <div class="signup-form">
+  <%= render 'shared/account_form' %>
+  </div>
+</div>

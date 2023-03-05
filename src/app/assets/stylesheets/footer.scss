@@ -1,0 +1,13 @@
+footer {
+  z-index: 100;
+  position: fixed;
+  height: 60px;
+  width: 100%;
+  bottom: 0;
+  background: aquamarine;
+  display: flex;
+  div {
+    height: 60px;
+    width: 20%;
+  }
+}

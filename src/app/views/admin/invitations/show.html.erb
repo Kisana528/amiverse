@@ -1,0 +1,32 @@
+<% provide(:title, '招待') %>
+<h1>招待</h1>
+<div style="overflow-y:scroll;">
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>更新</th>
+      <th>account_id</th>
+      <th>name</th>
+      <th>invitation_code</th>
+      <th>uses</th>
+      <th>max_uses</th>
+      <th>expires_at</th>
+      <th>deleted</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+    </tr>
+    <tr>
+      <td><%= @invitation.id %></td>
+      <td><%= link_to '更新', admin_edit_invitation_path(@invitation.invitation_code) %></td>
+      <td><%= @invitation.account_id %></td>
+      <td><%= @invitation.name %></td>
+      <td><%= @invitation.invitation_code %></td>
+      <td><%= @invitation.uses %></td>
+      <td><%= @invitation.max_uses %></td>
+      <td><%= @invitation.expires_at %></td>
+      <td><%= @invitation.deleted %></td>
+      <td><%= @invitation.created_at %></td>
+      <td><%= @invitation.updated_at %></td>
+    </tr>
+  </table>
+</div>

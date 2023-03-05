@@ -1,0 +1,32 @@
+<% provide(:title, 'セッション') %>
+<h1>セッション</h1>
+<div style="overflow-y:scroll;">
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>詳細</th>
+      <th>account_id</th>
+      <th>name</th>
+      <th>description</th>
+      <th>remote_ip</th>
+      <th>user_agent</th>
+      <th>uuid</th>
+      <th>deleted</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+    </tr>
+    <tr>
+      <td><%= @session.id %></td>
+      <td><%= link_to '編集', admin_edit_session_path(@session.id) %></td>
+      <td><%= @session.account_id %></td>
+      <td><%= @session.name %></td>
+      <td><%= @session.description %></td>
+      <td><%= @session.remote_ip %></td>
+      <td><%= @session.user_agent %></td>
+      <td><%= @session.uuid %></td>
+      <td><%= @session.deleted %></td>
+      <td><%= @session.created_at %></td>
+      <td><%= @session.updated_at %></td>
+    </tr>
+  </table>
+</div>

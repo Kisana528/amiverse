@@ -1,0 +1,17 @@
+<% provide(:title, 'ログイン') %>
+<h1>ログイン</h1>
+<div class="">
+  <%= form_with(scope: :session, url: create_session_path) do |f| %>
+    <div class="text-field-group">
+      <%= f.text_field :name_id, class: 'text-field-field', placeholder: '名前' %>
+      <%= f.label :name_id, class: 'text-field-label' %>
+    </div>
+    <div class="text-field-group">
+      <%= f.password_field :password, class: 'text-field-field', placeholder: '名前' %>
+      <%= f.label :password, class: 'text-field-label' %>
+    </div>
+    <%= f.submit "Log in" %>
+  <% end %>
+</div>
+<p>アカウントをお持ちでないですか？</p>
+<%= link_to "サインアップ", signup_path %>

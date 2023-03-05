@@ -1,0 +1,50 @@
+/*
+ *= require_tree .
+ *= require_self
+ */
+
+body {
+  margin: 0;
+  background: black;
+  color: white;
+}
+main {
+  padding: 60px 0px;
+}
+.success, .notice, .alert, .danger {
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 3px;
+  position: fixed;
+  right: 10px;
+  bottom: 70px;
+}
+.success {
+  background-color: #4fff67bb;
+}
+.notice {
+  background-color: #ffed00;
+}
+.alert {
+  background-color: #ff8f00;
+}
+.danger {
+  background-color: #ff403abb;
+}
+.icon {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  object-position: top;
+  border: 2px #36f18a solid;
+}
+.banner {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  object-position: top;
+  border: 2px #36f18a solid;
+}
+.loaded {
+  opacity: 1;
+}

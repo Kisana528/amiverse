@@ -5,9 +5,10 @@ services:
     tty: true
     stdin_open: true
     environment:
-      RAILS_ENV: development
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: true
     working_dir: /app
-    #restart: always
+    restart: always
     volumes:
       - ./src:/app
     ports:
@@ -16,14 +17,15 @@ services:
       - db
     command: >
       bash -c "rm -f /app/tmp/pids/server.pid &&
-      rm -f /app/tmp/pids/unicorn.pid &&
-      rm -f /app/tmp/sockets/unicorn.sock &&
+      rm -rf /app/public/assets &&
       bundle install &&
       rails db:create &&
       rails db:migrate &&
+      rails db:seed &&
+      RAILS_ENV=production rails assets:precompile &&
       rails s -b 0.0.0.0"
-    # bundle exec unicorn_rails -p 3000 -c /app/config/unicorn.conf.rb -E production"
-    # 本番ではポート指定なしでRAILS_ENV=productionをつけてdb作成&マイグレーション
+    # rails db:seed &&
+    # RAILS_ENV=production rails assets:precompile &&
 
   db:
     image: mariadb:10.9.5
@@ -36,6 +38,7 @@ services:
       - ./db:/var/lib/mysql
     stdin_open: true
     tty: true
+    restart: always
     ports:
       - '3306:3306'
 
@@ -49,6 +52,7 @@ services:
       - '8080:80'
     stdin_open: true
     tty: true
+    restart: always
     depends_on:
       - db
 
@@ -62,6 +66,7 @@ services:
       MINIO_ROOT_PASSWORD: minioroot
     stdin_open: true
     tty: true
+    restart: always
     ports:
       - '9000:9000'
       - '9001:9001'

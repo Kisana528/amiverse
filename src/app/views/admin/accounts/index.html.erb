@@ -1,0 +1,86 @@
+<% provide(:title, 'アカウント一覧') %>
+<h1>アカウント一覧</h1>
+<div style="overflow-y:scroll;">
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>操作</th>
+      <th>account_id</th>
+      <th>name</th>
+      <th>name_id</th>
+      <th>online_status</th>
+      <th>last_online</th>
+      <th>open_online_status</th>
+      <th>authenticated</th>
+      <th>public_visibility</th>
+      <th>local_group_visibility</th>
+      <th>local_account_visibility</th>
+      <th>role</th>
+      <th>activated</th>
+      <th>administrator</th>
+      <th>moderator</th>
+      <th>email</th>
+      <th>bio</th>
+      <th>location</th>
+      <th>birthday</th>
+      <th>lang</th>
+      <th>followers</th>
+      <th>following</th>
+      <th>items</th>
+      <th>pinned_items</th>
+      <th>nsfw</th>
+      <th>explorable</th>
+      <th>profile</th>
+      <th>achievements</th>
+      <th>locked</th>
+      <th>silenced</th>
+      <th>suspended</th>
+      <th>frozen</th>
+      <th>deleted</th>
+      <th>settings</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+    </tr>
+    <% @accounts.each do |a| %>
+      <tr>
+        <td><%= a.id %></td>
+        <td><%= link_to '詳細', admin_account_path(a.name_id) %></td>
+        <td><%= a.account_id %></td>
+        <td><%= a.name %></td>
+        <td><%= a.name_id %></td>
+        <td><%= a.online_status %></td>
+        <td><%= a.last_online %></td>
+        <td><%= a.open_online_status %></td>
+        <td><%= a.authenticated %></td>
+        <td><%= a.public_visibility %></td>
+        <td><%= a.local_group_visibility %></td>
+        <td><%= a.local_account_visibility %></td>
+        <td><%= a.role %></td>
+        <td><%= a.activated %></td>
+        <td><%= a.administrator %></td>
+        <td><%= a.moderator %></td>
+        <td><%= a.email %></td>
+        <td><%= a.bio %></td>
+        <td><%= a.location %></td>
+        <td><%= a.birthday %></td>
+        <td><%= a.lang %></td>
+        <td><%= a.followers %></td>
+        <td><%= a.following %></td>
+        <td><%= a.items %></td>
+        <td><%= a.pinned_items %></td>
+        <td><%= a.nsfw %></td>
+        <td><%= a.explorable %></td>
+        <td><%= a.profile %></td>
+        <td><%= a.achievements %></td>
+        <td><%= a.locked %></td>
+        <td><%= a.silenced %></td>
+        <td><%= a.suspended %></td>
+        <td><%= a.frozen %></td>
+        <td><%= a.deleted %></td>
+        <td><%= a.settings %></td>
+        <td><%= a.created_at %></td>
+        <td><%= a.updated_at %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

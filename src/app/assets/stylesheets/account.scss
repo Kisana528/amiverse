@@ -1,0 +1,216 @@
+.account-container {
+  max-width: 800px;
+  opacity: 0;
+}
+
+// バナー
+
+.top-container {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: sticky;
+  top: 60px;
+  overflow: hidden;
+}
+.banner-container {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: absolute;
+  top: 0px;
+  overflow: hidden;
+}
+.account-banner {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+// 名前
+
+.name-container {
+  height: 104px;
+  display: flex;
+  background: #dc24a138;
+  backdrop-filter: blur(3px);
+  border-radius: 10px 10px 0 0;
+  //box-shadow: 0 -20px 25px 10px #dc24a138;
+  position: sticky;
+  top: 59px;
+  z-index: 2;
+  transition-duration: 0.5s;
+  align-items: center;
+}
+#name-before {
+  position: absolute;
+  left: 0;
+  bottom: 165px;
+  width: 100%;
+}
+.icon-container {
+  img {
+    transition-duration: 0.5s;
+  }
+}
+.account-icon {
+  width: 100px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top;
+  border: 2px #36f18a solid;
+  border-radius: 54px;
+  display: block;
+}
+.meta-container {
+  h1 {
+    margin: 0;
+  }
+}
+// 接着
+.fixed {
+  background-color: #000000;
+  border-radius: 0;
+  height: 54px;
+  .account-icon {
+    width: 50px;
+  }
+  .meta-container {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// プロフ
+
+.profile-container {
+  padding: 10px;
+  background: #01153c;
+  z-index: 1;
+  position: relative;
+  p {
+    margin: 0px;
+  }
+}
+
+// タブ
+
+.tab-container {
+  display: flex;
+  border-radius: 0;
+  background: #272727;
+  //box-shadow: 0 9px 12px 1px #dc24a138;
+  z-index: 2;
+  position: sticky;
+  top: 113px;
+  div {
+    height: 30px;
+    line-height: 30px;
+    width: 150px;
+    text-align: center;
+  }
+}
+
+// コンテンツ
+
+.content-container {
+  background: #000000;
+  z-index: 1;
+  position: relative;
+  padding: 10px;
+}
+
+// 大きさ処理
+
+@media (min-width: 682px) {
+  .top-container {
+    aspect-ratio: 1/.5;
+  }
+  .banner-container{
+    aspect-ratio: 1/.5;
+  }
+  .account-banner {
+    aspect-ratio: 1/.5;
+    object-position: 50% 50%;
+  }
+}
+@media (min-aspect-ratio: 4/5) {
+  .top-container {
+    aspect-ratio: 1/.5;
+  }
+  .banner-container{
+    aspect-ratio: 1/.5;
+  }
+  .account-banner {
+    aspect-ratio: 1/.5;
+    object-position: 50% 50%;
+  }
+}
+
+// フォーム
+
+.text-field-group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 50%;
+}
+.text-field-field {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+  &::placeholder {
+    color: transparent;
+  }
+  &:placeholder-shown ~ .text-field-label {
+    cursor: text;
+    top: 20px;
+  }
+}
+.text-field-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  color: gray;
+}
+.text-field-field:focus {
+  ~ .text-field-label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    color: #6f17a9;
+  }
+  padding-bottom: 6px;  
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, #3b1183, #6f17a9);
+  border-image-slice: 1;
+}
+.text-field-field{
+  &:required,&:invalid { box-shadow:none; }
+}
+
+// signup
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.signup-form {
+  form {
+    border: 1px solid;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+}

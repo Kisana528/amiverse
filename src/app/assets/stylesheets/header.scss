@@ -1,0 +1,21 @@
+header {
+  z-index: 100;
+  position: fixed;
+  height: 60px;
+  width: 100%;
+  top: 0;
+  background: #31215d;
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  h1, form {
+    display: inline;
+    background: linear-gradient(90deg, #747eee, #d453cc 50%, #fe5597);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+  }
+  h1 {
+    font-size: 20px;
+  }
+}

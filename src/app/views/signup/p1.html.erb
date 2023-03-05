@@ -1,0 +1,7 @@
+<%= form_with url: signup_profile_path do |f| %>
+  <div class="text-field-group">
+    <%= f.text_field :invitation_code, class: 'text-field-field', placeholder: '招待コード' %>
+    <%= f.label :invitation_code, '招待コード', class: 'text-field-label' %>
+  </div>
+  <%= f.submit "次へ" %>
+<% end %>

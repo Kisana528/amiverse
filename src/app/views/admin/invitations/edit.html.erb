@@ -1,0 +1,31 @@
+<%= form_with model: @invitation, url: admin_update_invitation_path do |f| %>
+  <%= render 'shared/invitation_error_messages' %>
+  <%= f.label :deleted, 'deleted' %>
+  <%= f.select :deleted, [['F',false],['T',true]] %>
+  <br/>
+  <div class="text-field-group">
+    <%= f.text_field :name, class: 'text-field-field', placeholder: '名前' %>
+    <%= f.label :name, '名前', class: 'text-field-label' %>
+  </div>
+  <br/>
+  <div class="text-field-group">
+    <%= f.text_field :account_id, class: 'text-field-field', placeholder: 'account_id' %>
+    <%= f.label :account_id, 'account_id', class: 'text-field-label' %>
+  </div>
+  <br/>
+  <div class="text-field-group">
+    <%= f.text_field :invitation_code, class: 'text-field-field', placeholder: 'invitation_code' %>
+    <%= f.label :invitation_code, 'invitation_code', class: 'text-field-label' %>
+  </div>
+  <br/>
+  <%= f.label :uses, 'uses' %>
+  <%= f.number_field :uses %>
+  <br/>
+  <%= f.label :max_uses, 'max_uses' %>
+  <%= f.number_field :max_uses %>
+  <br/>
+  <%= f.label :expires_at, 'expires_at' %>
+  <%= f.datetime_field :expires_at %>
+  <br/>
+  <%= f.submit '更新' %>
+<% end %>

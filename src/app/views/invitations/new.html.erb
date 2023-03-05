@@ -1,0 +1,18 @@
+<% provide(:title, '招待作成') %>
+<h1>招待作成</h1>
+
+<%= form_with model: @invitation, url: invitations_create_path do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+  <br/>
+  <%= f.label :invitation_code %>
+  <%= f.text_field :invitation_code %>
+  <br/>
+  <%= f.label :max_uses %>
+  <%= f.text_field :max_uses %>
+  <br/>
+  <%= f.label :expires_at %>
+  <%= f.datetime_field :expires_at %>
+  <br/>
+  <%= f.submit '招待を作成' %>
+<% end %>

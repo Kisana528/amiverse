@@ -1,0 +1,12 @@
+<% if @invitation.errors.any? %>
+  <div>
+    <div>
+      送信内容に<%= @invitation.errors.count %>つのエラーがあります。
+    </div>
+    <ul>
+    <% @invitation.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

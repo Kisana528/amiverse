@@ -1,0 +1,84 @@
+<% provide(:title, '赤') %>
+<h1>あか</h1>
+<div style="overflow-y:scroll;">
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>操作</th>
+      <th>account_id</th>
+      <th>name</th>
+      <th>name_id</th>
+      <th>online_status</th>
+      <th>last_online</th>
+      <th>open_online_status</th>
+      <th>authenticated</th>
+      <th>public_visibility</th>
+      <th>local_group_visibility</th>
+      <th>local_account_visibility</th>
+      <th>role</th>
+      <th>activated</th>
+      <th>administrator</th>
+      <th>moderator</th>
+      <th>email</th>
+      <th>bio</th>
+      <th>location</th>
+      <th>birthday</th>
+      <th>lang</th>
+      <th>followers</th>
+      <th>following</th>
+      <th>items</th>
+      <th>pinned_items</th>
+      <th>nsfw</th>
+      <th>explorable</th>
+      <th>profile</th>
+      <th>achievements</th>
+      <th>locked</th>
+      <th>silenced</th>
+      <th>suspended</th>
+      <th>frozen</th>
+      <th>deleted</th>
+      <th>settings</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+    </tr>
+    <tr>
+      <td><%= @account.id %></td>
+      <td><%= link_to '編集', admin_edit_account_path(@account.name_id) %></td>
+      <td><%= @account.account_id %></td>
+      <td><%= @account.name %></td>
+      <td><%= @account.name_id %></td>
+      <td><%= @account.online_status %></td>
+      <td><%= @account.last_online %></td>
+      <td><%= @account.open_online_status %></td>
+      <td><%= @account.authenticated %></td>
+      <td><%= @account.public_visibility %></td>
+      <td><%= @account.local_group_visibility %></td>
+      <td><%= @account.local_account_visibility %></td>
+      <td><%= @account.role %></td>
+      <td><%= @account.activated %></td>
+      <td><%= @account.administrator %></td>
+      <td><%= @account.moderator %></td>
+      <td><%= @account.email %></td>
+      <td><%= @account.bio %></td>
+      <td><%= @account.location %></td>
+      <td><%= @account.birthday %></td>
+      <td><%= @account.lang %></td>
+      <td><%= @account.followers %></td>
+      <td><%= @account.following %></td>
+      <td><%= @account.items %></td>
+      <td><%= @account.pinned_items %></td>
+      <td><%= @account.nsfw %></td>
+      <td><%= @account.explorable %></td>
+      <td><%= @account.profile %></td>
+      <td><%= @account.achievements %></td>
+      <td><%= @account.locked %></td>
+      <td><%= @account.silenced %></td>
+      <td><%= @account.suspended %></td>
+      <td><%= @account.frozen %></td>
+      <td><%= @account.deleted %></td>
+      <td><%= @account.settings %></td>
+      <td><%= @account.created_at %></td>
+      <td><%= @account.updated_at %></td>
+    </tr>
+  </table>
+</div>

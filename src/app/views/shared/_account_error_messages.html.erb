@@ -1,0 +1,12 @@
+<% if @account.errors.any? %>
+  <div>
+    <div>
+      送信内容に<%= @account.errors.count %>つのエラーがあります。
+    </div>
+    <ul>
+    <% @account.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
