@@ -122,6 +122,11 @@
 
 // 大きさ処理
 
+@media (min-width: 865px) {
+  .account-container {
+    width: 800px;
+  }
+}
 @media (min-width: 682px) {
   .top-container {
     aspect-ratio: 1/.5;

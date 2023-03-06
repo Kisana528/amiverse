@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   # static
   root 'amiverse#index'
   get 'about' => 'amiverse#about'
@@ -39,15 +40,21 @@ Rails.application.routes.draw do
   patch 'i-:invitation_code/update' => 'invitations#update', as: 'update_invitation'
   delete 'i-:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
 
+  # item
+  resources :items, param: 'item_id'
+
   # admin
   namespace :admin do
+
     # analytics
     root 'application#index'
+
     # account
     get 'accounts' => 'accounts#index'
     get '@:name_id' => 'accounts#show', as: 'account'
     get '@:name_id/edit' => 'accounts#edit', as: 'edit_account'
     patch '@:name_id/update' => 'accounts#update', as: 'update_account'
+
     # invitation
     get 'invitations' => 'invitations#index'
     get 'i-:invitation_code' => 'invitations#show', as: 'invitation'
@@ -56,11 +63,15 @@ Rails.application.routes.draw do
     get 'i-:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
     patch 'i-:invitation_code/update' => 'invitations#update', as: 'update_invitation'
     delete 'i-:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
+
     # session
     get 'sessions' => 'sessions#index', as: 'sessions'
     get 'sessions/:id' => 'sessions#show', as: 'show_session'
     get 'sessions/:id/edit' => 'sessions#edit', as: 'edit_session'
     patch 'sessions/:id/update' => 'sessions#update', as: 'update_session'
     delete 'sessions/:id/destroy' => 'sessions#destroy', as: 'destroy_session'
+
+    # item
+    get 'items' => 'items#index', as: 'items'
   end
 end

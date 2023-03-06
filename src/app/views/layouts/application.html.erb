@@ -14,13 +14,20 @@
   <body>
     <div>
       <%= render 'layouts/header' %>
-      <main>
-        <%= yield %>
-        <% flash.each do |message_type, message| %>
-          <div class="<%= message_type %>"><%= message %></div>
-        <% end %>
-      </main>
-      <%= render 'layouts/footer' %>
+      <div class="page-container">
+        <%= render 'layouts/nav' %>
+        <div class="display-container">
+          <main>
+            <%= yield %>
+            <% flash.each do |message_type, message| %>
+              <div class="<%= message_type %>"><%= message %></div>
+            <% end %>
+          </main>
+          <div class="tab">
+            <%= render 'layouts/tab' %>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>

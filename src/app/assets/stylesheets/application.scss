@@ -9,7 +9,7 @@ body {
   color: white;
 }
 main {
-  padding: 60px 0px;
+  padding: 60px 0 0;
 }
 .success, .notice, .alert, .danger {
   border: 1px solid #000;
@@ -47,4 +47,50 @@ main {
 }
 .loaded {
   opacity: 1;
+}
+.page-container {
+  display: flex;
+}
+.display-container {
+  flex: 1;
+  width: 100%;
+}
+@media (min-width: 865px) {
+  .display-container {
+    display: flex;
+    //justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@media (min-width: 1080px) {
+  .display-container {
+    display: flex;
+    padding-bottom: 60px;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: flex-start;
+    .tab {
+      display: block;
+    }
+  }
+}
+@media (min-width: 1280px) {
+  nav {
+    width: 256px;
+  }
+}
+.tab {
+  position: sticky;
+  top: 60px;
+  display: none;
+}
+::-webkit-scrollbar{
+  width: 4px;
+}
+::-webkit-scrollbar-track{
+  background-color: #232323;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #431359;
 }

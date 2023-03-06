@@ -1,4 +1,5 @@
 class InvitationsController < ApplicationController
+  before_action :logged_in_account
   def index
     @invitations = Invitation.all
   end

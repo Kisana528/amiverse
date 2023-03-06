@@ -1,0 +1,67 @@
+<%= form_with(model: item) do |form| %>
+  <% if item.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+        <% item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :item_id, style: "display: block" %>
+    <%= form.text_field :item_id %>
+  </div>
+
+  <div>
+    <%= form.label :uuid, style: "display: block" %>
+    <%= form.text_field :uuid %>
+  </div>
+
+  <div>
+    <%= form.label :item_type, style: "display: block" %>
+    <%= form.text_field :item_type %>
+  </div>
+
+  <div>
+    <%= form.label :flow, style: "display: block" %>
+    <%= form.text_field :flow %>
+  </div>
+
+  <div>
+    <%= form.label :meta, style: "display: block" %>
+    <%= form.text_field :meta %>
+  </div>
+
+  <div>
+    <%= form.label :content, style: "display: block" %>
+    <%= form.text_field :content %>
+  </div>
+
+  <div>
+    <%= form.label :nsfw, style: "display: block" %>
+    <%= form.check_box :nsfw %>
+  </div>
+
+  <div>
+    <%= form.label :cw, style: "display: block" %>
+    <%= form.check_box :cw %>
+  </div>
+
+  <div>
+    <%= form.label :version, style: "display: block" %>
+    <%= form.text_field :version %>
+  </div>
+
+  <div>
+    <%= form.label :deleted, style: "display: block" %>
+    <%= form.check_box :deleted %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

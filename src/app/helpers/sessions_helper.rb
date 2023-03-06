@@ -34,19 +34,19 @@ module SessionsHelper
       value: account.account_id,
       domain: :all,
       expires: 1.year.from_now,
-      secure: true,
+      #secure: true,
       httponly: true }
     cookies.permanent.signed[:amiverse_uid] = {
       value: uuid,
       domain: :all,
       expires: 1.year.from_now,
-      secure: true,
+      #secure: true,
       httponly: true }
     cookies.permanent.signed[:amiverse_rtk] = {
       value: remember_token,
       domain: :all,
       expires: 1.year.from_now,
-      secure: true,
+      #secure: true,
       httponly: true }
   end
   def forget(account)

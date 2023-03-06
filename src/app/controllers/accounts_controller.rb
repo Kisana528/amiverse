@@ -1,19 +1,17 @@
 class AccountsController < ApplicationController
   include Images
+  before_action :set_account, only: %i[ show_icon show_banner show ]
   before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
   before_action :correct_account,only: %i[edit update destroy password_edit password_update]
   def show_icon
-    @account = Account.find_by(name_id: params[:name_id])
     send_noblob_stream(
       @account.icon, @account.resize_image(@account.name, @account.name_id, 'icon'))
   end
   def show_banner
-    @account = Account.find_by(name_id: params[:name_id])
     send_noblob_stream(
       @account.banner, @account.resize_image(@account.name, @account.name_id, 'banner'))
   end
   def show
-    @account = Account.find_by(name_id: params[:name_id])
   end
   def edit
     @account = current_account
@@ -57,10 +55,29 @@ class AccountsController < ApplicationController
   def destroy
   end
   private
+  def set_account
+    @account = Account.find_by(name_id: params[:name_id],
+                              activated: true,
+                              locked: false,
+                              silenced: false,
+                              suspended: false,
+                              frozen: false,
+                              deleted: false)
+  end
   def account_params
-    params.require(:account).permit(:name, :name_id, :bio, :location, :birthday, :password, :password_confirmation)
+    params.require(:account).permit(:name,
+                                    :name_id,
+                                    :bio,
+                                    :location,
+                                    :birthday,
+                                    :password,
+                                    :password_confirmation)
   end
   def account_update_params
-    params.require(:account).permit(:name, :name_id, :bio, :location, :birthday)
+    params.require(:account).permit(:name,
+                                    :name_id,
+                                    :bio,
+                                    :location,
+                                    :birthday)
   end
 end

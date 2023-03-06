@@ -17,7 +17,7 @@ class SignupController < ApplicationController
     @account = Account.new(account_params)
     if Invitation.exists?(invitation_code: session[:invitation_code])
       loop do
-        account_id = ('a'..'z').to_a.concat(('1'..'9').to_a).shuffle[1..14].join
+        account_id = random_id
         if !Account.exists?(account_id: account_id)
           @account.account_id = account_id
           break

@@ -1,4 +1,7 @@
 class SessionsController < ApplicationController
+  before_action :logged_in_account, only: %i[ index destroy ]
+  before_action :logged_out_account, only: %i[ new create ]
+  before_action :correct_account,only: %i[destroy]
   def index
     @sessions = Session.where(account_id: current_account.id, deleted: false)
   end
@@ -15,6 +18,10 @@ class SessionsController < ApplicationController
       flash.now[:danger] = '間違っています。'
       render 'new'
     end
+  end
+  def edit
+  end
+  def update
   end
   def destroy
     log_out if logged_in?
