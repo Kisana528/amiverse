@@ -1,6 +1,5 @@
 .account-container {
   max-width: 800px;
-  opacity: 0;
 }
 
 // バナー
@@ -95,10 +94,11 @@
 
 // タブ
 
-.tab-container {
+.account-tab-container {
   display: flex;
   border-radius: 0;
   background: #272727;
+  overflow-x: scroll;
   //box-shadow: 0 9px 12px 1px #dc24a138;
   z-index: 2;
   position: sticky;
@@ -106,7 +106,6 @@
   div {
     height: 30px;
     line-height: 30px;
-    width: 150px;
     text-align: center;
   }
 }
@@ -122,11 +121,6 @@
 
 // 大きさ処理
 
-@media (min-width: 865px) {
-  .account-container {
-    width: 800px;
-  }
-}
 @media (min-width: 682px) {
   .top-container {
     aspect-ratio: 1/.5;

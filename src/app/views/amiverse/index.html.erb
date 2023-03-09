@@ -1,7 +1,8 @@
 <h1>Amiverse.net</h1>
-<% if logged_in? %>
+<% if account = current_account %>
   <% if current_account.administrator %>
     <%= link_to '管理画面', admin_root_path %>
+    <%= account ? 'yes' : 'no' %>
   <% end %>
 <% else %>
   ぜひろぐいんしてください！！

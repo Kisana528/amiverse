@@ -1,7 +1,7 @@
 <p style="color: green"><%= notice %></p>
 
 <%= render @item %>
-
+<%= @item.account.name %>
 <div>
   <%= link_to "Edit this item", edit_item_path(@item) %> |
   <%= link_to "Back to items", items_path %>

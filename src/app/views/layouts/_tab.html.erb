@@ -1,8 +1,0 @@
-<% if logged_in? %>
-  現在のトレンド！
-  <% if current_account.administrator %>
-    <%= link_to '管理画面', admin_root_path %>
-  <% end %>
-<% else %>
-  ぜひろぐいんしてください！！
-<% end %>

@@ -1,4 +1,6 @@
 class Account < ApplicationRecord
+  has_many :items
+  has_many :invitations
   include AccountImages
   include CustomVariant
   attr_accessor :remember_token, :activation_token

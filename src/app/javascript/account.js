@@ -17,5 +17,4 @@ window.onload = () => {
     }
   })
   observer.observe(document.getElementById('name-before'))
-  document.getElementById('account-container').classList.add('loaded')
 }

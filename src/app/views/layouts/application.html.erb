@@ -12,21 +12,57 @@
     <%= javascript_include_tag 'application' %> 
   </head>
   <body>
-    <div>
-      <%= render 'layouts/header' %>
-      <div class="page-container">
-        <%= render 'layouts/nav' %>
-        <div class="display-container">
-          <main>
-            <%= yield %>
-            <% flash.each do |message_type, message| %>
-              <div class="<%= message_type %>"><%= message %></div>
+    <% account = current_account %>
+    <header>
+      <h1><%= link_to 'Amiverse', root_path %></h1>
+    </header>
+    <div class="container">
+      <nav>
+        <% if account %>
+          <div>
+            <% if account.icon.attached? %>
+              <%= link_to image_tag(show_icon_path(account.name_id), class: 'nav-account-icon'), account_path(current_account.name_id) %>
+            <% else %>
+              <%= image_tag 'icon.webp', class: 'nav-account-icon' %>
             <% end %>
-          </main>
-          <div class="tab">
-            <%= render 'layouts/tab' %>
           </div>
+          <div>
+            <%= link_to('@' + account.name_id, account_path(account.name_id)) %>
+            <%= button_to("Log out", logout_path, method: :delete) %>
+          </div>
+        <% else %>
+          <div>
+            <%= link_to image_tag('icon.webp', class: 'nav-account-icon'), login_path%>
+          </div>
+          <div>
+            <%= link_to("Log in", login_path) %>
+          </div>    
+        <% end %>
+        <div class="tab-button">
+          <button onclick="tabToggle()">TAB</button>
         </div>
+      </nav>
+      <div class="main-container">
+        <main>
+          <%= yield %>
+          <% flash.each do |message_type, message| %>
+            <div class="<%= message_type %>"><%= message %></div>
+          <% end %>
+        </main>
+        <div class="tab-container" id="tab">
+          <div class="tab-back">
+          </div>
+          <div class="tab">
+            <% if account %>
+              現在のトレンド！
+              <% if account.administrator %>
+                <%= link_to '管理画面', admin_root_path %>
+              <% end %>
+            <% else %>
+              ぜひろぐいんしてください！！
+            <% end %>
+          </div>
+        <div>
       </div>
     </div>
   </body>
