@@ -14,10 +14,10 @@ class AccountsController < ApplicationController
   def show
   end
   def edit
-    @account = current_account
+    @account = @current_account
   end
   def update
-    @account = current_account
+    @account = @current_account
     if !params[:account][:icon].blank?
       icon_type = content_type_to_extension(params[:account][:icon].content_type)
       @account.icon.attach(
@@ -41,7 +41,7 @@ class AccountsController < ApplicationController
     end
   end
   def password_edit
-    @account = current_account
+    @account = @current_account
   end
   def password_update
     @user = current_user

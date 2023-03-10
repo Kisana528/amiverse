@@ -14,7 +14,7 @@ class InvitationsController < ApplicationController
 
   def create
     @Invitation = Invitation.new(invitation_params)
-    @Invitation.account_id = current_account.id
+    @Invitation.account_id = @current_account.id
     if @Invitation.save
       flash[:success] = "招待を作成しました。"
       redirect_to root_path

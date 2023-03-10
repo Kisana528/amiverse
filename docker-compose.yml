@@ -6,7 +6,8 @@ services:
     stdin_open: true
     environment:
       RAILS_ENV: production
-      RAILS_SERVE_STATIC_FILES: true
+      RAILS_SERVE_STATIC_FILES: 'true'
+      RAILS_SECURE_COOKIES: 'true'
     working_dir: /app
     restart: always
     volumes:
@@ -18,14 +19,12 @@ services:
     command: >
       bash -c "rm -f /app/tmp/pids/server.pid &&
       rm -rf /app/public/assets &&
-      bundle install &&
+      bundle install -j4 &&
       rails db:create &&
       rails db:migrate &&
       rails db:seed &&
       RAILS_ENV=production rails assets:precompile &&
       rails s -b 0.0.0.0"
-    # rails db:seed &&
-    # RAILS_ENV=production rails assets:precompile &&
 
   db:
     image: mariadb:10.9.5

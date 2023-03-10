@@ -1,8 +1,9 @@
 class ApplicationController < ActionController::Base
   include SessionsHelper
+  before_action :set_current_account
   private
   def admin_account
-    unless logged_in? && current_account.administrator
+    unless logged_in? && @current_account.administrator
       render :file => "#{Rails.root}/public/404.html",  layout: false, status: :not_found
     end
   end
@@ -34,5 +35,8 @@ class ApplicationController < ActionController::Base
       when 'image/gif'  then 'gif'
       when 'image/webp' then 'webp'
     end
+  end
+  def set_current_account
+    @current_account = current_account
   end
 end

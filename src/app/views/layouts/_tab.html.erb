@@ -1,0 +1,16 @@
+
+<div class="tab-container" id="tab">
+  <div class="tab-back">
+  </div>
+  <div class="tab">
+    <% if @current_account %>
+      現在のトレンド！
+      <% if @current_account.administrator %>
+        <%= link_to '管理画面', admin_root_path %>
+      <% end %>
+    <% else %>
+      ぜひろぐいんしてください！！
+    <% end %>
+  </div>
+  <div>
+</div>

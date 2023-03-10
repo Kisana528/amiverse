@@ -2,10 +2,12 @@
   flex-grow: 1;
   display: flex;
   justify-content: space-around;
+  min-width: 0;
 }
 main {
   max-width: 800px;
   flex-grow: 1;
+  min-width: 0;
 }
 .tab-container {
   height: calc(100vh - 60px);
@@ -30,6 +32,11 @@ main {
   width: 100%;
   height: calc(100vh - 60px);
   backdrop-filter: blur(3px);
+}
+@media (max-width: 600px) {
+  main {
+    padding-bottom: 60px;
+  }
 }
 @media (min-width: 865px) {
   .tab-container {

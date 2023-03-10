@@ -12,6 +12,6 @@ minio:
   access_key_id: minioroot
   secret_access_key: minioroot
   region: amiverse
-  bucket: production
+  bucket: <%= ENV["RAILS_ENV"] %>
   #urlにバケット名を追加されるのを防ぐ
   force_path_style: true

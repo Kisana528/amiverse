@@ -4,7 +4,7 @@ nav {
   height: calc(100vh - 60px);
   position: sticky;
   top: 60px;
-  background: aquamarine;
+  background: #6a6a6a;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -12,6 +12,7 @@ nav {
   div {
     height: 60px;
     width: 60px;
+    background: #fff;
   }
 }
 @media (max-width: 600px) {

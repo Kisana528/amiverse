@@ -3,12 +3,18 @@ class SessionsController < ApplicationController
   before_action :logged_out_account, only: %i[ new create ]
   before_action :correct_account,only: %i[destroy]
   def index
-    @sessions = Session.where(account_id: current_account.id, deleted: false)
+    @sessions = Session.where(account_id: @current_account.id, deleted: false)
   end
   def new
   end
   def create
-    account = Account.find_by(name_id: params[:session][:name_id].downcase)
+    account = Account.find_by(name_id: params[:session][:name_id].downcase,
+                              activated: true,
+                              locked: false,
+                              silenced: false,
+                              suspended: false,
+                              frozen: false,
+                              deleted: false)
     if account && account.authenticate(params[:session][:password])
       log_in account
       remember(account, request.remote_ip, request.user_agent, request.uuid)

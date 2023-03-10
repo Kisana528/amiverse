@@ -23,7 +23,7 @@
       <div class="meta-container">
           <h1><%= @account.name %></h1>
           <div>@<%= @account.name_id %></div>
-        <%= @account == current_account ? link_to('編集', edit_account_path) : 'フォロー' %>
+        <%= @account == @current_account ? link_to('編集', edit_account_path) + button_to("Log out", logout_path, method: :delete) : 'フォロー' %>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
       <div><span>誕生日:</span><%= @account.birthday&.strftime("%Y年 %m月 %d日") %></div>
       <div><span>フォロワー:</span><%= @account.followers %></div>
       <div><span>フォロー:</span><%= @account.following %></div>
-      <div><span>投稿数:</span><%= @account.items %></div>
+      <div><span>投稿数:</span><%= @account.items_count %></div>
       <div><span>参加日:</span><%= @account.created_at.strftime("%Y年 %m月 %d日") %></div>
     </div>
     <div class="account-tab-container">
@@ -44,6 +44,12 @@
     </div>
     <div class="content-container">
       <p>開始</p>
+      <% @account.items.each do |item| %>
+        <%= render item %>
+        <p>
+          <%= link_to "Show this item", item_path(item.item_id) %>
+        </p>
+      <% end %>
       <p>ここにコンテンツ</p>
       <p>ここにコンテンツ</p>
       <p>ここにコンテンツ</p>

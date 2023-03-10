@@ -1,0 +1,27 @@
+<nav>
+  <% if @current_account %>
+    <div>
+      <% if @current_account.icon.attached? %>
+        <%= link_to image_tag(show_icon_path(@current_account.name_id), class: 'nav-account-icon'), account_path(@current_account.name_id) %>
+      <% else %>
+        <%= link_to image_tag('icon.webp', class: 'nav-account-icon'), account_path(@current_account.name_id) %>
+      <% end %>
+    </div>
+  <% else %>
+    <div>
+      <%= link_to image_tag('icon.webp', class: 'nav-account-icon'), login_path%>
+    </div> 
+  <% end %>
+  <div>
+    <%= link_to 'Discovery', items_path%>
+  </div>
+  <div>
+    <%= link_to 'TimeLine', items_path%>
+  </div>
+  <div>
+    <%= link_to 'DirectMail', items_path%>
+  </div>
+  <div class="tab-button">
+    <button onclick="tabToggle()">TAB</button>
+  </div>
+</nav>

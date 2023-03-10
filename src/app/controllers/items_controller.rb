@@ -13,7 +13,16 @@ class ItemsController < ApplicationController
   end
   def create
     @item = Item.new(item_params)
-    @item.account_id = current_account.id
+    if !params[:item][:images].blank?
+      params[:item][:images].each do |image|
+        image_type = content_type_to_extension(image)
+        @item.images.attach(
+          key: "items/#{image_type}/#{@current_account.name_id}-#{random_id}.#{image_type}",
+          io: (image),
+          filename: "image.#{image_type}")
+      end
+    end
+    @item.account_id = @current_account.id
     loop do
       item_id = random_id
       if !Item.exists?(item_id: item_id)
@@ -25,7 +34,7 @@ class ItemsController < ApplicationController
     @item.item_type = 'plane'
     if @item.save
       flash[:success] = '投稿しました。'
-      redirect_to item_url(@item)
+      redirect_to item_url(@item.item_id)
     else
       render :new
     end
@@ -33,7 +42,7 @@ class ItemsController < ApplicationController
   def update
     if @item.update(item_params)
       flash[:success] = '投稿を編集しました。'
-      redirect_to item_url(@item)
+      redirect_to item_url(@item.item_id)
     else
       render :edit
     end

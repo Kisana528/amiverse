@@ -3,9 +3,6 @@ module SessionsHelper
     session[:account_id] = account.account_id
   end
   def current_account
-    # cookie保存のsessionでログイン状態管理はやめる
-    # if session[:account_id]
-    #  @current_account ||= Account.find_by(account_id: session[:account_id])
     if cookies.signed[:amiverse_aid]
       account = Account.find_by(account_id: cookies.signed[:amiverse_aid])
       if account && account.authenticated?(
@@ -20,33 +17,34 @@ module SessionsHelper
     account == current_account
   end
   def logged_in?
-    !current_account.nil?
+    !@current_account.nil?
   end
   def log_out
-    forget(current_account)
+    forget(@current_account)
     session.delete(:account_id)
     @current_account = nil
   end
-  def remember(account, remote_ip, user_agent, uuid) # cookie secure here
+  def remember(account, remote_ip, user_agent, uuid)
     remember_token = Account.new_token
     account.remember(remember_token, remote_ip, user_agent, uuid)
+    ENV["RAILS_SECURE_COOKIES"].present? ? secure_cookies = true : secure_cookies = false
     cookies.permanent.signed[:amiverse_aid] = {
       value: account.account_id,
       domain: :all,
       expires: 1.year.from_now,
-      #secure: true,
+      secure: secure_cookies,
       httponly: true }
     cookies.permanent.signed[:amiverse_uid] = {
       value: uuid,
       domain: :all,
       expires: 1.year.from_now,
-      #secure: true,
+      secure: secure_cookies,
       httponly: true }
     cookies.permanent.signed[:amiverse_rtk] = {
       value: remember_token,
       domain: :all,
       expires: 1.year.from_now,
-      #secure: true,
+      secure: secure_cookies,
       httponly: true }
   end
   def forget(account)

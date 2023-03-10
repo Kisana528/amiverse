@@ -1,9 +1,13 @@
 <p style="color: green"><%= notice %></p>
-
+<% if @item.images.attached? %>
+  <% @item.images.each do |image| %>
+    <%= image_tag image %> <br>
+  <% end %>
+<% end %>
 <%= render @item %>
 <%= @item.account.name %>
 <div>
-  <%= link_to "Edit this item", edit_item_path(@item) %> |
+  <%= link_to "Edit this item", edit_item_path(@item.item_id) %> |
   <%= link_to "Back to items", items_path %>
 
   <%= button_to "Destroy this item", @item, method: :delete %>

@@ -15,6 +15,9 @@
     <%= form.label :content, style: "display: block" %>
     <%= form.text_field :content %>
   </div>
+  <div>
+    <%= form.file_field :images, multiple: true %>
+  </div>
 
   <div>
     <%= form.label :nsfw, style: "display: block" %>

@@ -18,10 +18,11 @@ module App
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    ENV["RAILS_SECURE_COOKIES"].present? ? secure_cookies = true : secure_cookies = false
     config.session_store :cookie_store, key: 'amiverse_ses',
       domain: :all,
       expires: 1.year.from_now,
-      #secure: true,
+      secure: secure_cookies,
       httponly: true
   end
 end
