@@ -14,4 +14,6 @@ class AmiverseController < ApplicationController
   end
   def page1
   end
+  def sitemap
+  end
 end

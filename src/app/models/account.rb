@@ -1,8 +1,7 @@
 class Account < ApplicationRecord
   has_many :items
+  has_many :images
   has_many :invitations
-  include AccountImages
-  include CustomVariant
   attr_accessor :remember_token, :activation_token
   validates :account_id,
     presence: true,
@@ -23,8 +22,13 @@ class Account < ApplicationRecord
     allow_nil: true
   has_secure_password validations: true
   has_one_attached :icon
+  validates :icon,
+    size: { less_than: 1.megabytes },
+    content_type: %w[ image/jpeg image/png image/gif image/webp ]
   has_one_attached :banner
-  validate :file_type, :file_size
+  validates :banner,
+    size: { less_than: 1.megabytes },
+    content_type: %w[ image/jpeg image/png image/gif image/webp ]
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ?
       BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
@@ -46,28 +50,5 @@ class Account < ApplicationRecord
   def forget(uuid)
     Session.find_by(account_id: self.id, uuid: uuid, deleted: false).update(deleted: true)
   end
-  def resize_image(name, name_id, type)
-    attachment = case type
-      when 'icon' then icon
-      when 'banner' then banner
-      when 'header'then header
-    end
-    attachment.analyze if attachment.attached?
-    CustomVariant.new(attachment, image_optimize(name, name_id, type)).processed
-  end
   private
-  def file_type
-    if icon == !nil
-      if !icon.blob.content_type.in?(%('image/jpeg image/png image/gif image/webp'))
-        errors.add(:icon, 'は JPEG PNG GIF WEBP 形式のいずれかを選択してください。')
-      end
-    end
-  end
-  def file_size
-    if icon == !nil
-      if icon.blob.byte_size > 5.megabytes
-        errors.add(:icon, 'は 5MB 以下のファイルを選択してください。')
-      end
-    end
-  end
 end

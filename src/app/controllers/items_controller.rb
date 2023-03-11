@@ -13,23 +13,8 @@ class ItemsController < ApplicationController
   end
   def create
     @item = Item.new(item_params)
-    if !params[:item][:images].blank?
-      params[:item][:images].each do |image|
-        image_type = content_type_to_extension(image)
-        @item.images.attach(
-          key: "items/#{image_type}/#{@current_account.name_id}-#{random_id}.#{image_type}",
-          io: (image),
-          filename: "image.#{image_type}")
-      end
-    end
     @item.account_id = @current_account.id
-    loop do
-      item_id = random_id
-      if !Item.exists?(item_id: item_id)
-        @item.item_id = item_id
-        break
-      end
-    end
+    @item.item_id = unique_random_id(Item, 'item_id')
     @item.uuid = SecureRandom.uuid
     @item.item_type = 'plane'
     if @item.save

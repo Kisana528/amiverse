@@ -18,20 +18,7 @@ class AccountsController < ApplicationController
   end
   def update
     @account = @current_account
-    if !params[:account][:icon].blank?
-      icon_type = content_type_to_extension(params[:account][:icon].content_type)
-      @account.icon.attach(
-        key: "icons/#{@account.id}-#{@account.name_id}-#{random_id}.#{icon_type}",
-        io: (params[:account][:icon]),
-        filename: "icon.#{icon_type}")
-    end
-    if !params[:account][:banner].blank?
-      banner_type = content_type_to_extension(params[:account][:banner].content_type)
-      @account.banner.attach(
-        key: "banners/#{@account.id}-#{@account.name_id}-#{random_id}.#{banner_type}",
-        io: (params[:account][:banner]),
-        filename: "banner.#{banner_type}")
-    end
+    account_icon_banner_attach
     if @account.update(account_update_params)
       flash[:success] = "更新成功!"
       redirect_to account_path(@account.name_id)

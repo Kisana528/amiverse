@@ -8,6 +8,8 @@
       <% if @current_account.administrator %>
         <%= link_to '管理画面', admin_root_path %>
       <% end %>
+      <br />
+      <%= link_to 'ストレージ', storage_path %>
     <% else %>
       ぜひろぐいんしてください！！
     <% end %>

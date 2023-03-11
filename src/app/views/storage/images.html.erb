@@ -1,0 +1,15 @@
+<h1>images</h1>
+<%= link_to 'new', storage_images_new_path %>
+
+  <% @images.each do |image| %>
+    <%= image.image_id %>
+    <%= image.uuid %>
+    <%= image.name %>
+    <%= image.description %>
+    <% if image.image.attached? %>
+      <%= image_tag show_image_path(image.image_id) %>
+      <%= link_to 'miru', show_image_path(image.image_id) %>
+    <% else %>
+      <p>のいまげ</p>
+    <% end %>
+  <% end %>

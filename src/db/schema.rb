@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_06_083512) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_11_003145) do
   create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "account_id", null: false
     t.string "name", default: "", null: false
@@ -46,12 +46,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_083512) do
     t.boolean "deleted", default: false, null: false
     t.text "settings", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.string "password_digest"
-    t.string "remember_digest"
+    t.bigint "storage_size", default: 0, null: false
+    t.bigint "storage_max_size", default: 1000000000, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_accounts_on_account_id"
-    t.index ["email"], name: "index_accounts_on_email"
-    t.index ["name_id"], name: "index_accounts_on_name_id"
+    t.index ["account_id", "name_id", "email"], name: "index_accounts_on_account_id_and_name_id_and_email", unique: true
     t.check_constraint "json_valid(`achievements`)", name: "achievements"
     t.check_constraint "json_valid(`lang`)", name: "lang"
     t.check_constraint "json_valid(`local_account_visibility`)", name: "local_account_visibility"
@@ -90,6 +89,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_083512) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "images", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "image_id", null: false
+    t.string "uuid", null: false
+    t.string "name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.string "visibility", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_images_on_account_id"
+    t.index ["image_id", "uuid"], name: "index_images_on_image_id_and_uuid", unique: true
+  end
+
   create_table "invitations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "name", default: "", null: false
@@ -101,7 +114,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_083512) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_invitations_on_account_id"
-    t.index ["invitation_code"], name: "index_invitations_on_invitation_code"
+    t.index ["invitation_code"], name: "index_invitations_on_invitation_code", unique: true
   end
 
   create_table "items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -119,8 +132,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_083512) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_items_on_account_id"
-    t.index ["item_id"], name: "index_items_on_item_id"
-    t.index ["uuid"], name: "index_items_on_uuid"
+    t.index ["item_id", "uuid"], name: "index_items_on_item_id_and_uuid", unique: true
     t.check_constraint "json_valid(`flow`)", name: "flow"
     t.check_constraint "json_valid(`meta`)", name: "meta"
     t.check_constraint "json_valid(`version`)", name: "version"
@@ -138,11 +150,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_06_083512) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_sessions_on_account_id"
-    t.index ["uuid"], name: "index_sessions_on_uuid"
+    t.index ["uuid"], name: "index_sessions_on_uuid", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "images", "accounts"
   add_foreign_key "invitations", "accounts"
   add_foreign_key "items", "accounts"
   add_foreign_key "sessions", "accounts"

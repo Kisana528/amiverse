@@ -3,6 +3,9 @@
   <% if @current_account.administrator %>
     <%= link_to '管理画面', admin_root_path %>
     <%= @current_account ? 'yes' : 'no' %>
+    <%= @current_account.icon.byte_size %>
+    <%= @current_account.storage_size %>/
+    <%= @current_account.storage_max_size %>
   <% end %>
 <% else %>
   ぜひろぐいんしてください！！

@@ -1,0 +1,28 @@
+<%= form_with model: @image, url: storage_images_create_path do |f| %>
+  <% if @image.errors.any? %>
+    <div>
+      <div>
+        送信内容に<%= @image.errors.count %>つのエラーがあります。
+      </div>
+      <ul>
+      <% @image.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= f.label :image, 'image' %>
+  <%= f.file_field :image %>
+  <br/>
+  <div class="text-field-group">
+    <%= f.text_field :name, class: 'text-field-field', placeholder: '名前' %>
+    <%= f.label :name, '名前', class: 'text-field-label' %>
+  </div>
+  <br/>
+  <div class="text-field-group">
+    <%= f.text_field :description, class: 'text-field-field', placeholder: 'description' %>
+    <%= f.label :description, 'description', class: 'text-field-label' %>
+  </div>
+  <br/>
+  <%= f.submit '送信' %>
+<% end %>

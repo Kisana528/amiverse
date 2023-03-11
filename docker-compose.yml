@@ -26,6 +26,20 @@ services:
       RAILS_ENV=production rails assets:precompile &&
       rails s -b 0.0.0.0"
 
+  front:
+    image: node:lts-alpine3.17
+    tty: true
+    stdin_open: true
+    environment:
+      - WATCHPACK_POLLING=true
+    working_dir: /app
+    restart: always
+    volumes:
+      - ./src2:/app
+    ports:
+      - '3001:3000'
+    command: sh -c "npm install && npm update && npm run build && npm run start"
+
   db:
     image: mariadb:10.9.5
     environment:

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'policy' => 'amiverse#policy'
   get 'disclaimer' => 'amiverse#disclaimer'
   get 'page1' => 'amiverse#page1'
+  get 'sitemap' => 'amiverse#sitemap'
 
   # account
   get '@:name_id' => 'accounts#show', as: 'account'
@@ -43,6 +44,13 @@ Rails.application.routes.draw do
   # item
   resources :items, param: 'item_id'
 
+  # storage
+  get 'storage' => 'storage#index'
+  get 'storage/images' => 'storage#images'
+  get 'storage/images/img-:image_id' => 'storage#show_image', as: 'show_image'
+  get 'storage/images/new' => 'storage#new_images'
+  post 'storage/images/create' => 'storage#create_images'
+
   # admin
   namespace :admin do
 
@@ -72,6 +80,13 @@ Rails.application.routes.draw do
     delete 'sessions/:id/destroy' => 'sessions#destroy', as: 'destroy_session'
 
     # item
+    get 'items' => 'items#index', as: 'items'
+  end
+  
+  # api
+  namespace :api do
+    # analytics
+    root 'application#index'
     get 'items' => 'items#index', as: 'items'
   end
 end

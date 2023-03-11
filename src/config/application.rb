@@ -24,5 +24,23 @@ module App
       expires: 1.year.from_now,
       secure: secure_cookies,
       httponly: true
+    
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins "amiverse-next",
+          "http://localhost:3000",
+          "http://localhost:3001",
+          "http://localhost:3002",
+          "http://127.0.0.1:3000",
+          "http://127.0.0.1:3001",
+          "http://127.0.0.1:3002",
+          "https://amiverse.net"
+        resource "*",
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :head, :options],
+          expose: ['X-CSRF-Token'],
+          credentials: true
+      end
+    end
   end
 end

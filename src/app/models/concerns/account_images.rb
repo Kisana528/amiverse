@@ -2,13 +2,16 @@ module AccountImages
   def image_optimize(name, name_id, type)
     @name = name
     @name_id = name_id
-    resize = "4096x4096>"
+    resize = "2048x2048>"
+    extent = ""
     if type == 'icon'
       resize = "500x500^"
       extent = "500x500"
     elsif type == 'banner'
       resize = "2000x2000^"
       extent = "2000x2000"
+    elsif type == 'image'
+      resize = "2048x2048>"
     end
     resized = start_optimize.merge(
       resize: resize,
