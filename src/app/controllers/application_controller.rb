@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
       redirect_to root_url
     end
   end
+  # 謎？
   def correct_account
     @account = current_account
     unless current_account?(@account)

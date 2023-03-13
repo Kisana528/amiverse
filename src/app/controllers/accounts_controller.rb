@@ -2,10 +2,11 @@ class AccountsController < ApplicationController
   include Images
   before_action :set_account, only: %i[ show_icon show_banner show ]
   before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
-  before_action :correct_account,only: %i[edit update destroy password_edit password_update]
   def show_icon
-    send_noblob_stream(
-      @account.icon, @account.resize_image(@account.name, @account.name_id, 'icon'))
+    if @account.icon.attached? 
+      send_noblob_stream(
+        @account.icon, @account.resize_image(@account.name, @account.name_id, 'icon'))
+    end
   end
   def show_banner
     send_noblob_stream(

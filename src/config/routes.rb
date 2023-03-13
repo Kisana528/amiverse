@@ -85,8 +85,21 @@ Rails.application.routes.draw do
   
   # api
   namespace :api do
+
     # analytics
     root 'application#index'
+
+    # logged-in
+    post 'logged-in' => 'application#logged_in', as: 'logged-in'
+
+    # csrf token generate
+    post 'new' => 'application#new', as: 'new'
+
+    # session
+    post 'login' => 'sessions#create', as: 'login'
+    delete 'logout' => 'sessions#destroy', as: 'logout'
+
+    # item
     get 'items' => 'items#index', as: 'items'
   end
 end

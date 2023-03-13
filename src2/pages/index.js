@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react'
+import axios from '../lib/axios'
+import Link from 'next/link'
 
 export default function Home() {
   const [items, setItems] = useState([])
+  let ignore = false
   useEffect(() => {
-    const fetchItems = async () => {
-      const response = await fetch('http://localhost:3000/api/items')
-      const data = await response.json()
-      setItems(data)
+    if (!ignore) {
+      const fetchItems = async () => {
+        const response = await axios.get('/api/items')
+        console.log(response.data)
+        const data = response.data
+        setItems(data)
+      }
+      fetchItems()
     }
-    fetchItems()
+    return () => {ignore = true}
   },[])
   return (
     <>
       <main>
         <h1>Amiverse.net</h1>
-        <a>aa</a>
+        <Link href="/login">ログイン</Link>
         <ul>
           {items.map(item => (
             <li key={item.id}>{item.content}</li>

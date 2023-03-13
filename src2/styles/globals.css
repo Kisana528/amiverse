@@ -1,0 +1,12 @@
+body, h1, h2, h3, p {
+  margin: 0;
+}
+::-webkit-scrollbar{
+  width: 5px;
+}
+::-webkit-scrollbar-track{
+  background-color: #232323;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #f4bfbf;
+}

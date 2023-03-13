@@ -34,7 +34,10 @@ module App
           "http://127.0.0.1:3000",
           "http://127.0.0.1:3001",
           "http://127.0.0.1:3002",
-          "https://amiverse.net"
+          "http://192.168.0.31:3001",
+          "http://192.168.0.31:3002",
+          "https://amiverse.net",
+          "https://api.amiverse.net"
         resource "*",
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :head, :options],

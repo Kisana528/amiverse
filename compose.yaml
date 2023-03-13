@@ -1,0 +1,85 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    tty: true
+    stdin_open: true
+    environment:
+      RAILS_ENV: development
+      RAILS_SERVE_STATIC_FILES: 'true'
+      RAILS_SECURE_COOKIES: ''
+    working_dir: /app
+    #restart: always
+    volumes:
+      - ./src:/app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    command: >
+      bash -c "rm -f /app/tmp/pids/server.pid &&
+      rm -rf /app/public/assets &&
+      bundle install -j4 &&
+      rails s -b 0.0.0.0"
+    # rails db:create &&
+    # rails db:migrate &&
+    # rails db:seed &&
+    # RAILS_ENV=production rails assets:precompile &&
+
+  front:
+    image: node:lts-alpine3.17
+    tty: true
+    stdin_open: true
+    environment:
+      - WATCHPACK_POLLING=true
+    working_dir: /app
+    #restart: always
+    volumes:
+      - ./src2:/app
+    ports:
+      - '3001:3000'
+    command: sh -c "npm install && npm update && npm run dev"
+
+  db:
+    image: mariadb:10.9.5
+    environment:
+      TZ: "Asia/Tokyo"
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: dockermdb
+      MARIADB_PASSWORD: dockermdb
+    volumes:
+      - ./db:/var/lib/mysql
+    stdin_open: true
+    tty: true
+    #restart: always
+    ports:
+      - '3306:3306'
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    environment:
+      PMA_HOSTS: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - '8080:80'
+    stdin_open: true
+    tty: true
+    #restart: always
+    depends_on:
+      - db
+
+  minio:
+    image: minio/minio
+    volumes:
+      - ./minio:/data
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioroot
+      MINIO_ROOT_PASSWORD: minioroot
+    stdin_open: true
+    tty: true
+    #restart: always
+    ports:
+      - '9000:9000'
+      - '9001:9001'
