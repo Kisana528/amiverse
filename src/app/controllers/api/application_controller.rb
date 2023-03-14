@@ -36,10 +36,13 @@ class Api::ApplicationController < ApplicationController
     end
   end
   def set_csrf_token_cookie
+    ENV["RAILS_SECURE_COOKIES"].present? ? secure_cookies = true : secure_cookies = false
     cookies['CSRF-TOKEN'] = {
       value: form_authenticity_token,
-      secure: false,
-      domain: :all}
+      domain: :all,
+      expires: 1.year.from_now,
+      secure: secure_cookies,
+      httponly: true }
   end
   def set_csrf_token_header
     response.set_header('X-CSRF-Token', form_authenticity_token)

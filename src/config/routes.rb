@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  mount ActionCable.server => '/cable'
+
   # static
   root 'amiverse#index'
   get 'about' => 'amiverse#about'

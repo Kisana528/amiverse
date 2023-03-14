@@ -20,6 +20,7 @@ class ItemsController < ApplicationController
     if @item.save
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
+      ActionCable.server.broadcast 'items_channel', {item: @item}
     else
       render :new
     end
