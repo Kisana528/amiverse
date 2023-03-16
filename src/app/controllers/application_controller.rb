@@ -42,14 +42,14 @@ class ApplicationController < ActionController::Base
     if !params[:account][:icon].blank?
       icon_type = content_type_to_extension(params[:account][:icon].content_type)
       @account.icon.attach(
-        key: "#{@account.account_id}/icons/#{random_id}.#{icon_type}",
+        key: "accounts/#{@account.account_id}/icons/#{random_id}.#{icon_type}",
         io: (params[:account][:icon]),
         filename: "icon.#{icon_type}")
     end
     if !params[:account][:banner].blank?
       banner_type = content_type_to_extension(params[:account][:banner].content_type)
       @account.banner.attach(
-        key: "#{@account.account_id}/banners/#{random_id}.#{banner_type}",
+        key: "accounts/#{@account.account_id}/banners/#{random_id}.#{banner_type}",
         io: (params[:account][:banner]),
         filename: "banner.#{banner_type}")
     end 

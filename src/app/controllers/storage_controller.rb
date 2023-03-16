@@ -28,7 +28,7 @@ class StorageController < ApplicationController
     end 
     image_type = content_type_to_extension(params[:image][:image].content_type)
     @image.image.attach(
-      key: "#{@current_account.account_id}/images/#{@image.image_id}.#{image_type}",
+      key: "accounts/#{@current_account.account_id}/images/#{@image.image_id}.#{image_type}",
       io: (params[:image][:image]),
       filename: "image.#{image_type}"
     )

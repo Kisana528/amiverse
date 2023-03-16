@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from '../lib/axios'
 import {appContext} from './_app'
+import { useRouter } from 'next/router'
 
 export default function Login() {
   const loggedIn = useContext(appContext).loggedIn
   const setLoggedIn = useContext(appContext).setLoggedIn
   const loginStatus = useContext(appContext).loginStatus
   const setLoginStatus = useContext(appContext).setLoginStatus
+  const setFlash = useContext(appContext).setFlash
   const [accountID, setAccountID] = useState('')
   const [password, setPassword] = useState('')
+  const router = useRouter()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -17,6 +20,8 @@ export default function Login() {
         setLoginStatus(response.data.message)
         if(response.data.logged_in) {
           setLoggedIn(true)
+          router.push('/')
+          setFlash('ログインしたよ')
         }
       })
       .catch(err => {
@@ -41,9 +46,9 @@ export default function Login() {
     <>
       <main>
         <h1>Amiverse.netへログイン</h1>
-        {loggedIn ? 'ログイン中' : '未ログイン'}
+        {loggedIn ? 't' : 'f'}
+        {loginStatus}
         <br />
-        { loginStatus }
         <form onSubmit={handleSubmit}>
           <label>
             アカウントID:

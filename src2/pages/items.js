@@ -4,12 +4,12 @@ import Link from 'next/link'
 import Canvas from '@/components/canvas'
 import {appContext} from './_app'
 
-export default function Home() {
+export default function Items() {
   const loggedIn = useContext(appContext).loggedIn
   const [items, setItems] = useState([])
   let ignore = false
   useEffect(() => {
-    if (!ignore && loggedIn) {
+    if (!ignore) {
       const fetchItems = async () => {
         const response = await axios.get('/api/items')
         const data = response.data
@@ -21,15 +21,18 @@ export default function Home() {
         const cable = ActionCable.createConsumer(process.env.NEXT_PUBLIC_WSNAME)
         cable.subscriptions.create( "ItemsChannel",{
           connected() {
-            console.log('connected')
+            // Called when the subscription is ready for use on the server
+            console.log('connected : ', this)
           },
           disconnected() {
-            console.log('disconnected')
+            // Called when the subscription has been terminated by the server
           },
           received(data) {
-            let li = document.createElement("li")
-            li.textContent = data.item.content
-            document.getElementById('items').appendChild(li)
+            // Called when there's incoming data on the websocket for this channel
+            let div = document.createElement("div")
+            div.id = data.item.id
+            div.textContent = data.item.content
+            document.getElementById('items').appendChild(div)
             return console.log(data['item']['content'])
           }
         })
@@ -37,27 +40,17 @@ export default function Home() {
       created()
     }
     return () => {ignore = true}
-  },[loggedIn])
-    
-  if(loggedIn){
-    return (
-      <main>
-        <h1>Amiverse.net</h1>
-        <ul id="items">
-          {items.map(item => (
-            <li key={item.id}>{item.content}</li>
-          ))}
-        </ul>
-        <Canvas></Canvas>
-      </main>
-    )
-  } else {
-    return (
-      <main>
-        <h1>Amiverse.netへようこそ！</h1>
-        <Link href="/login">ログイン</Link>
-        <Link href="/signup">登録</Link>
-      </main>
-    )
-  }
+  },[])
+  return (
+    <main>
+      <h1>items</h1>
+      <div id="items"></div>
+      <ul>
+        {items.map(item => (
+          <li key={item.id}>{item.content}</li>
+        ))}
+      </ul>
+      <Canvas></Canvas>
+    </main>
+  )
 }

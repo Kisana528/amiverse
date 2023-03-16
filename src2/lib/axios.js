@@ -1,6 +1,8 @@
+// axiosに設定を追加する
+
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_HTTPNAME
 axios.defaults.xsrfCookieName = 'CSRF-TOKEN'
 axios.defaults.xsrfHeaderName = 'X-CSRF-Token'
 axios.defaults.withCredentials = true

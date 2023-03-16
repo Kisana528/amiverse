@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import {appContext} from '../pages/_app'
 
 export default function Header() {
+  const loading = useContext(appContext).loading
   const loginStatus = useContext(appContext).loginStatus
   return (
     <header>
@@ -13,7 +14,7 @@ export default function Header() {
           </div>
         </Link>
       </div>
-      <div>{loginStatus}</div>
+      <div>{loginStatus},{loading ? 't':'f'}</div>
       <style jsx="true">{`
       header {
         display: flex;
