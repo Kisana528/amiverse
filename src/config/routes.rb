@@ -97,6 +97,13 @@ Rails.application.routes.draw do
     # csrf token generate
     post 'new' => 'application#new', as: 'new'
 
+    # account
+    post '@:name_id' => 'accounts#show', as: 'account'
+
+    # signup
+    post 'check-invitation-code' => 'signup#check_invitation_code'
+    post 'signup' => 'signup#create'
+
     # session
     post 'login' => 'sessions#create', as: 'login'
     delete 'logout' => 'sessions#destroy', as: 'logout'

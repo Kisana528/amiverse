@@ -38,21 +38,26 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  def account_icon_banner_attach  
-    if !params[:account][:icon].blank?
-      icon_type = content_type_to_extension(params[:account][:icon].content_type)
+  def account_icon_banner_attach(type)
+    if type == 'api'
+      this_params = params
+    else
+      this_params = params[:account]
+    end
+    if !this_params[:icon].blank?
+      icon_type = content_type_to_extension(this_params[:icon].content_type)
       @account.icon.attach(
         key: "accounts/#{@account.account_id}/icons/#{random_id}.#{icon_type}",
-        io: (params[:account][:icon]),
+        io: (this_params[:icon]),
         filename: "icon.#{icon_type}")
     end
-    if !params[:account][:banner].blank?
-      banner_type = content_type_to_extension(params[:account][:banner].content_type)
+    if !this_params[:banner].blank?
+      banner_type = content_type_to_extension(this_params[:banner].content_type)
       @account.banner.attach(
         key: "accounts/#{@account.account_id}/banners/#{random_id}.#{banner_type}",
-        io: (params[:account][:banner]),
+        io: (this_params[:banner]),
         filename: "banner.#{banner_type}")
-    end 
+    end
   end
   def content_type_to_extension(type)
     case type

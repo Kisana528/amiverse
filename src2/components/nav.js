@@ -4,10 +4,10 @@ export default function Nav() {
   return (
     <nav>
       <ul>
-        <li></li>
-        <li>link2</li>
-        <li>link3</li>
-        <li></li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
       </ul>
       <style jsx="true">{`
         nav {

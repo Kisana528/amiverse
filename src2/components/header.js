@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import React, { useEffect, useState, useContext } from 'react'
-import {appContext} from '../pages/_app'
+import { appContext } from '@/pages/_app'
 
 export default function Header() {
-  const loading = useContext(appContext).loading
-  const loginStatus = useContext(appContext).loginStatus
+  const dark = useContext(appContext).dark
+  const modeTrigger = useContext(appContext).modeTrigger
+
   return (
     <header>
       <div className="top">
@@ -14,9 +15,12 @@ export default function Header() {
           </div>
         </Link>
       </div>
-      <div>{loginStatus},{loading ? 't':'f'}</div>
+      <div className="mode-toggle">
+        <button className={dark ? "dark-button" : "light-button"} onClick={modeTrigger}>{dark ? "🌙" : "☀️"}</button>
+      </div>
       <style jsx="true">{`
       header {
+        z-index: 8;
         display: flex;
         position: sticky;
         top: 0;
@@ -32,6 +36,28 @@ export default function Header() {
       .top-inner {
         line-height: 60px;
         padding: 0 10px;
+      }
+      .mode-toggle {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .dark-button{
+        width: 30px;
+        height: 30px;
+        border: 3px solid #fff;
+        background: #395391;
+        margin: auto;
+        border-radius: 15px;
+      }
+      .light-button{
+        width: 30px;
+        height: 30px;
+        border: 3px solid #000;
+        background: #fff9cb;
+        margin: auto;
+        border-radius: 15px;
       }
       `}</style>
     </header>

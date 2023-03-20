@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from '../lib/axios'
-import {appContext} from './_app'
+import { appContext } from './_app'
 import { useRouter } from 'next/router'
 
 export default function Login() {
   const loggedIn = useContext(appContext).loggedIn
   const setLoggedIn = useContext(appContext).setLoggedIn
-  const loginStatus = useContext(appContext).loginStatus
-  const setLoginStatus = useContext(appContext).setLoginStatus
   const setFlash = useContext(appContext).setFlash
+  const [loginStatus, setLoginStatus] = useState('')
   const [accountID, setAccountID] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
@@ -16,54 +15,56 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     await axios.post('/api/login', { 'name_id': accountID, password })
-      .then(response => {
-        setLoginStatus(response.data.message)
-        if(response.data.logged_in) {
+      .then(res => {
+        if (res.data.logged_in) {
           setLoggedIn(true)
-          router.push('/')
+          setLoginStatus('ログインしました')
           setFlash('ログインしたよ')
+          router.push('/')
+        } else if (!res.data.logged_in) {
+          setLoginStatus('情報が間違っています')
+        } else {
+          setLoginStatus('ログインできませんでした')
         }
       })
       .catch(err => {
-        setLoginStatus('Error')
-        console.log(err)
+        setLoginStatus('ログイン通信例外')
       })
   }
   const handleLogout = async () => {
     await axios.delete('/api/logout')
-      .then(response => {
-        setLoginStatus(response.data.message)
-        if(!response.data.logged_in) {
+      .then(res => {
+        if (!res.data.logged_in) {
           setLoggedIn(false)
+          setLoginStatus('ログアウトしました')
+        } else {
+          setLoginStatus('ログアウト処理ができませんでした')
         }
       })
       .catch(err => {
-        setLoginStatus('Error')
-        console.log(err)
+        setLoginStatus('ログアウト通信例外')
       })
   }
   return (
     <>
-      <main>
-        <h1>Amiverse.netへログイン</h1>
-        {loggedIn ? 't' : 'f'}
-        {loginStatus}
+      <h1>Amiverse.netへログイン</h1>
+      {loggedIn ? 't' : 'f'}
+      {loginStatus}
+      <br />
+      <form onSubmit={handleSubmit}>
+        <label>
+          アカウントID:
+          <input type="text" value={accountID} onChange={(e) => setAccountID(e.target.value)} />
+        </label>
         <br />
-        <form onSubmit={handleSubmit}>
-          <label>
-            アカウントID:
-            <input type="text" value={accountID} onChange={(e) => setAccountID(e.target.value)} />
-          </label>
-          <br />
-          <label>
-            パスワード:
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </label>
-          <br />
-          <button type="submit">送信</button>
-        </form>
-        <button onClick={handleLogout}>ログアウト</button>
-      </main>
+        <label>
+          パスワード:
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </label>
+        <br />
+        <button type="submit">送信</button>
+      </form>
+      <button onClick={handleLogout}>ログアウト</button>
     </>
   )
 }

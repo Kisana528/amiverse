@@ -30,7 +30,7 @@ module App
         origins "front",
           "http://192.168.0.31:3001",
           "http://localhost:3001",
-          "https://amiverse.net"
+          "https://api.amiverse.net"
         resource "*",
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :head, :options],

@@ -3,7 +3,7 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "@rails/actioncable"
 import "channels"
-import "account"
+import "./account.js"
 
 let tabToggleTF = false
 function tabToggle() {

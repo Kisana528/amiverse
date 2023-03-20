@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react'
-import axios from '../lib/axios'
+import axios from '@/lib/axios'
 import Link from 'next/link'
 import Canvas from '@/components/canvas'
-import {appContext} from './_app'
+import {appContext} from '@/pages/_app'
 
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
@@ -38,26 +38,28 @@ export default function Home() {
     }
     return () => {ignore = true}
   },[loggedIn])
-    
+
   if(loggedIn){
     return (
-      <main>
-        <h1>Amiverse.net</h1>
+      <>
+        <h1>HOME</h1>
+        <p>投稿一覧</p>
         <ul id="items">
           {items.map(item => (
             <li key={item.id}>{item.content}</li>
           ))}
         </ul>
         <Canvas></Canvas>
-      </main>
+      </>
     )
   } else {
     return (
-      <main>
+      <>
         <h1>Amiverse.netへようこそ！</h1>
         <Link href="/login">ログイン</Link>
         <Link href="/signup">登録</Link>
-      </main>
+        <Link href="/@kisana">き</Link>
+      </>
     )
   }
 }

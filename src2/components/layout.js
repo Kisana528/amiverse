@@ -2,35 +2,38 @@ import Header from './header'
 import Footer from './footer'
 import Nav from './nav'
 import Tab from './tab'
-import {appContext} from '../pages/_app'
+import { appContext } from '@/pages/_app'
 import React, { useState, useEffect, useContext } from 'react'
 
 export default function Layout({ children }) {
   const loading = useContext(appContext).loading
-  const loginStatus = useContext(appContext).loginStatus
+  const loadingStatus = useContext(appContext).loadingStatus
   const dark = useContext(appContext).dark
   const flash = useContext(appContext).flash
+  const setFlash = useContext(appContext).setFlash
+  const handleClick = () => {
+    setFlash('')
+  }
+
   return (
-    <div className={`all ${dark ? "dark" : ""} ${loading ? "loading-top" : ""}` }>
+    <div className={`all ${dark ? "dark-mode" : "light-mode"} ${loading ? "loading-top" : ""}`}>
       <div className={`loading-hide ${loading ? "loading" : ""}`}>
         <div className="loading-logo">Amiverse</div>
-        <div className="loading-status">{loginStatus}</div>
+        <div className="loading-status">{loadingStatus}</div>
       </div>
       <Header />
       <div className="main-container">
         <Nav />
         <main>
           {children}
-          {flash ? <div className="flash">{flash}</div> : ''}
+          {flash ? <div className="flash" onClick={handleClick}>{flash}</div> : ''}
         </main>
         <Tab />
       </div>
       <style jsx="true">{`
         .all {
-        }
-        .dark {
-          background-color: #000000e6;
-          color: #fff;
+          background: var(--background-color);
+          color: var(--font-color);
         }
         .loading-top {
           width: 100vw;
@@ -51,18 +54,18 @@ export default function Layout({ children }) {
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: #76ffdf;
+          background: rgb(22,22,22);
         }
         .loading-logo {
           font-size: 50px;
           font-family: math;
-          color: #74006e;
+          color: #b057e8;
         }
         .loading-status {
-          color: #1a4682;
+          color: #64a5fc;
         }
         main {
-          height: 300vh;
+          //height: 300vh;
           //background-color: rgb(209, 233, 255);
           flex-grow: 1;
         }

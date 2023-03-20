@@ -19,7 +19,7 @@ class AccountsController < ApplicationController
   end
   def update
     @account = @current_account
-    account_icon_banner_attach
+    account_icon_banner_attach('')
     if @account.update(account_update_params)
       flash[:success] = "更新成功!"
       redirect_to account_path(@account.name_id)

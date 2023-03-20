@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
-import axios from '../lib/axios'
-import {appContext} from './_app'
+import axios from '@/lib/axios'
+import { appContext } from './_app'
 import { useRouter } from 'next/router'
 
 export default function Signup() {
@@ -8,41 +8,55 @@ export default function Signup() {
   const setLoggedIn = useContext(appContext).setLoggedIn
   const loginStatus = useContext(appContext).loginStatus
   const setLoginStatus = useContext(appContext).setLoginStatus
-  const [invitationCode, setInvitationCode] = useState('')
+  const setFlash = useContext(appContext).setFlash
+  const router = useRouter()
+  const [signupStatus, setSignupStatus] = useState('未確認')
   const [invited, setInvited] = useState(false)
-  const [accountID, setAccountID] = useState('')
+  const [invitationCode, setInvitationCode] = useState('')
+  const [name, setName] = useState('')
+  const [nameID, setNameID] = useState('')
   const [password, setPassword] = useState('')
-  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [passwordConfirmation, setPasswordConfirmation] = useState('')
 
   const checkInvitationCode = async (event) => {
     event.preventDefault()
-    setInvited(true)
+    await axios.post('/api/check-invitation-code', { 'invitation_code': invitationCode })
+      .then(res => {
+        if (res.data.invitation_code) {
+          setSignupStatus('招待を確認済み')
+          setInvited(true)
+        } else {
+          setSignupStatus('招待が確認できませんでした')
+        }
+      })
+      .catch(err => {
+        setSignupStatus('招待確認通信例外')
+      })
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await axios.post('/api/login', { 'name_id': accountID, password })
-      .then(response => {
-        setLoginStatus(response.data.message)
-        if(response.data.logged_in) {
-          setLoggedIn(true)
+    await axios.post('/api/signup', {
+      'invitation_code': invitationCode,
+      'name': name,
+      'name_id': nameID,
+      'password': password,
+      'password_confirmation': passwordConfirmation
+    })
+      .then(res => {
+        if (res.data.created) {
+          setSignupStatus('作成されました')
+          setFlash('作成したよ')
+          router.push('/')
+        } else if (!res.data.created) {
+          setSignupStatus('間違っています')
+        } else if (!res.data.invitation_code) {
+          setSignupStatus('招待が確認できませんでした')
+        } else {
+          setSignupStatus('アカウントが作成できませんでした')
         }
       })
       .catch(err => {
-        setLoginStatus('Error')
-        console.log(err)
-      })
-  }
-  const handleLogout = async () => {
-    await axios.delete('/api/logout')
-      .then(response => {
-        setLoginStatus(response.data.message)
-        if(!response.data.logged_in) {
-          setLoggedIn(false)
-        }
-      })
-      .catch(err => {
-        setLoginStatus('Error')
-        console.log(err)
+        setSignupStatus('アカウント作成通信例外')
       })
   }
   const invitationCodeForm = (
@@ -62,8 +76,13 @@ export default function Signup() {
       </label>
       <br />
       <label>
-        アカウントID:
-        <input type="text" value={accountID} onChange={(e) => setAccountID(e.target.value)} />
+        なまえ:
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      </label>
+      <br />
+      <label>
+        ID:
+        <input type="text" value={nameID} onChange={(e) => setNameID(e.target.value)} />
       </label>
       <br />
       <label>
@@ -71,11 +90,16 @@ export default function Signup() {
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </label>
       <br />
+      <label>
+        パスワード確認:
+        <input type="password" value={passwordConfirmation} onChange={(e) => setPasswordConfirmation(e.target.value)} />
+      </label>
+      <br />
       <button type="submit">送信</button>
     </form>
   )
   let form
-  if(invited) {
+  if (invited) {
     form = AccountForm
   } else {
     form = invitationCodeForm
@@ -84,7 +108,8 @@ export default function Signup() {
     <>
       <main>
         <h1>サインイン</h1>
-        { form }
+        <span>{signupStatus}</span>
+        {form}
       </main>
     </>
   )

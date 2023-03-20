@@ -1,7 +1,7 @@
 <% provide(:title, 'ログイン') %>
 <h1>ログイン</h1>
 <div class="">
-  <%= form_with(scope: :session, url: create_session_path) do |f| %>
+  <%= form_with(scope: :session, url: create_session_path, data: { turbo: false }) do |f| %>
     <div class="text-field-group">
       <%= f.text_field :name_id, class: 'text-field-field', placeholder: '名前' %>
       <%= f.label :name_id, class: 'text-field-label' %>

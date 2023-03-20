@@ -1,8 +1,51 @@
 body, h1, h2, h3, p {
   margin: 0;
 }
+:root {
+  /* ↓ For Light Mode Color Palet (難しい) ↓ */
+  --light-0: #e17051;
+  --light-1: #e17051;
+  --light-2: #e17051;
+  --light-3: #e17051;
+  --light-4: #e17051;
+  --light-5: #e17051;
+  --light-6: #be44be;
+  --light-7: #f74f21;
+  --light-8: #939393;
+  --light-9: #4c4c4c;
+  /* ↓ For Dark Mode Color Palet ↓ */
+  --dark-0: #f2c384;
+  --dark-1: #f77356;
+  --dark-2: #95e34e;
+  --dark-3: #49e2ff;
+  --dark-4: #5095ff;
+  --dark-5: #a77eff;
+  --dark-6: #ef5dff;
+  --dark-7: #ff5d76;
+  --dark-8: #ababab;
+  --dark-9: #e7e7e7;
+}
+:root .light-mode {
+  --background-color: #cecece;
+  --main-container-background-color: #ffffff;
+  --font-color: black;
+  --link-color: rgb(189, 38, 38);
+  --primary-color: blue;
+}
+:root .dark-mode {
+  --background-color: #1d1d1d;
+  --main-container-background-color: #141414;
+  --font-color: white;
+  --link-color: var(--dark-0);
+  --primary-color: darkblue;
+}
+.all a {
+  color: var(--link-color);
+  text-decoration: none;
+}
 ::-webkit-scrollbar{
   width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track{
   background-color: #232323;

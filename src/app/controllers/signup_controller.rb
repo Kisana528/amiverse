@@ -17,7 +17,7 @@ class SignupController < ApplicationController
     @account = Account.new(account_params)
     if Invitation.exists?(invitation_code: session[:invitation_code])
       @account.account_id = unique_random_id(Account, 'account_id')
-      account_icon_banner_attach
+      account_icon_banner_attach('')
       if @account.save
         flash[:success] = "アカウントが作成されました"
         session[:invitation_code].clear

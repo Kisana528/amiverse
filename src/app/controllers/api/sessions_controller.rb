@@ -17,7 +17,7 @@ class Api::SessionsController < Api::ApplicationController
         name: account.name,
         name_id: account.name_id}
     else
-      render json: { message: "間違っています。" }
+      render json: { logged_in: false }
     end
   end
   def destroy

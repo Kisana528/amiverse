@@ -1,4 +1,6 @@
 import Head from "next/head"
+import React, { useEffect, useState, useContext } from 'react'
+import { appContext } from '@/pages/_app'
 
 export default function DefaultHead({ children,
   title,
@@ -14,12 +16,14 @@ export default function DefaultHead({ children,
   id = "amiverse.net",
   alt = "amiverse",
 }) {
+  const dark = useContext(appContext).dark
+
   return (
     <Head key={title}>
       <meta charSet="UTF-8" />
       <title>{title ? title + ' | Amiverse' : 'Amiverse'}</title>
       <meta name="theme-color" content="#ffa9c7" />
-      <meta name="color-scheme" content="light" /> {/* dark対応予定 */}
+      <meta name="color-scheme" content={dark ? '':''} /> {/* jsで管理 */}
       <meta name="viewport" content="width=device-width" />
       <meta name="author" content={author} />
       <meta name="generator" content="Next.js" />
