@@ -1,75 +1,97 @@
 import axios from '@/lib/axios'
 import { useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import {appContext} from '@/pages/_app'
+import { appContext } from '@/pages/_app'
 import Link from 'next/link'
 import Image from 'next/image'
+import Item from '@/components/item'
 
 export default function Account() {
   const loggedIn = useContext(appContext).loggedIn
   const { query = {} } = useRouter()
   const [account, setAccount] = useState({})
+  const [items, setItems] = useState([])
+  const [scrollY, setScrollY] = useState(1)
+  const [fixedHeader, setFixedHeader] = useState(false)
+  const [icon, setIcon] = useState('')
+  const [banner, setBanner] = useState('')
 
   if (process.browser) {
-    if(document.getElementById('banner-container')){
-      window.addEventListener('scroll', () => {
-        let elem = document.getElementById('banner-container')
-        let scrollY = window.scrollY/2000 + 1
-        if(scrollY > 1.5) scrollY = 1.5
-        elem.style.transform = 'scale(' + scrollY + ')'
-      })
-      const header = document.getElementById('name-container')
-      const observer = new IntersectionObserver(entries => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            header.classList.remove('fixed')
-          } else {
-            header.classList.add('fixed')
-          }
-        }
-      })
-      observer.observe(document.getElementById('name-before'))
-    }
   }
   useEffect(() => {
-    if (query.name_id) {
-      axios.post('/api/@'+query.name_id)
-      .then(res => {
-        setAccount(res.data)
-      })
-      .catch(err => {
-      })
+    const handleScroll = () => {
+      const newScrollY = window.scrollY / 2000 + 1
+      setScrollY(newScrollY > 1.5 ? 1.5 : newScrollY)
     }
-  },[query])
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          setFixedHeader(false)
+        } else {
+          setFixedHeader(true)
+        }
+      }
+    })
+    window.addEventListener('scroll', handleScroll)
+    observer.observe(document.getElementById('name-before'))
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      observer.disconnect()
+    }
+  }, [])
+  useEffect(() => {
+    if (query.name_id) {
+      axios.get('/@' + query.name_id)
+        .then(res => {
+          setAccount(res.data)
+          setItems(res.data.items)
+          setIcon(process.env.NEXT_PUBLIC_HTTPNAME + '@' + res.data.name_id + '/icon')
+          setBanner(process.env.NEXT_PUBLIC_HTTPNAME + '@' + res.data.name_id + '/banner')
+
+          console.log(account.items.map)
+        })
+        .catch(err => {
+          //アカウント取得例外
+        })
+    }
+  }, [query])
 
   return (
     <>
       <div className="account-container" id="account-container">
         <div className="top-container">
-          <div className="banner-container" id="banner-container" >
-            <Link href="/">
-            </Link>
+          <div className="banner-container" id="banner-container" style={{ transform: `scale(${scrollY})` }}>
+            <img
+              className="account-banner"
+              src={banner}
+              alt='banner'
+            />
           </div>
         </div>
-        <div className="name-container" id="name-container">
+        <div className={`name-container${fixedHeader ? ' fixed' : ''}`} id="name-container">
           <div id="name-before"></div>
           <div className="icon-container">
+            <img
+              className="account-icon"
+              src={icon}
+              alt='icon'
+            />
           </div>
           <div className="meta-container">
-            <h1>{ account.name }</h1>
-            <div>{ account.name_id }</div>
-            {/* フォローボタンor編集ボタン */  }
+            <h1>{account.name}</h1>
+            <div>@{account.name_id}</div>
+            {/* フォローボタンor編集ボタン */}
           </div>
         </div>
 
         <div className="profile-container">
-          <div><span>紹介:</span>{ account.bio }</div>
-          <div><span>場所:</span>{ account.location }</div>
-          <div><span>誕生日:</span>{ account.birthday }</div>
-          <div><span>フォロワー:</span>{ account.followers }</div>
-          <div><span>フォロー:</span>{ account.following }</div>
-          <div><span>投稿数:</span>{ account.items_count }</div>
-          <div><span>参加日:</span>{ account.created_at }</div>
+          <div><span>紹介:</span>{account.bio}</div>
+          <div><span>場所:</span>{account.location}</div>
+          <div><span>誕生日:</span>{account.birthday}</div>
+          <div><span>フォロワー:</span>{account.followers}</div>
+          <div><span>フォロー:</span>{account.following}</div>
+          <div><span>投稿数:</span>{account.items_count}</div>
+          <div><span>参加日:</span>{account.created_at}</div>
         </div>
         <div className="account-tab-container">
           <div>投稿</div>
@@ -79,56 +101,12 @@ export default function Account() {
         </div>
         <div className="content-container">
           <p>開始</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
-          <p>ここにコンテンツ</p>
+          {items.map(item => (
+            <Item key={item.item_id} item={item} />
+          ))}
           <p>終了</p>
         </div>
       </div>
-      {query.name_id || 'missing'}
       <style jsx="true">{`
         .account-container {
           max-width: 800px;
@@ -164,20 +142,21 @@ export default function Account() {
         .name-container {
           height: 104px;
           display: flex;
-          background: #dc24a138;
+          background: var(--name-color);
           backdrop-filter: blur(3px);
-          border-radius: 10px 10px 0 0;
+          //border-radius: 10px 10px 0 0;
+          border-bottom: 0.5px solid var(--border-color);
           //box-shadow: 0 -20px 25px 10px #dc24a138;
           position: sticky;
           top: 59px;
-          z-index: 2;
+          z-index: 3;
           transition-duration: 0.5s;
           align-items: center;
         }
         #name-before {
           position: absolute;
           left: 0;
-          bottom: 165px;
+          bottom: 164px;
           width: 100%;
         }
         .icon-container {
@@ -203,7 +182,7 @@ export default function Account() {
         }
         // 接着
         .fixed {
-          background-color: #000000;
+          background:  var(--fixed-name-color);
           border-radius: 0;
           height: 54px;
         }
@@ -219,7 +198,8 @@ export default function Account() {
         
         .profile-container {
           padding: 10px;
-          background: #01153c;
+          background: var(--profile-color);
+          border-bottom: 0.5px solid var(--border-color);
           z-index: 1;
           position: relative;
         }
@@ -232,8 +212,9 @@ export default function Account() {
         .account-tab-container {
           display: flex;
           border-radius: 0;
-          background: #272727;
-          overflow-x: scroll;
+          background: var(--account-tab-color);
+          border-bottom: 0.5px solid var(--border-color);
+          //overflow-x: scroll;
           //box-shadow: 0 9px 12px 1px #dc24a138;
           z-index: 2;
           position: sticky;
@@ -249,7 +230,7 @@ export default function Account() {
         // コンテンツ
         
         .content-container {
-          background: #000000;
+          background: var(--content-color);
           z-index: 1;
           position: relative;
           padding: 10px;

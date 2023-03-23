@@ -70,4 +70,24 @@ class ApplicationController < ActionController::Base
   def set_current_account
     @current_account = current_account
   end
+  def create_item_broadcast_format(item)
+    account = Account.find(item.account_id)
+    return_item = {
+      account: {
+        account_id: account.id,
+        name: account.name,
+        name_id: account.name_id
+      },
+      content: item.content,
+      nsfw: item.nsfw,
+      cw: item.cw,
+      flow: item.flow,
+      item_type: item.item_type,
+      meta: item.meta,
+      updated_at: item.updated_at,
+      created_at: item.created_at,
+      item_id: item.item_id,
+    }
+    return return_item
+  end
 end

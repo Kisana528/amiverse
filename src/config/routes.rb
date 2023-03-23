@@ -110,5 +110,7 @@ Rails.application.routes.draw do
 
     # item
     get 'items' => 'items#index', as: 'items'
+    post 'items/create' => 'items#create', as: 'create_items'
+    get 'items/:item_id' => 'items#show', as: 'item'
   end
 end

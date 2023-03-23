@@ -104,6 +104,7 @@ export default function Signup() {
   } else {
     form = invitationCodeForm
   }
+
   return (
     <>
       <main>

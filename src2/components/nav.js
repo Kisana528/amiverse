@@ -10,6 +10,7 @@ export default function Nav() {
         <li>4</li>
       </ul>
       <style jsx="true">{`
+        /* 2 */
         nav {
           //background-color: rgb(212, 166, 255);
           height: calc(100vh - 60px);
@@ -20,7 +21,7 @@ export default function Nav() {
           margin: 0px;
           padding: 0px;
           display: flex;
-          justify-content: space-around;
+          
           flex-direction: column;
           height: 100%;
         }
@@ -41,9 +42,11 @@ export default function Nav() {
           }
           nav ul {
             flex-direction: row;
+            justify-content: space-around;
           }
         }
         @media (min-width: 700px) {
+          /* 3 */
           nav ul li {
             width: 100px;
           }

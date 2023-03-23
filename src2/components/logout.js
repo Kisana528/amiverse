@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import axios from '../lib/axios'
-import { appContext } from '../pages/_app'
+import axios from '@/lib/axios'
+import { appContext } from '@/pages/_app'
 import { useRouter } from 'next/router'
 
 export default function Logout() {

@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     if (!ignore && loggedIn) {
       const fetchItems = async () => {
-        const response = await axios.get('/api/items')
+        const response = await axios.get('/items')
         const data = response.data
         setItems(data)
       }
@@ -34,32 +34,44 @@ export default function Home() {
           }
         })
       }
-      created()
     }
     return () => {ignore = true}
   },[loggedIn])
 
   if(loggedIn){
     return (
-      <>
+      <div className="main-container">
         <h1>HOME</h1>
         <p>投稿一覧</p>
         <ul id="items">
           {items.map(item => (
-            <li key={item.id}>{item.content}</li>
+            <li key={item.item_id}>{item.content}</li>
           ))}
         </ul>
-        <Canvas></Canvas>
-      </>
+        <Link href="/@kisana">@kisana</Link>
+        <Link href="/items">投稿を見る</Link>
+        <style jsx="true">{`
+          .main-container {
+            background: var(--main-container-background-color);
+            padding: 5px;
+          }
+        `}</style>
+      </div>
     )
   } else {
     return (
-      <>
+      <div className="main-container">
         <h1>Amiverse.netへようこそ！</h1>
         <Link href="/login">ログイン</Link>
         <Link href="/signup">登録</Link>
-        <Link href="/@kisana">き</Link>
-      </>
+        <Link href="/@kisana">@kisana</Link>
+        <style jsx="true">{`
+          .main-container {
+            background: var(--main-container-background-color);
+            padding: 5px;
+          }
+        `}</style>
+      </div>
     )
   }
 }

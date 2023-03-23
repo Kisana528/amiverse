@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_action :logged_in_account, only: %i[ new create update destroy ]
+  before_action :logged_in_account, only: %i[ index show new create update destroy ]
   before_action :set_item, only: %i[ show edit update destroy ]
   def index
     @items = Item.all
@@ -20,7 +20,8 @@ class ItemsController < ApplicationController
     if @item.save
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
-      ActionCable.server.broadcast 'items_channel', {item: @item}
+      item = create_item_broadcast_format(@item)
+      ActionCable.server.broadcast 'items_channel', item
     else
       render :new
     end

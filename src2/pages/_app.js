@@ -5,6 +5,8 @@ import axios from '@/lib/axios'
 import React, { useState, useEffect, createContext } from 'react'
 import { useRouter } from 'next/router'
 
+const loggedOutPaths = ['/login','/signup']//ログイン中はアクセスできない
+
 export const appContext = createContext()
 export default function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(true)
@@ -22,44 +24,29 @@ export default function App({ Component, pageProps }) {
       modeTrigger()
     }
     if (!ignore) {
-      async function getCSRFToken() {
-        await axios.post('/api/new')
-        .then(res => {
+      async function fetchAccountInfo() {
+        try {
+          await axios.post('/api/new')
           setLoadingStatus('アカウント情報確認中')
-        })
-        .catch(err => {
-          setLoadingStatus('サーバーエラー')
-        })
-      }
-      async function getAccountInfo() {
-        await axios.post('/api/logged-in')
-        .then(res => {
-          if(res.data.logged_in){
-            setLoadingStatus('ログイン中')
-            setLoggedIn(true)
-            setAccount(res.data)
-          } else {
-            setLoadingStatus('未ログイン')
-            setLoggedIn(false)
-          }
-        })
-        .catch(err => {
-          setLoadingStatus('アカウントエラー')
-        })
-      }
-      getCSRFToken()
-      .then(() => {
-        getAccountInfo()
-        .then(() => {
+          const response = await axios.post('/api/logged-in')
+          const data = response.data
+          setLoadingStatus(data.logged_in ? 'ログイン中' : '未ログイン')
+          setLoggedIn(data.logged_in)
+          setAccount(data)
           setLoading(false)
-        })
-      })
+        } catch (error) {
+          setLoadingStatus(error.response ? 'アカウントエラー' : 'サーバーエラー')
+          //setLoading(false)
+        }
+      }
+      fetchAccountInfo()
     }
     return () => {ignore = true}
   },[])
   useEffect(() => {
-	  if(router.pathname === "/") return
+	  if(!loggedOutPaths.includes(router.pathname)) return
     if(loggedIn){
+      setFlash('ログイン済みです')
       router.push('/')
       return
     }

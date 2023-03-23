@@ -3,14 +3,20 @@ class AccountsController < ApplicationController
   before_action :set_account, only: %i[ show_icon show_banner show ]
   before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
   def show_icon
-    if @account.icon.attached? 
+    if @account.icon.attached?
       send_noblob_stream(
         @account.icon, @account.resize_image(@account.name, @account.name_id, 'icon'))
+    else
+      send_file('./app/assets/images/icon.webp')
     end
   end
   def show_banner
-    send_noblob_stream(
-      @account.banner, @account.resize_image(@account.name, @account.name_id, 'banner'))
+    if @account.banner.attached?
+      send_noblob_stream(
+        @account.banner, @account.resize_image(@account.name, @account.name_id, 'banner'))
+    else
+      send_file('./app/assets/images/banner.webp')
+    end
   end
   def show
   end

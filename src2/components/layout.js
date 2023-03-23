@@ -3,7 +3,7 @@ import Footer from './footer'
 import Nav from './nav'
 import Tab from './tab'
 import { appContext } from '@/pages/_app'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 
 export default function Layout({ children }) {
   const loading = useContext(appContext).loading
@@ -65,9 +65,15 @@ export default function Layout({ children }) {
           color: #64a5fc;
         }
         main {
-          //height: 300vh;
-          //background-color: rgb(209, 233, 255);
           flex-grow: 1;
+          border-left: 0.5px solid var(--border-color);
+          min-height: calc(100vh - 60px);
+        }
+        
+        @media (min-width: 600px) {
+          main {
+            border-right: 0.5px solid var(--border-color);
+          }
         }
         .main-container {
           display: flex;

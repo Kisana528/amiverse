@@ -1,5 +1,5 @@
-import React, {useContext} from 'react'
-import {appContext} from '@/pages/_app'
+import React, { useContext } from 'react'
+import { appContext } from '@/pages/_app'
 import Logout from './logout'
 
 export default function Tab() {
@@ -18,6 +18,7 @@ export default function Tab() {
           display: none;
         }
         @media (min-width: 600px) {
+          /* tab2 */
           .tab {
             display: inline-block;
           }

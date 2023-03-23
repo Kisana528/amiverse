@@ -33,7 +33,7 @@ export default function Canvas() {
     canvas.addEventListener('mousedown', (e) => {
       isDrawing = true;
       [lastX, lastY] = [e.offsetX, e.offsetY];
-      context.fillRect(lastX,lastY,1,1);
+      context.fillRect(lastX, lastY, 1, 1);
     });
     canvas.addEventListener('touchstart', (e) => {
       e.preventDefault()
@@ -41,7 +41,7 @@ export default function Canvas() {
       const rect = canvas.getBoundingClientRect()
       lastX = e.touches[0].clientX - rect.left
       lastY = e.touches[0].clientY - rect.top
-      context.fillRect(lastX,lastY,1,1)
+      context.fillRect(lastX, lastY, 1, 1)
     })
     canvas.addEventListener('mousemove', draw)
     canvas.addEventListener('touchmove', (e) => {

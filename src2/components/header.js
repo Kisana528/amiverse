@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { appContext } from '@/pages/_app'
 
 export default function Header() {

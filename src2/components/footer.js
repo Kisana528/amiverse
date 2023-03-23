@@ -5,7 +5,7 @@ export default function Footer() {
     <footer>
       <div>
       </div>
-      <style jsx="true">{`
+      <style jsx>{`
       `}</style>
     </footer>
   )

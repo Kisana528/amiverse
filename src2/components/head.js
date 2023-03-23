@@ -1,5 +1,5 @@
 import Head from "next/head"
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { appContext } from '@/pages/_app'
 
 export default function DefaultHead({ children,
@@ -23,7 +23,7 @@ export default function DefaultHead({ children,
       <meta charSet="UTF-8" />
       <title>{title ? title + ' | Amiverse' : 'Amiverse'}</title>
       <meta name="theme-color" content="#ffa9c7" />
-      <meta name="color-scheme" content={dark ? '':''} /> {/* jsで管理 */}
+      <meta name="color-scheme" content={dark ? '' : ''} /> {/* jsで管理 */}
       <meta name="viewport" content="width=device-width" />
       <meta name="author" content={author} />
       <meta name="generator" content="Next.js" />

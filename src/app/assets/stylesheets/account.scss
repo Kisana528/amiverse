@@ -33,7 +33,6 @@
   display: flex;
   background: #dc24a138;
   backdrop-filter: blur(3px);
-  border-radius: 10px 10px 0 0;
   //box-shadow: 0 -20px 25px 10px #dc24a138;
   position: sticky;
   top: 59px;
@@ -69,6 +68,7 @@
 // 接着
 .fixed {
   background-color: #000000;
+  color: #fff;
   border-radius: 0;
   height: 54px;
   .account-icon {
@@ -84,7 +84,7 @@
 
 .profile-container {
   padding: 10px;
-  background: #01153c;
+  background: #ffffff;
   z-index: 1;
   position: relative;
   p {
@@ -97,8 +97,7 @@
 .account-tab-container {
   display: flex;
   border-radius: 0;
-  background: #272727;
-  overflow-x: scroll;
+  background: #ffffff;
   //box-shadow: 0 9px 12px 1px #dc24a138;
   z-index: 2;
   position: sticky;
@@ -113,7 +112,7 @@
 // コンテンツ
 
 .content-container {
-  background: #000000;
+  background: #ffffff;
   z-index: 1;
   position: relative;
   padding: 10px;
@@ -160,7 +159,7 @@
   border-bottom: 2px solid gray;
   outline: 0;
   font-size: 1.3rem;
-  color: white;
+  color: rgb(255, 121, 121);
   padding: 7px 0;
   background: transparent;
   transition: border-color 0.2s;
