@@ -18,7 +18,7 @@ export default function Header() {
       <div className="mode-toggle">
         <button className={dark ? "dark-button" : "light-button"} onClick={modeTrigger}>{dark ? "🌙" : "☀️"}</button>
       </div>
-      <style jsx="true">{`
+      <style jsx>{`
       header {
         z-index: 8;
         display: flex;

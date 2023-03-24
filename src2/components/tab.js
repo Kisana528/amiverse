@@ -13,14 +13,19 @@ export default function Tab() {
       <p>content here</p>
       <button onClick={modeTrigger}>{isDark ? '🌙' : '☀'}</button>
       <Logout />
-      <style jsx="true">{`
+      <style jsx>{`
         .tab {
           display: none;
+          position: sticky;
+          top: 0px;
+          height: 100vh;
+          flex-shrink: 0;
         }
         @media (min-width: 600px) {
-          /* tab2 */
+          /* FORM-2 */
           .tab {
             display: inline-block;
+            width: 100px;
           }
         }
       `}</style>

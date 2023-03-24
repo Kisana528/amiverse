@@ -40,6 +40,7 @@ body, h1, h2, h3, p {
   --account-tab-color: #88d095;
   --content-color: #fff;
   --shadow-color: #808080;
+  --blur-color: #0008;
   --primary-color: blue;
 }
 :root .dark-mode {
@@ -54,11 +55,13 @@ body, h1, h2, h3, p {
   --account-tab-color: #2c3d2f;
   --content-color: #141414;
   --shadow-color: #808080;
+  --blur-color: #0008;
   --primary-color: darkblue;
 }
 .all a {
   color: var(--link-color);
   text-decoration: none;
+  display: inline-block;
 }
 ::-webkit-scrollbar{
   width: 5px;

@@ -33,6 +33,7 @@ export default function Item({ item }) {
         .item-reaction {
           display: flex;
           padding: 4px;
+          flex-wrap: wrap;
         }
       `}</style>
     </>

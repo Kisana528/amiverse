@@ -21,7 +21,6 @@ export default function Layout({ children }) {
         <div className="loading-logo">Amiverse</div>
         <div className="loading-status">{loadingStatus}</div>
       </div>
-      <Header />
       <div className="main-container">
         <Nav />
         <main>
@@ -30,7 +29,7 @@ export default function Layout({ children }) {
         </main>
         <Tab />
       </div>
-      <style jsx="true">{`
+      <style jsx>{`
         .all {
           background: var(--background-color);
           color: var(--font-color);
@@ -66,13 +65,20 @@ export default function Layout({ children }) {
         }
         main {
           flex-grow: 1;
-          border-left: 0.5px solid var(--border-color);
           min-height: calc(100vh - 60px);
+          box-sizing: border-box;
+          width: 100%;
         }
-        
+        @media (min-width: 400px) {
+          main {
+            border-left: 0.5px solid var(--border-color);
+            width: calc(100% - 30px);
+          }
+        }
         @media (min-width: 600px) {
           main {
             border-right: 0.5px solid var(--border-color);
+            width: calc(100% - 100px - 100px);
           }
         }
         .main-container {

@@ -55,6 +55,7 @@ export default function ItemAccount({ item }) {
           box-shadow: 2px 4px 8px 0px var(--shadow-color);
           object-fit: cover;
           object-position: top center;
+          background: linear-gradient(90deg,#747eee,#d453cc 50%,#fe5597);
         }
         .item-account {
           margin-left: 8px;
@@ -79,6 +80,7 @@ export default function ItemAccount({ item }) {
         .item-reaction {
           display: flex;
           padding: 4px;
+          flex-wrap: wrap;
         }
       `}</style>
     </>

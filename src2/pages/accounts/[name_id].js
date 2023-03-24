@@ -107,7 +107,7 @@ export default function Account() {
           <p>終了</p>
         </div>
       </div>
-      <style jsx="true">{`
+      <style jsx>{`
         .account-container {
           max-width: 800px;
           margin: auto;
@@ -119,7 +119,7 @@ export default function Account() {
           width: 100%;
           aspect-ratio: 1/1;
           position: sticky;
-          top: 60px;
+          top: 0px;
           overflow: hidden;
         }
         .banner-container {
@@ -148,7 +148,7 @@ export default function Account() {
           border-bottom: 0.5px solid var(--border-color);
           //box-shadow: 0 -20px 25px 10px #dc24a138;
           position: sticky;
-          top: 59px;
+          top: -1px;
           z-index: 3;
           transition-duration: 0.5s;
           align-items: center;
@@ -218,7 +218,7 @@ export default function Account() {
           //box-shadow: 0 9px 12px 1px #dc24a138;
           z-index: 2;
           position: sticky;
-          top: 113px;
+          top: 53px;
           
         }
         .account-tab-container div {
@@ -237,7 +237,7 @@ export default function Account() {
         }
         
         // 大きさ処理
-        
+        /* 画像を左に、右に名前とプロフといったデザインのほうがいい */
         @media (min-width: 682px) {
           .top-container {
             aspect-ratio: 1/.5;

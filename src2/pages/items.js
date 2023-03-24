@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from '../lib/axios'
 import {appContext} from './_app'
-import Item from '@/components/item_account'
+import ItemAccount from '@/components/item_account'
 import Post from '@/components/post'
 
 export default function Items() {
@@ -28,7 +28,7 @@ export default function Items() {
     })
   }
   useEffect(() => {
-    if (!ignore) {
+    if (!ignore && loggedIn) {
       const fetchItems = async () => {
         const response = await axios.get('/items')
         const data = response.data
@@ -38,13 +38,14 @@ export default function Items() {
       created()
     }
     return () => {ignore = true}
-  },[])
+  },[loggedIn])
+
   return (
     <div className="main-container">
       <h1>items</h1>
       <div id="items">
         {items.map(item => (
-          <Item key={item.item_id} item={item} />
+          <ItemAccount key={item.item_id} item={item} />
         ))}
       </div>
       <Post />

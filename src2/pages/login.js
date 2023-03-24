@@ -4,6 +4,7 @@ import { appContext } from './_app'
 import { useRouter } from 'next/router'
 
 export default function Login() {
+  const setLoginLoading = useContext(appContext).setLoginLoading
   const loggedIn = useContext(appContext).loggedIn
   const setLoggedIn = useContext(appContext).setLoggedIn
   const setFlash = useContext(appContext).setFlash
@@ -14,13 +15,16 @@ export default function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    setLoginLoading(true)
     await axios.post('/api/login', { 'name_id': accountID, password })
       .then(res => {
         if (res.data.logged_in) {
           setLoggedIn(true)
-          setLoginStatus('ログインしました')
-          setFlash('ログインしたよ')
-          router.push('/')
+          router.push('/').then(() => {
+            setLoginStatus('ログインしました')
+            setFlash('ログインしたよ')
+            setLoginLoading(false)
+          })
         } else if (!res.data.logged_in) {
           setLoginStatus('情報が間違っています')
         } else {
@@ -29,21 +33,9 @@ export default function Login() {
       })
       .catch(err => {
         setLoginStatus('ログイン通信例外')
+        setLoginLoading(false)
       })
-  }
-  const handleLogout = async () => {
-    await axios.delete('/api/logout')
-      .then(res => {
-        if (!res.data.logged_in) {
-          setLoggedIn(false)
-          setLoginStatus('ログアウトしました')
-        } else {
-          setLoginStatus('ログアウト処理ができませんでした')
-        }
-      })
-      .catch(err => {
-        setLoginStatus('ログアウト通信例外')
-      })
+
   }
   return (
     <>
@@ -64,7 +56,6 @@ export default function Login() {
         <br />
         <button type="submit">送信</button>
       </form>
-      <button onClick={handleLogout}>ログアウト</button>
     </>
   )
 }
