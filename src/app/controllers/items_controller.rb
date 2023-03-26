@@ -5,6 +5,8 @@ class ItemsController < ApplicationController
     @items = Item.all
   end
   def show
+    @reactions = Reaction.where(account_id: @current_account.id)
+    # ?reactionが?個
   end
   def new
     @item = Item.new

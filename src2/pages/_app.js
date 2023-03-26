@@ -16,6 +16,8 @@ export default function App({ Component, pageProps }) {
   const [loggedIn, setLoggedIn] = useState(false)
   const [account, setAccount] = useState({})
   const [flash, setFlash] = useState('')
+  const [loginForm, setLoginForm] = useState(false)
+  const loginFormTrigger = () => setLoginForm(!loginForm)
   const [dark, setDark] = useState(false)
   const modeTrigger = () => setDark(!dark)
   let ignore = false
@@ -52,7 +54,7 @@ export default function App({ Component, pageProps }) {
         if(loggedIn){
           return
         } else {
-          setFlash('ログインしてください')
+          setFlash(`${router.pathname}へアクセスするにはログインしてください`)
           router.push('/')
           return
         }
@@ -60,7 +62,7 @@ export default function App({ Component, pageProps }) {
       if(loggedIn && loggedInPaths.includes(router.pathname)) return
       if(!loggedOutPaths.includes(router.pathname)) return
       if(loggedIn){
-        setFlash('ログイン済みです')
+        setFlash(`ログイン済みですので${router.pathname}へアクセスできません`)
         router.push('/')
         return
       }
@@ -70,6 +72,7 @@ export default function App({ Component, pageProps }) {
       <appContext.Provider value={{loading, setLoading,
         loginLoading, setLoginLoading,
         loadingStatus, setLoadingStatus,
+        loginForm, setLoginForm, loginFormTrigger,
         loggedIn, setLoggedIn,
         account, setAccount,
         flash, setFlash,

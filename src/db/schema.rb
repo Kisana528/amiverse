@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_11_003145) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_25_104837) do
+  create_table "account_reaction_items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "reaction_id", null: false
+    t.bigint "item_id", null: false
+    t.string "description", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_account_reaction_items_on_account_id"
+    t.index ["item_id"], name: "index_account_reaction_items_on_item_id"
+    t.index ["reaction_id"], name: "index_account_reaction_items_on_reaction_id"
+  end
+
   create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "account_id", null: false
     t.string "name", default: "", null: false
@@ -138,6 +151,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_003145) do
     t.check_constraint "json_valid(`version`)", name: "version"
   end
 
+  create_table "reactions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "reaction_id", null: false
+    t.string "reaction_type", default: "", null: false
+    t.string "content", default: "", null: false
+    t.string "description", default: "", null: false
+    t.string "category", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_reactions_on_account_id"
+  end
+
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "name", default: "", null: false
@@ -153,10 +179,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_003145) do
     t.index ["uuid"], name: "index_sessions_on_uuid", unique: true
   end
 
+  add_foreign_key "account_reaction_items", "accounts"
+  add_foreign_key "account_reaction_items", "items"
+  add_foreign_key "account_reaction_items", "reactions"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "images", "accounts"
   add_foreign_key "invitations", "accounts"
   add_foreign_key "items", "accounts"
+  add_foreign_key "reactions", "accounts"
   add_foreign_key "sessions", "accounts"
 end

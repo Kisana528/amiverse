@@ -12,19 +12,15 @@
     <%= javascript_importmap_tags %> 
   </head>
   <body>
-    <header>
-      <div><%= link_to 'Amiverse', root_path %></div>
-    </header>
-    <div class="container">
+    <div class="main-container dark-mode" id="main-container">
       <%= render 'layouts/nav' %>
-      <div class="main-container">
-        <main>
-          <%= yield %>
-          <% flash.each do |message_type, message| %>
-            <div class="<%= message_type %>"><%= message %></div>
-          <% end %>
-        </main>
-        <%= render 'layouts/tab' %>
+      <main>
+        <%= yield %>
+        <% flash.each do |message_type, message| %>
+          <div class="<%= message_type %>"><%= message %></div>
+        <% end %>
+      </main>
+      <%= render 'layouts/tab' %>
     </div>
   </body>
 </html>

@@ -2,6 +2,8 @@ class Account < ApplicationRecord
   has_many :items
   has_many :images
   has_many :invitations
+  has_many :reaction
+  has_many :account_reaction_items
   attr_accessor :remember_token, :activation_token
   validates :account_id,
     presence: true,
@@ -9,7 +11,7 @@ class Account < ApplicationRecord
     uniqueness: { case_sensitive: false }
   validates :name_id,
     presence: true,
-    length: { maximum: 50, allow_blank: true },
+    length: { in: 5..50, allow_blank: true },
     uniqueness: { case_sensitive: false }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email,

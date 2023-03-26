@@ -6,15 +6,21 @@
 <% end %>
 <%= render @item %>
 <%= @item.account.name %>
+<hr />
+<p>あなたのリアクション</p>
+<% @reactions.each do |reaction| %>
+  <%= button_to reaction.content, react_path(@item.item_id, reaction.reaction_id), method: :post %>
+<% end %>
+<hr />
+<p>この投稿へのリアクション</p>
+<% @item.account_reaction_items.group(:reaction_id).count.each do |key, value| %>
+  <%= button_to react_path(@item.item_id, @reactions.find_by(id: key).reaction_id) do %>
+    <%= @reactions.find_by(id: key).content %>が<%= value %>個
+  <% end %>
+<% end %>
 <div>
   <%= link_to "Edit this item", edit_item_path(@item.item_id) %> |
   <%= link_to "Back to items", items_path %>
-
   <%= button_to "Destroy this item", @item, method: :delete %>
+  
 </div>
-
-
-<form>
-  <label>Say something:</label><br>
-  <input type="text" data-behavior="room_speaker">
-</form>

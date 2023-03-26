@@ -135,6 +135,7 @@ export default function Account() {
           object-fit: cover;
           object-position: top center;
           display: block;
+          background: linear-gradient(90deg,#747eee,#d453cc 50%,#fe5597);
         }
         
         // 名前
@@ -173,6 +174,7 @@ export default function Account() {
           border: 2px #36f18a solid;
           border-radius: 54px;
           display: block;
+          background: linear-gradient(90deg,#747eee,#d453cc 50%,#fe5597);
         }
         .meta-container {
           

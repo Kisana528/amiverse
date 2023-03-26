@@ -6,6 +6,7 @@ import ItemAccount from '@/components/item_account'
 
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
+  const loginFormTrigger = useContext(appContext).loginFormTrigger
   const [items, setItems] = useState([])
 
   let ignore = false
@@ -59,7 +60,7 @@ export default function Home() {
       <div>
         Amiverse.netへようこそ！
         <br />
-        <Link href="/login">ログイン</Link>
+        <div onClick={loginFormTrigger}>ログイン</div>
         <br />
         <Link href="/signup">登録</Link>
         <br />
@@ -78,7 +79,9 @@ export default function Home() {
   return (
     <>
       <div className="main-header">
-        <div className="main-header-text">Home</div>
+        <div className="main-header-text">
+          <Link href="/">Home</Link>
+        </div>
       </div>
       <div className="main-container">
         {content}

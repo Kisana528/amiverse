@@ -1,0 +1,24 @@
+/* FORM-2 */
+.main-container {
+  display: flex;
+  background-color: var(--background-color);
+  color: var(--font-color);
+}
+main {
+  width: calc(100% - 60px - 100px);
+  border-left: 0.5px solid;
+  box-sizing: border-box;
+  background-color: var(--main-container-background-color);
+}
+@media (max-width: 400px) {
+  /* FORM-1 */
+  main {
+    border: none;
+  }
+}
+@media (min-width: 600px) {
+  /* FORM-3 */
+  main {
+    border-right: 0.5px solid;
+  }
+}

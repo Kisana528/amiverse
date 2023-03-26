@@ -1,46 +1,88 @@
+/* FORM-2 */
 nav {
-  z-index: 99;
-  width: 60px;
-  height: calc(100vh - 60px);
+  width: 30px;
+  height: 100vh;
   position: sticky;
-  top: 60px;
-  background: #6a6a6a;
+  padding: 30px 5px;
+  box-sizing: border-box;
+  top: 0px;
+  left: 0px;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
   flex-direction: column;
-  div {
-    height: 60px;
-    width: 60px;
-    background: #fff;
-  }
 }
-@media (max-width: 600px) {
-  nav {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    flex-direction: row;
-  }
+.nav-logo {
+  margin-bottom: 30px;
 }
-@media (min-width: 865px) {
-  nav .tab-button {
-    display: none;
-  }
+.nav-ul {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  list-style: none;
 }
-@media (min-width: 1200px) {
-  nav{
-    width: 200px;
-  }
+.nav-li {
+  height: 30px;
+  display: flex;
+  align-items: center;
 }
-.nav-account-icon {
-  width: 56px;
+.nav-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.nav-list-icon {
+
+}
+.nav-list-image-icon {
+  width: 20px;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: top;
-  border: 2px #36f18a solid;
-  border-radius: 54px;
+  border-radius: 10px;
   display: block;
+}
+.nav-list-info {
+  display: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 400px) {
+  /* FORM-1 */
+  nav {
+    position: fixed;
+    top: auto;
+    bottom: 0px;
+    width: 100%;
+    height: 30px;
+    padding: 0px;
+    backdrop-filter: blur(3px);
+    background: var(--blur-color);
+  }
+  .nav-logo {
+    display: none;
+  }
+  .nav-ul {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .nav-menu {
+    display: none;
+  }
+}
+@media (min-width: 700px) {
+  /* FORM-3 */
+  nav {
+    width: 110px;
+  }
+  .nav-list-container {
+    display: flex;
+    flex-direction: row;
+  }
+  .nav-list-info {
+    display: inline-block;
+  }
 }

@@ -2,8 +2,9 @@ import Header from './header'
 import Footer from './footer'
 import Nav from './nav'
 import Tab from './tab'
+import Login from './login'
 import { appContext } from '@/pages/_app'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 export default function Layout({ children }) {
   const loading = useContext(appContext).loading
@@ -11,8 +12,16 @@ export default function Layout({ children }) {
   const dark = useContext(appContext).dark
   const flash = useContext(appContext).flash
   const setFlash = useContext(appContext).setFlash
+  const loginForm = useContext(appContext).loginForm
+  const [removeFlash, setRemoveFlash] = useState(false)
   const handleClick = () => {
-    setFlash('')
+    if(removeFlash){
+      setFlash('')
+      setRemoveFlash(false)
+    } else {
+      setFlash(flash + '(もう一度押して削除)')
+      setRemoveFlash(true)
+    }
   }
 
   return (
@@ -23,6 +32,7 @@ export default function Layout({ children }) {
       </div>
       <div className="main-container">
         <Nav />
+        {loginForm ? <Login /> : ''}
         <main>
           {children}
           {flash ? <div className="flash" onClick={handleClick}>{flash}</div> : ''}
@@ -36,7 +46,7 @@ export default function Layout({ children }) {
         }
         .loading-top {
           width: 100vw;
-          height: 100vh;
+          height: 100svh;
           overflow: hidden;
         }
         .loading-hide {
@@ -52,7 +62,7 @@ export default function Layout({ children }) {
           top: 0;
           left: 0;
           width: 100vw;
-          height: 100vh;
+          height: 100svh;
           background: rgb(22,22,22);
         }
         .loading-logo {
@@ -65,7 +75,6 @@ export default function Layout({ children }) {
         }
         main {
           flex-grow: 1;
-          min-height: calc(100vh - 60px);
           box-sizing: border-box;
           width: 100%;
         }

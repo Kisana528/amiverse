@@ -9,6 +9,8 @@ git clone https://github.com/Kisana528/amiverse.git
 chown -R kisana:kisana /amiverse
 git fetch origin main
 git reset --hard origin/main
+docker-compose down
+docker-compose up -d --build
 ```
 ## 将来実装したい
 - Redis(セッションなど管理)

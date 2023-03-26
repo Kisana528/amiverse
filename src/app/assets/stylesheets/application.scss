@@ -6,6 +6,68 @@
 body {
   margin: 0;
 }
+:root {
+  /* Main Settings */
+  --color-1: white;
+  --color-2: black;
+  /* ↓ For Light Mode Color Palet (難しい) ↓ */
+  --light-0: #e42626;
+  --light-1: #e17051;
+  --light-2: #e17051;
+  --light-3: #e17051;
+  --light-4: #e17051;
+  --light-5: #e17051;
+  --light-6: #be44be;
+  --light-7: #f74f21;
+  --light-8: #939393;
+  --light-9: #4c4c4c;
+  /* ↓ For Dark Mode Color Palet ↓ */
+  --dark-0: #f2c384;
+  --dark-1: #f77356;
+  --dark-2: #95e34e;
+  --dark-3: #49e2ff;
+  --dark-4: #5095ff;
+  --dark-5: #a77eff;
+  --dark-6: #ef5dff;
+  --dark-7: #ff5d76;
+  --dark-8: #ababab;
+  --dark-9: #e7e7e7;
+}
+:root .light-mode {
+  --background-color: #cecece;
+  --main-container-background-color: #ffffff;
+  --font-color: black;
+  --link-color: var(--light-0);
+  --border-color: #000000;
+  --name-color: #4cfec354;
+  --fixed-name-color: #ffffff99;
+  --profile-color: #ccd7ec;
+  --account-tab-color: #88d095;
+  --content-color: #fff;
+  --shadow-color: #808080;
+  --blur-color: #0008;
+  --primary-color: blue;
+}
+:root .dark-mode {
+  --background-color: #1d1d1d;
+  --main-container-background-color: #141414;
+  --font-color: white;
+  --link-color: var(--dark-0);
+  --border-color: #fff;
+  --name-color: #dc59d194;
+  --fixed-name-color: #00000099;
+  --profile-color: #2c2f35;
+  --account-tab-color: #2c3d2f;
+  --content-color: #141414;
+  --shadow-color: #808080;
+  --blur-color: #0008;
+  --primary-color: darkblue;
+}
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  display: inline-block;
+}
 .success, .notice, .alert, .danger {
   border: 1px solid #000;
   border-radius: 5px;
@@ -26,9 +88,6 @@ body {
 }
 .danger {
   background-color: #ff403abb;
-}
-.container {
-  display: flex;
 }
 ::-webkit-scrollbar{
   width: 5px;

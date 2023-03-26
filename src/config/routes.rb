@@ -53,6 +53,12 @@ Rails.application.routes.draw do
   get 'storage/images/new' => 'storage#new_images'
   post 'storage/images/create' => 'storage#create_images'
 
+  # reaction
+  get 'reactions' => 'reactions#index'
+  post 'reactions' => 'reactions#create'
+  get 'reactions/new' => 'reactions#new'
+  post 'react/:item_id/:reaction_id' => 'reactions#react', as: 'react'
+
   # admin
   namespace :admin do
 
