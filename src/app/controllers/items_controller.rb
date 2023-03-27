@@ -2,7 +2,12 @@ class ItemsController < ApplicationController
   before_action :logged_in_account, only: %i[ index show new create update destroy ]
   before_action :set_item, only: %i[ show edit update destroy ]
   def index
-    @items = Item.all
+    offset_item = 1
+    limit_item = 10
+    offset_item = params[:o_i] unless params[:o_i].nil?
+    limit_item = params[:l_i] unless params[:l_i].nil?
+
+    @items = Item.offset(offset_item.to_i).limit(limit_item.to_i)
   end
   def show
     @reactions = Reaction.where(account_id: @current_account.id)

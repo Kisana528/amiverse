@@ -1,0 +1,10 @@
+<% content_for :header do %>
+  <div class='main-header-text'>
+    <%= yield(:main_header_text) %>
+  </div>
+<% end %>
+<div class='shared-default-layout-out-container'>
+  <div class='shared-default-layout-in-container'>
+    <%= yield(:main_content) %>
+  </div>
+</div>

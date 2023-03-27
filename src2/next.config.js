@@ -1,8 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
+
+const withPWA = require("next-pwa")({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+})
+
+module.exports = withPWA({
   images: {
-    domains: ['localhost','amiverse.net'],
+    domains: ['localhost','amiverse.net', '192.168.0.4'],
   },
   async rewrites() {
     return [
@@ -12,6 +18,4 @@ const nextConfig = {
       }
     ]
   }
-}
-
-module.exports = nextConfig
+})
