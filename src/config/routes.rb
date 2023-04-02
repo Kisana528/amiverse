@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get 'page1' => 'amiverse#page1'
   get 'sitemap' => 'amiverse#sitemap'
 
+  # setting
+  get 'settings' => 'settings#index'
+
   # account
   get '@:name_id' => 'accounts#show', as: 'account'
   get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon'
@@ -48,10 +51,16 @@ Rails.application.routes.draw do
 
   # storage
   get 'storage' => 'storage#index'
+  # img
   get 'storage/images' => 'storage#images'
-  get 'storage/images/img-:image_id' => 'storage#show_image', as: 'show_image'
-  get 'storage/images/new' => 'storage#new_images'
-  post 'storage/images/create' => 'storage#create_images'
+  get 'storage/images/new' => 'storage#new_image'
+  post 'storage/images/create' => 'storage#create_image'
+  get 'storage/images/:image_id' => 'storage#show_image', as: 'show_image'
+  # vdo
+  get 'storage/videos' => 'storage#videos'
+  get 'storage/videos/new' => 'storage#new_video'
+  post 'storage/videos/create' => 'storage#create_video'
+  get 'storage/videos/:video_id' => 'storage#show_video', as: 'show_video'
 
   # reaction
   get 'reactions' => 'reactions#index'

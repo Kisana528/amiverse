@@ -1,5 +1,5 @@
 <%= form_with model: @account, url: yield(:url), data: { turbo: false } do |f| %>
-  <%= render 'shared/account_error_messages' %>
+  <%= render 'shared/error_messages', instead: @account %>
   <% type = yield(:type) %>
   <%= f.label :icon, 'アイコン' %>
   <%= f.file_field :icon %>

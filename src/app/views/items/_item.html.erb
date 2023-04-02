@@ -1,23 +1,18 @@
-<div id="<%= dom_id item %>">
-
-  <p>
-    <strong>Item type:</strong>
-    <%= item.item_type %>
-  </p>
-
-  <p>
-    <strong>Content:</strong>
-    <%= item.content %>
-  </p>
-
-  <p>
-    <strong>Nsfw:</strong>
-    <%= item.nsfw %>
-  </p>
-
-  <p>
-    <strong>Cw:</strong>
-    <%= item.cw %>
-  </p>
-
+<div class="item">
+  <% item.images.each do |image| %>
+    <%= image.image_id %>
+    <%= image_tag show_image_path(image.image_id), class: 'item-image' %>
+  <% end %>
+  <br />
+  <strong>Item type:</strong>
+  <%= item.item_type %>
+  <br />
+  <strong>Content:</strong>
+  <%= item.content %>
+  <br />
+  <strong>Nsfw:</strong>
+  <%= item.nsfw %>
+  <br />
+  <strong>Cw:</strong>
+  <%= item.cw %>
 </div>

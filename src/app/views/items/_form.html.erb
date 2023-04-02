@@ -11,12 +11,17 @@
     </div>
   <% end %>
 
+<details>
+  <summary>あなたのストレージの画像</summary>
+  <% images.each do |image| %>
+    <%= form.check_box :selected_images, { multiple: true }, image.image_id, nil %>
+    <%= form.label image.image_id %>
+  <% end %>
+</details>
+
   <div>
     <%= form.label :content, style: "display: block" %>
     <%= form.text_field :content %>
-  </div>
-  <div>
-    <%= form.file_field :images, multiple: true %>
   </div>
 
   <div>

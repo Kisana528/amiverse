@@ -1,0 +1,49 @@
+.item {
+  padding: 10px 5px;
+  border-bottom: 1px var(--border-color) solid;
+  //display: flex;
+}
+.item-whose {
+  display: flex;
+  padding: 4px;
+}
+.item_account_image{
+  border-radius: 24px;
+  height: 48px;
+  aspect-ratio: 1/1;
+  box-shadow: 2px 4px 8px 0px var(--shadow-color);
+  object-fit: cover;
+  object-position: top center;
+  background: linear-gradient(90deg,#747eee,#d453cc 50%,#fe5597);
+}
+.item-account {
+  margin-left: 8px;
+}
+.item-account-profile {
+  display: flex;
+  flex-direction: column;
+}
+.item-account-name {
+  font-size: 24px;
+  line-height: 30px;
+}
+.item-account-name-id {
+  line-height: 18px;
+  font-size: 16px;
+}
+.item-content {
+  min-height: 40px;
+  padding: 5px;
+  overflow-wrap: break-word;
+}
+.item-media {
+  padding: 5px;
+}
+.item-image {
+  width: 100%;
+}
+.item-reaction {
+  display: flex;
+  padding: 4px;
+  flex-wrap: wrap;
+}

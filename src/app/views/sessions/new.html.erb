@@ -6,14 +6,14 @@
       <div class="text-field-sizing">
         <div class="text-field-group">
           <%= f.text_field :name_id, class: 'text-field-field', placeholder: ' ' %>
-          <%= f.label :name_id, class: 'text-field-label' %>
+          <%= f.label :name_id, 'ID', class: 'text-field-label' %>
         </div>
         <div class="text-field-group">
           <%= f.password_field :password, class: 'text-field-field', placeholder: ' ' %>
-          <%= f.label :password, class: 'text-field-label' %>
+          <%= f.label :password, 'パスワード', class: 'text-field-label' %>
         </div>
       </div>
-      <%= f.submit "Log in" %>
+      <%= f.submit "ログイン" %>
     <% end %>
     アカウントをお持ちでないですか？
     <%= link_to "サインアップ", signup_path %>

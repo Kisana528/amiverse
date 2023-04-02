@@ -1,0 +1,15 @@
+<h1>videos</h1>
+<%= link_to 'new', storage_videos_new_path %>
+
+  <% @videos.each do |video| %>
+    <%= video.video_id %>
+    <%= video.uuid %>
+    <%= video.name %>
+    <%= video.description %>
+    <% if video.video.attached? %>
+      <%= video_tag 'http://localhost:9000/development/accounts/' + video.account.account_id + '/videos/' + video.video_id + '.', controls: true, width: '300px'%>
+      <%= link_to 'miru', show_video_path(video.video_id) %>
+    <% else %>
+      <p>のいまげ</p>
+    <% end %>
+  <% end %>

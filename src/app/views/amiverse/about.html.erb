@@ -1,1 +1,8 @@
-<% provide(:title, 'ABOUT') %>
+<% provide(:title, 'About Amiverse API v0.1') %>
+<% provide(:main_header_text, 'About Amiverse API v0.1') %>
+<% content_for :main_content do %>
+  Amiverse API v0.1は<a href="https://amiverse.net/">amiverse.net</a>のバックエンドサーバーです。
+  <br />
+  このサイトではSSRしており、CSRの<a href="https://amiverse.net/">amiverse.net</a>よりもレスポンスが遅く感じられます。
+<% end %>
+<%= render 'shared/default_layout' %>

@@ -16,7 +16,11 @@
           <%= @current_account.storage_max_size %>
         </div>
       <% end %>
-      <div>おそらくここにTLが来る</div>
+      <div id="items">
+        <% @items.each do |item| %>
+          <%= render 'shared/item_account', item: item, reactions: @reactions %>
+        <% end %>
+      </div>
     <% else %>
       <div class='amiverse-index-box'>
         Amiverseにはフロントエンドアプリがあります。

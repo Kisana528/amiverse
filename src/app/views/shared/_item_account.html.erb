@@ -1,0 +1,41 @@
+<div class="item">
+  <%= link_to account_path(item.account.name_id) do %>
+    <div class="item-whose">
+      <%= image_tag show_icon_path(item.account.name_id), class: 'item_account_image' %>
+      <div class="item-account">
+        <div class="item-account-profile">
+          <div class="item-account-name">
+            <%= item.account.name %>
+          </div>
+          <div class="item-account-name-id">
+            <%= item.account.name_id %>
+          </div>
+        </div>
+        <%# menu %>
+      </div>
+    </div>
+  <% end %>
+  <%= link_to item_path(item.item_id) do %>
+    <div class="item-content">
+      <%= item.content %>
+    </div>
+    <div class="item-media">
+      <% item.images.each do |image| %>
+        <%= image_tag show_image_path(image.image_id), class: 'item-image' %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="item-reaction">
+    <% item.account_reaction_items.group(:reaction_id).count.each do |key, value| %>
+      <%= button_to Reaction.find_by(id: key).content, react_path(item.item_id, Reaction.find_by(id: key).reaction_id) %>
+      <%= value %>
+    <% end %>
+    <br />
+    <details>
+      <summary>リアクション追加</summary>
+      <% Reaction.where(account_id: @current_account.id).each do |reaction| %>
+        <%= button_to reaction.content, react_path(item.item_id, reaction.reaction_id), method: :post %>
+      <% end %>
+    </details>
+  </div>
+</div>

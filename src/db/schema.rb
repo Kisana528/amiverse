@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_25_104837) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_02_060041) do
   create_table "account_reaction_items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "reaction_id", null: false
@@ -130,6 +130,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_25_104837) do
     t.index ["invitation_code"], name: "index_invitations_on_invitation_code", unique: true
   end
 
+  create_table "item_images", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "image_id", null: false
+    t.string "description", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["image_id"], name: "index_item_images_on_image_id"
+    t.index ["item_id"], name: "index_item_images_on_item_id"
+  end
+
   create_table "items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "item_id", null: false
@@ -179,6 +190,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_25_104837) do
     t.index ["uuid"], name: "index_sessions_on_uuid", unique: true
   end
 
+  create_table "videos", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "video_id", null: false
+    t.string "uuid", null: false
+    t.string "name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.string "visibility", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_videos_on_account_id"
+    t.index ["video_id", "uuid"], name: "index_videos_on_video_id_and_uuid", unique: true
+  end
+
   add_foreign_key "account_reaction_items", "accounts"
   add_foreign_key "account_reaction_items", "items"
   add_foreign_key "account_reaction_items", "reactions"
@@ -186,7 +211,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_25_104837) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "images", "accounts"
   add_foreign_key "invitations", "accounts"
+  add_foreign_key "item_images", "images"
+  add_foreign_key "item_images", "items"
   add_foreign_key "items", "accounts"
   add_foreign_key "reactions", "accounts"
   add_foreign_key "sessions", "accounts"
+  add_foreign_key "videos", "accounts"
 end

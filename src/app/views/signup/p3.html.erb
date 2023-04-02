@@ -1,3 +1,10 @@
-<h1>おめでとうございます！</h1>
-<h2>アカウントが作成されました。</h2>
-<p>アカウントがアクティベートされたことを確認の上、ログインしてみましょう！</p>
+<% provide(:title, 'サインアップ') %>
+<% provide(:main_header_text, 'サインアップ') %>
+<% content_for :main_content do %>
+  <div class="signup-p3-container">
+    <h1>おめでとうございます！</h1>
+    <h2>アカウントが作成されました。</h2>
+    <p>アカウントがアクティベートされたことを確認の上、ログインしてみましょう！</p>
+  </div>
+<% end %>
+<%= render 'shared/default_layout' %>

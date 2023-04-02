@@ -10,11 +10,12 @@ class ItemsController < ApplicationController
     @items = Item.offset(offset_item.to_i).limit(limit_item.to_i)
   end
   def show
-    @reactions = Reaction.where(account_id: @current_account.id)
+    @reactions = Reaction.all
     # ?reactionが?個
   end
   def new
     @item = Item.new
+    @images = Image.where(account_id: @current_account.id)
   end
   def edit
   end
@@ -25,11 +26,21 @@ class ItemsController < ApplicationController
     @item.uuid = SecureRandom.uuid
     @item.item_type = 'plane'
     if @item.save
+      params[:item][:selected_images].each do |image_id|
+        if image = Image.find_by(image_id: image_id)
+          this_item_image_params = {
+            image_id: image.id,
+            item_id: @item.id
+          }
+          ItemImage.create(this_item_image_params)
+        end
+      end
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
       item = create_item_broadcast_format(@item)
       ActionCable.server.broadcast 'items_channel', item
     else
+      flash[:success] = '失敗しました。'
       render :new
     end
   end
