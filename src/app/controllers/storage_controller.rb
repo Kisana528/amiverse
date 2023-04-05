@@ -7,6 +7,13 @@ class StorageController < ApplicationController
     send_noblob_stream(
       @image.image, @image.resize_image(@image.account.name, @image.account.name_id, 'image'))
   end
+  def show_video
+    send_stream(filename: @video.video_id, type: @video.encoded_video.content_type) do |stream|
+      @video.encoded_video.download do |chunk|
+        stream.write(chunk)
+      end
+    end
+  end
   def index
   end
   def images

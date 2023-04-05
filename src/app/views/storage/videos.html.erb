@@ -7,7 +7,7 @@
     <%= video.name %>
     <%= video.description %>
     <% if video.video.attached? %>
-      <%= video_tag 'http://localhost:9000/development/accounts/' + video.account.account_id + '/videos/' + video.video_id + '.', controls: true, width: '300px'%>
+      <%= video_tag show_video_path(video.video_id), controls: true, width: '300px' %>
       <%= link_to 'miru', show_video_path(video.video_id) %>
     <% else %>
       <p>のいまげ</p>
