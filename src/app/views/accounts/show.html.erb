@@ -4,7 +4,7 @@
     <div class="top-container">
       <div class="banner-container" id="banner-container" >
         <% if @account.banner.attached? %>
-          <%= image_tag show_banner_path(@account.name_id), class: 'account-banner' %>
+          <%= image_tag osp("development/variants/#{@account.banner.key}.webp"), class: 'account-banner' %>
         <% else %>
           <%= image_tag 'banner.webp', class: 'account-banner' %>
         <% end %>
@@ -14,7 +14,7 @@
       <div id="name-before"></div>
       <div class="icon-container">
         <% if @account.icon.attached? %>
-          <%= image_tag show_icon_path(@account.name_id), class: 'account-icon' %>
+          <%= image_tag osp("development/variants/#{@account.icon.key}.webp"), class: 'account-icon' %>
         <% else %>
           <%= image_tag 'icon.webp', class: 'account-icon' %>
         <% end %>

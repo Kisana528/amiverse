@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  def account_icon_banner_attach(type)
+  def account_icon_banner_attach(type = '')
     if type == 'api'
       this_params = params
     else
@@ -57,6 +57,19 @@ class ApplicationController < ActionController::Base
         key: "accounts/#{@account.account_id}/banners/#{random_id}.#{banner_type}",
         io: (this_params[:banner]),
         filename: "banner.#{banner_type}")
+    end
+  end
+  def account_icon_banner_variant(type = '')
+    if type == 'api'
+      this_params = params
+    else
+      this_params = params[:account]
+    end
+    if !this_params[:icon].blank?
+      @account.resize_image(@account.name, @account.name_id, 'icon')
+    end
+    if !this_params[:banner].blank?
+      @account.resize_image(@account.name, @account.name_id, 'banner')
     end
   end
   def content_type_to_extension(type)

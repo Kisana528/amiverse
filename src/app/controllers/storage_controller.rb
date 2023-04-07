@@ -27,12 +27,12 @@ class StorageController < ApplicationController
     @image.image_id = unique_random_id(Image, 'image_id')
     if params[:image][:image].blank?
       flash.now[:danger] = "画像がありません。"
-      return render 'new_images'
+      return render 'new_image'
     end
     capacity = @current_account.storage_max_size - @current_account.storage_size
     if params[:image][:image].size > capacity
       flash.now[:danger] = "ストレージ容量が足りません。"
-      return render 'new_images'
+      return render 'new_image'
     end 
     image_type = content_type_to_extension(params[:image][:image].content_type)
     @image.image.attach(
@@ -48,7 +48,7 @@ class StorageController < ApplicationController
       redirect_to storage_images_path
     else
       flash.now[:danger] = "できませんでした。"
-      render 'new_images'
+      render 'new_image'
     end
   end
   def videos
@@ -62,12 +62,12 @@ class StorageController < ApplicationController
     @video.video_id = unique_random_id(Video, 'video_id')
     if params[:video][:video].blank?
       flash.now[:danger] = "動画がありません。"
-      return render 'new_videos'
+      return render 'new_video'
     end
     capacity = @current_account.storage_max_size - @current_account.storage_size
     if params[:video][:video].size > capacity
       flash.now[:danger] = "ストレージ容量が足りません。"
-      return render 'new_videos'
+      return render 'new_video'
     end 
     video_type = content_type_to_extension(params[:video][:video].content_type)
     @video.video.attach(
@@ -84,7 +84,7 @@ class StorageController < ApplicationController
       redirect_to storage_videos_path
     else
       flash.now[:danger] = "できませんでした。"
-      render 'new_videos'
+      render 'new_video'
     end
   end
   private
