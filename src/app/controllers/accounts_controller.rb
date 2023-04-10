@@ -33,9 +33,10 @@ class AccountsController < ApplicationController
         render 'edit' and return
       end
     end
+    pre_icon_id = @account.icon_id
     if @account.update(account_update_params)
       #account_icon_banner_variant
-      if params[:account][:icon_id].present? && @account.icon_id != params[:account][:icon_id]
+      if params[:account][:icon_id].present? && pre_icon_id != params[:account][:icon_id]
         image = Image.find_by(image_id: params[:account][:icon_id])
         metadata = image.image.metadata
         metadata["icon"] = true
