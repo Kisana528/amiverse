@@ -13,7 +13,7 @@ module ApplicationHelper
     name = File.basename(key, '.*') + format
     true_key = File.join(dir, name)
     if Rails.env.production?
-      return "https://m.amiverse.net/bucket/#{true_key}"
+      return "https://m.amiverse.net/production/variants/#{true_key}"
     else
       return "http://192.168.0.4:9000/development/variants/#{true_key}"
     end
@@ -24,7 +24,7 @@ module ApplicationHelper
     name = image_id + format
     true_key = File.join(dir, name)
     if Rails.env.production?
-      return "https://m.amiverse.net/bucket/#{true_key}"
+      return "https://m.amiverse.net/production/variants/#{true_key}"
     else
       return "http://192.168.0.4:9000/development/variants/#{true_key}"
     end
