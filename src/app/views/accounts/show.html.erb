@@ -3,8 +3,8 @@
   <div class="account-container" id="account-container">
     <div class="top-container">
       <div class="banner-container" id="banner-container" >
-        <% if @account.banner.attached? %>
-          <%= image_tag osp("development/variants/#{@account.banner.key}.webp"), class: 'account-banner' %>
+        <% if !@account.banner_id.blank? %>
+          <%= image_tag ati(@account.account_id, 'banner', @account.banner_id), class: 'account-banner' %>
         <% else %>
           <%= image_tag 'banner.webp', class: 'account-banner' %>
         <% end %>
@@ -13,8 +13,8 @@
     <div class="name-container" id="name-container">
       <div id="name-before"></div>
       <div class="icon-container">
-        <% if @account.icon.attached? %>
-          <%= image_tag osp("development/variants/#{@account.icon.key}.webp"), class: 'account-icon' %>
+        <% if !@account.icon_id.blank? %>
+          <%= image_tag ati(@account.account_id, 'icon', @account.icon_id), class: 'account-icon' %>
         <% else %>
           <%= image_tag 'icon.webp', class: 'account-icon' %>
         <% end %>

@@ -30,9 +30,9 @@ export default function App({ Component, pageProps }) {
     if (!ignore) {
       async function fetchAccountInfo() {
         try {
-          await axios.post('/api/new')
+          await axios.post('/new')
           setLoadingStatus('アカウント情報確認中')
-          const response = await axios.post('/api/logged-in')
+          const response = await axios.post('/logged-in')
           const data = response.data
           setLoadingStatus(data.logged_in ? 'ログイン中' : '未ログイン')
           setLoading(false)

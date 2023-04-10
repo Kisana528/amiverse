@@ -28,6 +28,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_02_060041) do
     t.string "account_id", null: false
     t.string "name", default: "", null: false
     t.string "name_id", null: false
+    t.string "icon_id", default: "", null: false
+    t.string "banner_id", default: "", null: false
     t.string "online_status", default: "", null: false
     t.timestamp "last_online"
     t.boolean "open_online_status", default: true, null: false

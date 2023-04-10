@@ -15,19 +15,19 @@
       </div>
     </div>
   <% end %>
-  <%= link_to item_path(item.item_id) do %>
+  <%# link_to item_path(item.item_id) do %>
     <div class="item-content">
       <%= item.content %>
     </div>
     <div class="item-media">
       <% item.images.each do |image| %>
-        <%= image_tag show_image_path(image.image_id), class: 'item-image' %>
+        <%= image_tag ati(image.account.account_id, 'images', image.image_id), class: 'item-image' %>
       <% end %>
     </div>
-  <% end %>
+  <%# end %>
   <div class="item-reaction">
-    <% item.account_reaction_items.group(:reaction_id).count.each do |key, value| %>
-      <%= button_to Reaction.find_by(id: key).content, react_path(item.item_id, Reaction.find_by(id: key).reaction_id) %>
+    <% item.reactions.group(:reaction_id).count.each do |key, value| %>
+      <%= button_to item.reactions.find_by(reaction_id: key).content, react_path(item.item_id, key) %>
       <%= value %>
     <% end %>
     <br />

@@ -1,12 +1,26 @@
-class Api::ItemsController < Api::ApplicationController
+class V1::ItemsController < V1::ApplicationController
   before_action :api_logged_in_account, only: %i[ create ]
   before_action :set_item, only: %i[ show ]
   def index
     @items = Item.all
-    #render json: @items
+    render json: @items.map {|item| {
+      content: item.content,
+      item_id: item.item_id,
+      created_at: item.created_at,
+      account: {
+        name_id: item.account.name_id,
+        name: item.account.name,
+        icon_url: ati(item.account.account_id, 'icon', item.account.icon_id)
+      },
+      reactions: item.reactions.group(:reaction_id).count.map { |key, value| {
+        reaction_id: key,
+        content: item.reactions.find_by(reaction_id: key).content,
+        count: value
+      }}
+    }}
   end
   def show
-    render 'items/show'
+    #render json: @item
   end
   def create
     @item = Item.new(

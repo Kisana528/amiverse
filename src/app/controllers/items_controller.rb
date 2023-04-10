@@ -26,13 +26,15 @@ class ItemsController < ApplicationController
     @item.uuid = SecureRandom.uuid
     @item.item_type = 'plane'
     if @item.save
-      params[:item][:selected_images].each do |image_id|
-        if image = Image.find_by(image_id: image_id)
-          this_item_image_params = {
-            image_id: image.id,
-            item_id: @item.id
-          }
-          ItemImage.create(this_item_image_params)
+      if params[:item][:selected_images].present?
+        params[:item][:selected_images].each do |image_id|
+          if image = Image.find_by(image_id: image_id)
+            this_item_image_params = {
+              image_id: image.id,
+              item_id: @item.id
+            }
+            ItemImage.create(this_item_image_params)
+          end
         end
       end
       flash[:success] = '投稿しました。'

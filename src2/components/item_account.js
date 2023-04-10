@@ -8,7 +8,7 @@ export default function ItemAccount({ item }) {
         <Link href={'/@' + item.account.name_id}>
           <div className="item-whose">
             <img
-              src={process.env.NEXT_PUBLIC_HTTPNAME + '@' + item.account.name_id + '/icon'}
+              src={item.account.icon_url}
               className="item_account_image"
             />
             <div className="item-account">
@@ -28,14 +28,12 @@ export default function ItemAccount({ item }) {
           {item.content}
         </div>
         <div className="item-reaction">
-          <button>💖</button>
-          <div>11</div>
-          <button>🍭</button>
-          <div>4</div>
-          <button>➕</button>
-          <div>‥</div>
-          <button>🔃</button>
-          <div>5</div>
+          {item.reactions.map(reaction => (
+            <div key={reaction.reaction_id}>
+              <button>{reaction.content}</button>
+              <div>{reaction.count}</div>
+            </div>
+          ))}
         </div>
       </div>
       <style jsx>{`

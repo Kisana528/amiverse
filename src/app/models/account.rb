@@ -5,6 +5,7 @@ class Account < ApplicationRecord
   has_many :reaction
   has_many :account_reaction_items
   attr_accessor :remember_token, :activation_token
+  BASE_64_URL_REGEX  = /\A[a-zA-Z0-9_-]*\z/
   validates :account_id,
     presence: true,
     length: { in: 5..25, allow_blank: true },
@@ -12,7 +13,12 @@ class Account < ApplicationRecord
   validates :name_id,
     presence: true,
     length: { in: 5..50, allow_blank: true },
+    format: { with: BASE_64_URL_REGEX, allow_blank: true },
     uniqueness: { case_sensitive: false }
+  validates :icon_id,
+    format: { with: BASE_64_URL_REGEX, allow_blank: true }
+  validates :banner_id,
+    format: { with: BASE_64_URL_REGEX, allow_blank: true }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email,
     length: { maximum: 255, allow_blank: true },

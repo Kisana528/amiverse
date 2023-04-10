@@ -4,6 +4,8 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.string :account_id, null: false
       t.string :name, null: false, default: ''
       t.string :name_id, null: false
+      t.string :icon_id, null: false, default: ''
+      t.string :banner_id, null: false, default: ''
       t.string :online_status, null: false, default: ''
       t.timestamp :last_online
       t.boolean :open_online_status, null: false, default: true

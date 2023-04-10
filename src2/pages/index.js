@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     if (!ignore && loggedIn) {
       const fetchItems = async () => {
-        const response = await axios.get('/items')
+        const response = await axios.post('/items')
         const data = response.data
         setItems(data)
       }
@@ -49,9 +49,13 @@ export default function Home() {
         <br />
       </div>
       <div>
-        {items.map(item => (
-          <ItemAccount key={item.item_id} item={item} />
-        ))}
+        {items.length > 0 ?
+            items.map(item => (
+              <ItemAccount key={item.item_id} item={item} />
+            ))
+          :
+            <p>Loading...</p>
+        }
       </div>
     </>
   )

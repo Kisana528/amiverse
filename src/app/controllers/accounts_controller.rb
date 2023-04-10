@@ -26,8 +26,22 @@ class AccountsController < ApplicationController
   def update
     @account = @current_account
     account_icon_banner_attach
+    #account_icon_banner_set
+    if !params[:account][:icon_id].blank?
+      unless image = Image.find_by(image_id: params[:account][:icon_id])
+        flash.now[:danger] = "アイコンなし"
+        render 'edit' and return
+      end
+    end
     if @account.update(account_update_params)
-      account_icon_banner_variant
+      #account_icon_banner_variant
+      if params[:account][:icon_id].present? && @account.icon_id != params[:account][:icon_id]
+        image = Image.find_by(image_id: params[:account][:icon_id])
+        metadata = image.image.metadata
+        metadata["icon"] = true
+        image.image.update(metadata: metadata)
+        image.resize_image(@account.name, @account.name_id, 'icon')
+      end
       flash[:success] = "更新成功!"
       redirect_to account_path(@account.name_id)
     else
@@ -62,6 +76,8 @@ class AccountsController < ApplicationController
   def account_params
     params.require(:account).permit(:name,
                                     :name_id,
+                                    :icon_id,
+                                    :banner_id,
                                     :bio,
                                     :location,
                                     :birthday,
@@ -71,6 +87,8 @@ class AccountsController < ApplicationController
   def account_update_params
     params.require(:account).permit(:name,
                                     :name_id,
+                                    :icon_id,
+                                    :banner_id,
                                     :bio,
                                     :location,
                                     :birthday)

@@ -4,26 +4,36 @@
   <%= f.label :icon, 'アイコン' %>
   <%= f.file_field :icon %>
   <br/>
+  <div class="text-field-group">
+    <%= f.text_field :icon_id, class: 'text-field-field', placeholder: ' ' %>
+    <%= f.label :icon_id, 'アイコンID', class: 'text-field-label' %>
+  </div>
+  <br/>
   <%= f.label :banner, 'バナー' %>
   <%= f.file_field :banner %>
   <br/>
   <div class="text-field-group">
-    <%= f.text_field :name, class: 'text-field-field', placeholder: '名前' %>
+    <%= f.text_field :banner_id, class: 'text-field-field', placeholder: ' ' %>
+    <%= f.label :banner_id, 'バナーID', class: 'text-field-label' %>
+  </div>
+  <br/>
+  <div class="text-field-group">
+    <%= f.text_field :name, class: 'text-field-field', placeholder: ' ' %>
     <%= f.label :name, '名前', class: 'text-field-label' %>
   </div>
   <br/>
   <div class="text-field-group">
-    <%= f.text_field :name_id, class: 'text-field-field', placeholder: 'ID' %>
+    <%= f.text_field :name_id, class: 'text-field-field', placeholder: ' ' %>
     <%= f.label :name_id, 'ID', class: 'text-field-label' %>
   </div>
   <br/>
   <div class="text-field-group">
-    <%= f.text_field :bio, class: 'text-field-field', placeholder: '紹介' %>
+    <%= f.text_field :bio, class: 'text-field-field', placeholder: ' ' %>
     <%= f.label :bio, '紹介', class: 'text-field-label' %>
   </div>
   <br/>
   <div class="text-field-group">
-    <%= f.text_field :location, class: 'text-field-field', placeholder: '場所' %>
+    <%= f.text_field :location, class: 'text-field-field', placeholder: ' ' %>
     <%= f.label :location, '場所', class: 'text-field-label' %>
   </div>
   <br/>
@@ -32,12 +42,12 @@
   <br/>
   <% if type == 'pwedit' || type == 'new' %>
     <div class="text-field-group">
-      <%= f.password_field :password, class: 'text-field-field', placeholder: 'パスワード' %>
+      <%= f.password_field :password, class: 'text-field-field', placeholder: ' ' %>
       <%= f.label :password, 'パスワード', class: 'text-field-label' %>
     </div>
     <br/>
     <div class="text-field-group">
-      <%= f.password_field :password_confirmation, class: 'text-field-field', placeholder: 'パスワード確認' %>
+      <%= f.password_field :password_confirmation, class: 'text-field-field', placeholder: ' ' %>
       <%= f.label :password_confirmation, 'パスワード確認', class: 'text-field-label' %>
     </div>
   <% elsif type == 'edit' %>

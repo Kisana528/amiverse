@@ -98,19 +98,18 @@ Rails.application.routes.draw do
 
     # item
     get 'items' => 'items#index', as: 'items'
+
   end
-  
-  # api
-  namespace :api do
 
-    # analytics
+  # v1
+  namespace :v1 do
+
+    # online-status
     root 'application#index'
-
-    # logged-in
-    post 'logged-in' => 'application#logged_in', as: 'logged-in'
-
     # csrf token generate
     post 'new' => 'application#new', as: 'new'
+    # logged-in
+    post 'logged-in' => 'application#logged_in', as: 'logged-in'
 
     # account
     post '@:name_id' => 'accounts#show', as: 'account'
@@ -124,8 +123,10 @@ Rails.application.routes.draw do
     delete 'logout' => 'sessions#destroy', as: 'logout'
 
     # item
-    get 'items' => 'items#index', as: 'items'
+    post 'items' => 'items#index', as: 'items'
     post 'items/create' => 'items#create', as: 'create_items'
-    get 'items/:item_id' => 'items#show', as: 'item'
+    post 'items/:item_id' => 'items#show', as: 'item'
+
   end
+
 end

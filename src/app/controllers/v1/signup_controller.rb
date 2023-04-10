@@ -1,4 +1,4 @@
-class Api::SignupController < Api::ApplicationController
+class V1::SignupController < V1::ApplicationController
   before_action :logged_out_account, only: %i[check_invitation_code create]
   def check_invitation_code
     if Invitation.exists?(invitation_code: params[:invitation_code])

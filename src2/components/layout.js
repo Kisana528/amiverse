@@ -77,6 +77,7 @@ export default function Layout({ children }) {
           flex-grow: 1;
           box-sizing: border-box;
           width: 100%;
+          min-height: 100svh;
         }
         @media (min-width: 400px) {
           main {

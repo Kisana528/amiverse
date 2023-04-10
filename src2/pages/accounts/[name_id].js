@@ -41,12 +41,12 @@ export default function Account() {
   }, [])
   useEffect(() => {
     if (query.name_id) {
-      axios.get('/@' + query.name_id)
+      axios.post('/@' + query.name_id)
         .then(res => {
           setAccount(res.data)
           setItems(res.data.items)
-          setIcon(process.env.NEXT_PUBLIC_HTTPNAME + '@' + res.data.name_id + '/icon')
-          setBanner(process.env.NEXT_PUBLIC_HTTPNAME + '@' + res.data.name_id + '/banner')
+          setIcon(res.data.icon_url)
+          setBanner(res.data.banner_url)
 
           console.log(account.items.map)
         })

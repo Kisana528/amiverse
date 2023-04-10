@@ -38,12 +38,13 @@ class StorageController < ApplicationController
     @image.image.attach(
       key: "accounts/#{@current_account.account_id}/images/#{@image.image_id}.#{image_type}",
       io: (params[:image][:image]),
-      filename: "image.#{image_type}"
+      filename: "#{@image.image_id}.#{image_type}"
     )
     @current_account.update(storage_size: @current_account.storage_size + @image.image.byte_size.to_i)
     @image.account_id = @current_account.id
     @image.uuid = SecureRandom.uuid
     if @image.save
+      @image.resize_image(@current_account.name, @current_account.name_id, 'image')
       flash[:success] = "成功!"
       redirect_to storage_images_path
     else
@@ -73,7 +74,7 @@ class StorageController < ApplicationController
     @video.video.attach(
       key: "accounts/#{@current_account.account_id}/videos/#{@video.video_id}.#{video_type}",
       io: (params[:video][:video]),
-      filename: "video.#{video_type}"
+      filename: "#{@video.video_id}.#{video_type}"
     )
     @current_account.update(storage_size: @current_account.storage_size + @video.video.byte_size.to_i)
     @video.account_id = @current_account.id

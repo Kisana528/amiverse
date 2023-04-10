@@ -72,6 +72,9 @@ class ApplicationController < ActionController::Base
       @account.resize_image(@account.name, @account.name_id, 'banner')
     end
   end
+  def account_icon_banner_set
+    
+  end
   def content_type_to_extension(type)
     case type
       when 'image/jpeg' then 'jpg'

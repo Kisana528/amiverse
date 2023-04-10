@@ -1,4 +1,4 @@
-class Api::InvitationsController < Api::ApplicationController
+class V1::InvitationsController < V1::ApplicationController
   before_action :set_item, only: %i[ show ]
   def index
     @items = Item.all
