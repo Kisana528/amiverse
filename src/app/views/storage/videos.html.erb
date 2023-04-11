@@ -7,7 +7,7 @@
     <%= video.name %>
     <%= video.description %>
     <% if video.video.attached? %>
-      <%= video_tag osp(video.video.key), controls: true, width: '300px' %>
+      <%= video_tag osp(video.video.key, '.mp4'), controls: true, width: '300px' %>
       <%= link_to 'miru', show_video_path(video.video_id) %>
     <% else %>
       <p>のいまげ</p>

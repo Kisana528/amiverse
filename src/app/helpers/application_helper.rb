@@ -7,8 +7,7 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
-  def osp(key)
-    format = '.webp'
+  def osp(key, format = '.webp')
     dir = File.dirname(key)
     name = File.basename(key, '.*') + format
     true_key = File.join(dir, name)
