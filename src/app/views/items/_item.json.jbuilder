@@ -1,1 +1,0 @@
-json.extract! item, :item_id, :item_type, :flow, :meta, :content, :nsfw, :cw, :created_at, :updated_at

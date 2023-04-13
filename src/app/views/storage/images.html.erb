@@ -8,7 +8,6 @@
     <%= image.description %>
     <% if image.image.attached? %>
       <%= image_tag osp(image.image.key) %>
-      <%= link_to 'miru', show_image_path(image.image_id) %>
     <% else %>
       <p>のいまげ</p>
     <% end %>

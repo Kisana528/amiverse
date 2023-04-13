@@ -27,7 +27,14 @@ export default function Layout({ children }) {
   return (
     <div className={`all ${dark ? "dark-mode" : "light-mode"} ${loading ? "loading-top" : ""}`}>
       <div className={`loading-hide ${loading ? "loading" : ""}`}>
-        <div className="loading-logo">Amiverse</div>
+        <div className="loading-logo">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="29" fill="#8BFFB2"/>
+          <path d="M22 58C8.00001 76.5 99.5 53 78.5 45M21 55.5C-30 96.5 138.5 51 77.5 42" stroke="white"/>
+        </svg>
+        <br />
+        Amiverse
+        </div>
         <div className="loading-status">{loadingStatus}</div>
       </div>
       <div className="main-container">
@@ -66,7 +73,7 @@ export default function Layout({ children }) {
           background: rgb(22,22,22);
         }
         .loading-logo {
-          font-size: 50px;
+          font-size: 32px;
           font-family: math;
           color: #b057e8;
         }

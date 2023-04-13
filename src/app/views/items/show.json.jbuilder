@@ -1,1 +1,0 @@
-json.partial! "items/item_account", item: @item

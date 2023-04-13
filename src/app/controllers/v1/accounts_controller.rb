@@ -14,9 +14,27 @@ class V1::AccountsController < V1::ApplicationController
       created_at: @account.created_at,
       updated_at: @account.updated_at,
       items: @account.items.map {|item| {
-        content: item.content,
         item_id: item.item_id,
-        created_at: item.created_at
+        item_type: item.item_type,
+        flow: item.flow,
+        meta: item.meta,
+        content: item.content,
+        nsfw: item.nsfw,
+        cw: item.cw,
+        version: item.version,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        reactions: item.reactions.group(:reaction_id).count.map { |key, value| {
+          reaction_id: key,
+          content: item.reactions.find_by(reaction_id: key).content,
+          count: value
+        }},
+        images: item.images.map {|image| {
+          image_id: image.image_id,
+          name: image.name,
+          description: image.description,
+          url: ati(image.account.account_id, 'images', image.image_id)
+        }}
       }}
     }
   end
