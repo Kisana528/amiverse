@@ -68,7 +68,7 @@ Rails.application.routes.draw do
   get 'reactions/new' => 'reactions#new'
   post 'react/:item_id/:reaction_id' => 'reactions#react', as: 'react'
 
-  # admin
+  # administorator
   namespace :admin do
 
     # analytics
@@ -101,7 +101,7 @@ Rails.application.routes.draw do
 
   end
 
-  # v1
+  # version 1
   namespace :v1 do
 
     # online-status
@@ -128,5 +128,15 @@ Rails.application.routes.draw do
     post 'items/:item_id' => 'items#show', as: 'item'
 
   end
+
+  # activity pub
+  namespace :ap do
+    # account
+    get '@:name_id' => 'accounts#show', as: 'account'
+  end
+
+  # .well-known
+  get '/.well-known/host-meta' => 'well_known#host_meta'
+  get '/.well-known/webfinger' => 'well_known#webfinger'
 
 end

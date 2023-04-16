@@ -28,4 +28,11 @@ module ApplicationHelper
       return "http://192.168.0.4:9000/development/variants/#{true_key}"
     end
   end
+  def full_api_url(path)
+    if Rails.env.production?
+      return "https://api.amiverse.net/#{path}"
+    else
+      return "http://192.168.0.4:3000/#{path}"
+    end
+  end
 end
