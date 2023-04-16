@@ -1,5 +1,4 @@
 class V1::ApplicationController < ApplicationController
-  include ApplicationHelper
   protect_from_forgery except: :new
   def index
     status = { status: 'online' }

@@ -133,6 +133,10 @@ Rails.application.routes.draw do
   namespace :ap do
     # account
     get '@:name_id' => 'accounts#show', as: 'account'
+    post '@:name_id/inbox' => 'accounts#inbox', as: 'account_inbox'
+    get '@:name_id/outbox' => 'accounts#outbox', as: 'account_outbox'
+    get '@:name_id/followers' => 'accounts#followers', as: 'account_followers'
+    get '@:name_id/following' => 'accounts#following', as: 'account_following'
   end
 
   # .well-known

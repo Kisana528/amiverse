@@ -36,11 +36,20 @@ class WellKnownController < ApplicationController
     if domain.blank? || domain == 'amiverse.net' || domain == 'api.amiverse.net'
       if Account.exists?(name_id: name_id)
         render json: {
-          subject: "acct:#{name_id}@amiverse.net",
-          links: [{
+          subject: "acct:#{name_id}@api.amiverse.net",
+          aliases: [
+            full_api_url("@#{name_id}")
+          ],
+          links: [
+          {
+            rel: "http://webfinger.net/rel/profile-page",
+            type: "text/html",
+            href: full_api_url("@#{name_id}")
+          },
+          {
             rel: "self",
             type: "application/activity+json",
-            href: "https://api.amiverse.net/v1/@#{name_id}"
+            href: full_api_url("ap/@#{name_id}")
           }]
         }
       else
