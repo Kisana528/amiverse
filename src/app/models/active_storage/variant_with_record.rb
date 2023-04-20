@@ -1,8 +1,9 @@
 class ActiveStorage::VariantWithRecord
   attr_reader :blob, :variation
   delegate :service, to: :blob
-  def initialize(blob, variation)
-    @blob, @variation = blob, ActiveStorage::Variation.wrap(variation)
+  def initialize(blob, variation, custom_key)
+    #@blob, @variation = blob, ActiveStorage::Variation.wrap(variation)
+    @blob, @variation, @key_suffix = blob, ActiveStorage::Variation.wrap(variation), custom_key
   end
   def processed
     process
@@ -24,13 +25,17 @@ class ActiveStorage::VariantWithRecord
       variation.transform(input) do |output|
         prefix = "variants"
         dir = File.dirname(blob.key)
-        if blob.metadata['icon']
-          dir.sub!(/images/, "icon")
+        if @key_suffix == 'icon'
+          dir.sub!(/images/, 'icon')
+        elsif @key_suffix == 'banner'
+          dir.sub!(/images/, 'banner')
         end
         name = "#{File.basename(blob.key, '.*')}.#{variation.format.downcase}"
         pre_key = File.join(dir, name)
         key = File.join(prefix, pre_key)
-        yield key: key, io: output, filename: "#{blob.filename.base}.#{variation.format.downcase}", content_type: variation.content_type, service_name: blob.service.name
+
+        yield key: key, io: output, filename: "#{blob.filename.base}.#{variation.format.downcase}",
+          content_type: variation.content_type, service_name: blob.service.name
       end
     end
   end

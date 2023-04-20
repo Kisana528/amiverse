@@ -15,6 +15,7 @@ class Account < ApplicationRecord
     length: { in: 5..50, allow_blank: true },
     format: { with: BASE_64_URL_REGEX, allow_blank: true },
     uniqueness: { case_sensitive: false }
+  validate :image_id_presence
   validates :icon_id,
     format: { with: BASE_64_URL_REGEX, allow_blank: true }
   validates :banner_id,
@@ -29,14 +30,12 @@ class Account < ApplicationRecord
     length: { in: 8..63, allow_blank: true },
     allow_nil: true
   has_secure_password validations: true
-  has_one_attached :icon
-  validates :icon,
-    size: { less_than: 1.megabytes },
-    content_type: %w[ image/jpeg image/png image/gif image/webp ]
-  has_one_attached :banner
-  validates :banner,
-    size: { less_than: 1.megabytes },
-    content_type: %w[ image/jpeg image/png image/gif image/webp ]
+  #validates :icon,
+  #  size: { less_than: 1.megabytes },
+  #  content_type: %w[ image/jpeg image/png image/gif image/webp ]
+  #validates :banner,
+  #  size: { less_than: 1.megabytes },
+  #  content_type: %w[ image/jpeg image/png image/gif image/webp ]
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ?
       BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
@@ -59,4 +58,16 @@ class Account < ApplicationRecord
     Session.find_by(account_id: self.id, uuid: uuid, deleted: false).update(deleted: true)
   end
   private
+  def image_id_presence
+    if icon_id.present?
+      unless Image.exists?(image_id: icon_id)
+        errors.add(:base, '存在しないicon')
+      end
+    end
+    if banner_id.present?
+      unless Image.exists?(image_id: banner_id)
+        errors.add(:base, '存在しないbanner')
+      end
+    end
+  end
 end

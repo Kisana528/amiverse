@@ -4,6 +4,6 @@ class ApplicationRecord < ActiveRecord::Base
   def resize_image(name, name_id, type)
     attachment = image
     attachment.analyze if attachment.attached?
-    attachment.variant(image_optimize(name, name_id, type)).processed
+    attachment.variant(image_optimize(name, name_id, type), type).processed
   end
 end

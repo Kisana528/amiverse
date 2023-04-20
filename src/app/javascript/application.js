@@ -39,4 +39,8 @@ window.onload = () => {
     })
     observer.observe(document.getElementById('name-before'))
   }
+  let path = location.pathname
+  if (path == "/") {
+    console.log('loaded')
+  } 
 }

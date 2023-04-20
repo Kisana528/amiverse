@@ -62,8 +62,8 @@
       <% if @current_account %>
         <%= link_to account_path(@current_account.name_id) do %>
           <div class="nav-list-container">
-            <% if @current_account.icon.attached? %>
-              <%= image_tag show_icon_path(@current_account.name_id), class: 'nav-list-image-icon' %>
+            <% if !@current_account.icon_id.blank? %>
+              <%= image_tag ati(@current_account.account_id, 'icon', @current_account.icon_id), class: 'nav-list-image-icon' %>
             <% else %>
               <%= image_tag 'icon.webp', class: 'nav-list-image-icon' %>
             <% end %>
