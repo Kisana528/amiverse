@@ -17,7 +17,7 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault()
     setLoginLoading(true)
-    await axios.post('/api/login', { 'name_id': accountID, password })
+    await axios.post('/login', { 'name_id': accountID, password })
       .then(res => {
         if (res.data.logged_in) {
           setLoggedIn(true)

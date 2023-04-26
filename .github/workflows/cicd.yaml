@@ -21,5 +21,4 @@ jobs:
             docker-compose down
             git fetch origin main
             git reset --hard origin/main
-            chown -R kisana:kisana ~/amiverse
             docker-compose up -d --build
