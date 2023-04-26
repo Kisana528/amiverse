@@ -17,8 +17,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/amiverse
-            docker-compose down
-            git fetch origin main
-            git reset --hard origin/main
-            chown -R kisana:kisana ~/amiverse
-            docker-compose up -d --build
+            sudo docker-compose down
+            sudo git fetch origin main
+            sudo git reset --hard origin/main
+            sudo chown -R kisana:kisana ~/amiverse
+            sudo docker-compose up -d --build
