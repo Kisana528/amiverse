@@ -1,23 +1,7 @@
 class AccountsController < ApplicationController
   include Images
-  before_action :set_account, only: %i[ show_icon show_banner show ]
+  before_action :set_account, only: %i[ show ]
   before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
-  def show_icon
-    if @account.icon.attached?
-      send_noblob_stream(
-        @account.icon, @account.resize_image(@account.name, @account.name_id, 'icon'))
-    else
-      send_file('./app/assets/images/icon.webp')
-    end
-  end
-  def show_banner
-    if @account.banner.attached?
-      send_noblob_stream(
-        @account.banner, @account.resize_image(@account.name, @account.name_id, 'banner'))
-    else
-      send_file('./app/assets/images/banner.webp')
-    end
-  end
   def show
   end
   def edit
@@ -25,25 +9,11 @@ class AccountsController < ApplicationController
   end
   def update
     @account = @current_account
-    #account_icon_banner_attach
     pre_icon_id = @account.icon_id
     pre_banner_id = @account.banner_id
     if @account.update(account_update_params)
-      #account_icon_banner_variant
-      if params[:account][:icon_id].present? && pre_icon_id != params[:account][:icon_id]
-        image = Image.find_by(image_id: params[:account][:icon_id])
-        metadata = image.image.metadata
-        metadata["icon"] = true
-        image.image.update(metadata: metadata)
-        image.resize_image(@account.name, @account.name_id, 'icon')
-      end
-      if params[:account][:banner_id].present? && pre_banner_id != params[:account][:banner_id]
-        image = Image.find_by(image_id: params[:account][:banner_id])
-        metadata = image.image.metadata
-        metadata["banner"] = true
-        image.image.update(metadata: metadata)
-        image.resize_image(@account.name, @account.name_id, 'banner')
-      end
+      check_and_variant_image(params[:account][:icon_id], pre_icon_id, 'icon')
+      check_and_variant_image(params[:account][:banner_id], pre_banner_id, 'banner')
       flash[:success] = "更新成功!"
       redirect_to account_path(@account.name_id)
     else
@@ -67,13 +37,7 @@ class AccountsController < ApplicationController
   end
   private
   def set_account
-    @account = Account.find_by(name_id: params[:name_id],
-                              activated: true,
-                              locked: false,
-                              silenced: false,
-                              suspended: false,
-                              frozen: false,
-                              deleted: false)
+    @account = find_account_by_nid(params[:name_id])
   end
   def account_params
     params.require(:account).permit(:name,

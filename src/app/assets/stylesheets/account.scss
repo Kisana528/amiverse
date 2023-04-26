@@ -84,7 +84,7 @@
 
 .profile-container {
   padding: 10px;
-  background: #ffffff;
+  background: var(--background-color);
   z-index: 1;
   position: relative;
   p {
@@ -97,7 +97,7 @@
 .account-tab-container {
   display: flex;
   border-radius: 0;
-  background: #ffffff;
+  background: var(--account-tab-color);
   //box-shadow: 0 9px 12px 1px #dc24a138;
   z-index: 2;
   position: sticky;
@@ -112,7 +112,7 @@
 // コンテンツ
 
 .content-container {
-  background: #ffffff;
+  background: var(--background-color);
   z-index: 1;
   position: relative;
   padding: 10px;

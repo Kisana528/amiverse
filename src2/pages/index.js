@@ -7,6 +7,7 @@ import ItemAccount from '@/components/item_account'
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
   const loginFormTrigger = useContext(appContext).loginFormTrigger
+  const [loadItems, setloadItems] = useState(true)
   const [items, setItems] = useState([])
 
   let ignore = false
@@ -16,6 +17,7 @@ export default function Home() {
         const response = await axios.post('/items')
         const data = response.data
         setItems(data)
+        setloadItems(false)
       }
       fetchItems()
       async function created(){
@@ -59,12 +61,15 @@ export default function Home() {
 
       </div>
       <div>
-        {items.length > 0 ?
+        {loadItems ?
+          <p>Loading...</p>
+          :
+          items.length > 0 ?
             items.map(item => (
               <ItemAccount key={item.item_id} item={item} />
             ))
           :
-            <p>Loading...</p>
+          <p>Nothing Here</p>
         }
       </div>
     </>
