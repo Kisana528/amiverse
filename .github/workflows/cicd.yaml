@@ -19,7 +19,7 @@ jobs:
           script: |
             cd ~/amiverse
             docker-compose down
-            git clone https://github.com/Kisana528/amiverse.git
+            git remote set-url origin https://kisana528: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@github.com/Kisana528/amiverse.git
             git fetch origin main
             git reset --hard origin/main
             docker-compose up -d --build
