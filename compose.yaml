@@ -48,7 +48,7 @@ services:
       MARIADB_USER: dockermdb
       MARIADB_PASSWORD: dockermdb
     volumes:
-      - ./db:/var/lib/mysql
+      - db-vol:/var/lib/mysql
     stdin_open: true
     tty: true
     #restart: always
@@ -83,3 +83,6 @@ services:
     ports:
       - '9000:9000'
       - '9001:9001'
+
+volumes:
+  db-vol:
