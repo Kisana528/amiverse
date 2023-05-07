@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Item from '@/components/item'
 
-export default function Account() {
+export default function Account(req, res) {
   const loggedIn = useContext(appContext).loggedIn
   const { query = {} } = useRouter()
   const [account, setAccount] = useState({})

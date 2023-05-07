@@ -71,4 +71,6 @@ Rails.application.configure do
 
   # :3000と:3001間で通信
   config.action_controller.forgery_protection_origin_check = false
+
+  config.hosts << "app"
 end

@@ -14,7 +14,15 @@ module.exports = withPWA({
     return [
       {
         source: '/@:name_id',
-        destination: '/accounts/:name_id'
+        destination: '/accounts/:name_id/account'
+      },
+      {
+        source: '/@:name_id/ap',
+        destination: '/accounts/:name_id/ap'
+      },
+      {
+        source: '/@:name_id/outbox',
+        destination: '/accounts/:name_id/outbox'
       }
     ]
   }
