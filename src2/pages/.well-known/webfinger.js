@@ -53,7 +53,7 @@ export async function getServerSideProps({req, res, context, query}) {
         {
           "rel":"self",
           "type":"application/activity+json",
-          "href":FullAppUrl(`@${name_id}`)
+          "href":FullAppUrl(`@${name_id}/ap`)
         }
       ]
     }
