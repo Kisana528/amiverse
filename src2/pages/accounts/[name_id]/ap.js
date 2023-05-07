@@ -1,5 +1,5 @@
 import axios from '@/lib/axios'
-import FullAppUrl from '@/components/full_app_url';
+import FullAppUrl from '@/components/full_app_url'
 
 export async function getServerSideProps({req, res, context, query}) {
   let accountData = {}
