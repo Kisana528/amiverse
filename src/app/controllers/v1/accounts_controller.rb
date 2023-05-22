@@ -13,6 +13,7 @@ class V1::AccountsController < V1::ApplicationController
       items_count: @account.items_count,
       created_at: @account.created_at,
       updated_at: @account.updated_at,
+      public_key: @account.public_key,
       items: @account.items.map {|item| {
         item_id: item.item_id,
         item_type: item.item_type,

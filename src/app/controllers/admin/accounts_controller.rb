@@ -9,6 +9,17 @@ class Admin::AccountsController < Admin::ApplicationController
   end
   def create
   end
+  def generate_key
+    @account = Account.find_by(name_id: params[:name_id])
+    key_pair = OpenSSL::PKey::RSA.generate(2048)
+    # 秘密鍵の出力
+    private_key = key_pair.to_pem
+    # 公開鍵の出力
+    public_key = key_pair.public_key.to_pem
+    @account.update(public_key: public_key, private_key: private_key)
+    flash[:success] = '生成しました。'
+    redirect_to admin_account_path(@account.name_id)
+  end
   def edit
     @account = Account.find_by(name_id: params[:name_id])
   end

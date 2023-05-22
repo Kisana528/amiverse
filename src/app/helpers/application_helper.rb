@@ -14,7 +14,7 @@ module ApplicationHelper
     if Rails.env.production?
       return "https://m.amiverse.net/production/variants/#{true_key}"
     else
-      return "http://192.168.0.4:9000/development/variants/#{true_key}"
+      return "http://localhost:9000/development/variants/#{true_key}"
     end
   end
   def ati(account_id, type, image_id)
@@ -25,14 +25,14 @@ module ApplicationHelper
     if Rails.env.production?
       return "https://m.amiverse.net/production/variants/#{true_key}"
     else
-      return "http://192.168.0.4:9000/development/variants/#{true_key}"
+      return "http://localhost:9000/development/variants/#{true_key}"
     end
   end
   def full_api_url(path)
     if Rails.env.production?
       return "https://api.amiverse.net/#{path}"
     else
-      return "http://192.168.0.4:3000/#{path}"
+      return "http://localhost:3000/#{path}"
     end
   end
 end

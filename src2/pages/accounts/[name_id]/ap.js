@@ -32,7 +32,12 @@ export async function getServerSideProps({req, res, context, query}) {
     inbox: FullAppUrl(`@${accountData.name_id}/inbox`),
     outbox: FullAppUrl(`@${accountData.name_id}/outbox`),
     followers: FullAppUrl(`@${accountData.name_id}/followers`),
-    following: FullAppUrl(`@${accountData.name_id}/following`)
+    following: FullAppUrl(`@${accountData.name_id}/following`),
+    publicKey: {
+      id: `https://amiverse.net/@${accountData.name_id}#main-key`,
+      owner: `https://amiverse.net/@${accountData.name_id}`,
+      publicKeyPem: accountData.public_key
+    }
   }
 
   res.setHeader('Content-Type', 'application/activity+json')

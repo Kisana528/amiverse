@@ -1,5 +1,7 @@
 <% provide(:title, '赤') %>
 <h1>あか</h1>
+
+<%= link_to 'generate key', admin_generate_key_account_path(@account.name_id) %>
 <div style="overflow-y:scroll;">
   <table>
     <tr>

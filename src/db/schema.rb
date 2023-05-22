@@ -43,6 +43,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_02_060041) do
     t.boolean "moderator", default: false, null: false
     t.string "email", default: "", null: false
     t.string "bio", default: "", null: false
+    t.text "public_key", default: "", null: false
+    t.text "private_key", default: "", null: false
     t.string "location", default: "", null: false
     t.timestamp "birthday"
     t.text "lang", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"

@@ -79,6 +79,8 @@ Rails.application.routes.draw do
     get '@:name_id' => 'accounts#show', as: 'account'
     get '@:name_id/edit' => 'accounts#edit', as: 'edit_account'
     patch '@:name_id/update' => 'accounts#update', as: 'update_account'
+    
+    get '@:name_id/generate_key' => 'accounts#generate_key', as: 'generate_key_account'
 
     # invitation
     get 'invitations' => 'invitations#index'

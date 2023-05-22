@@ -19,6 +19,8 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.boolean :moderator, null: false, default: false
       t.string :email, null: false, default: ''
       t.string :bio, null: false, default: ''
+      t.text :public_key, null: false, default: ''
+      t.text :private_key, null: false, default: ''
       t.string :location, null: false, default: ''
       t.timestamp :birthday
       t.json :lang, null: false, default: []
