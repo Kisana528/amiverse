@@ -39,9 +39,9 @@ module AccountImages
       background: "black",
       fill: "white",
       font: font,
-      splice: "0x24",
+      #splice: "0x24",
       pointsize: "14",
-      draw: "gravity southeast text 10,2 'Posted by #{@name} @#{@name_id} | Amiverse' ",
+      #draw: "gravity southeast text 10,2 'Posted by #{@name} @#{@name_id} | Amiverse' ",
       deconstruct: true # アニメーションシーケンスの最適化2 #動くwebpで2回目処理時に文字が消えるバグ対策
     }
   end

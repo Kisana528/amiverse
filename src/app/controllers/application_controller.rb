@@ -39,6 +39,12 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+  def generate_rsa_key_pair
+    rsa_key = OpenSSL::PKey::RSA.new(2048)
+    private_key_pem = rsa_key.to_pem
+    public_key_pem = rsa_key.public_key.to_pem
+    { private_key: private_key_pem, public_key: public_key_pem }
+  end
   def check_and_variant_image(icon_id, pre_icon_id, type)
     if icon_id.present? && pre_icon_id != icon_id
       image = Image.find_by(image_id: icon_id)

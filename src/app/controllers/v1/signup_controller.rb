@@ -16,7 +16,7 @@ class V1::SignupController < V1::ApplicationController
     )
     if Invitation.exists?(invitation_code: params[:invitation_code])
       @account.account_id = unique_random_id(Account, 'account_id')
-      account_icon_banner_attach('api')
+      #account_icon_banner_attach('api')
       if @account.save
         render json: { created: true }
       else

@@ -19,7 +19,10 @@ class SignupController < ApplicationController
       render 'p2' and return
     end
     @account.account_id = unique_random_id(Account, 'account_id')
-    account_icon_banner_attach('')
+    key_pair = generate_rsa_key_pair
+    @account.private_key = key_pair[:private_key]
+    @account.public_key = key_pair[:public_key]
+    #account_icon_banner_attach('')
     if @account.save
       invitation.update(uses: invitation.uses + 1)
       flash[:success] = "アカウントが作成されました"
