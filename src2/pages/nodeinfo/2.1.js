@@ -35,4 +35,4 @@ export async function getServerSideProps({ req, res, context, query }) {
   return { props: {} }
 }
 
-export default function Nodeinfo() { }
+export default function Nodeinfo2_1() { }
