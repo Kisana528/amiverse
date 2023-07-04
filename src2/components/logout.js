@@ -12,7 +12,7 @@ export default function Logout() {
 
   const handleLogout = async () => {
     setLoginLoading(true)
-    await axios.delete('/api/logout')
+    await axios.delete('/logout')
       .then(response => {
         if (!response.data.logged_in) {
           setLoggedIn(false)

@@ -8,6 +8,7 @@ import React, { useContext, useState } from 'react'
 
 export default function Layout({ children }) {
   const loading = useContext(appContext).loading
+  const setLoading = useContext(appContext).setLoading
   const loadingStatus = useContext(appContext).loadingStatus
   const dark = useContext(appContext).dark
   const flash = useContext(appContext).flash
@@ -23,19 +24,25 @@ export default function Layout({ children }) {
       setRemoveFlash(true)
     }
   }
-
+  const closeLoading = () => setLoading(false)
+  
   return (
     <div className={`all ${dark ? "dark-mode" : "light-mode"} ${loading ? "loading-top" : ""}`}>
-      <div className={`loading-hide ${loading ? "loading" : ""}`}>
-        <div className="loading-logo">
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="29" fill="#8BFFB2"/>
-          <path d="M22 58C8.00001 76.5 99.5 53 78.5 45M21 55.5C-30 96.5 138.5 51 77.5 42" stroke="white"/>
-        </svg>
-        <br />
-        Amiverse
+      <div className={`${loading ? "loading" : "loading-hide"}`}>
+        <div className='loading-info'>
+          <div className="loading-logo">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="29" fill="#8BFFB2"/>
+              <path d="M22 58C8.00001 76.5 99.5 53 78.5 45M21 55.5C-30 96.5 138.5 51 77.5 42" stroke="white"/>
+            </svg>
+            <br />
+            Amiverse
+          </div>
+          <div className="loading-status">{loadingStatus}</div>
         </div>
-        <div className="loading-status">{loadingStatus}</div>
+        <div className='loading-detail'>
+          <div className='close-loading' onClick={closeLoading} >閉じる</div>
+        </div>
       </div>
       <div className="main-container">
         <Nav />
@@ -61,16 +68,20 @@ export default function Layout({ children }) {
         }
         .loading {
           z-index: 10;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
+          display: inline-block;
           position: fixed;
           top: 0;
           left: 0;
           width: 100vw;
           height: 100svh;
           background: rgb(22,22,22);
+        }
+        .loading-info {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          height: calc(100svh - 100px);
         }
         .loading-logo {
           font-size: 32px;
@@ -79,6 +90,9 @@ export default function Layout({ children }) {
         }
         .loading-status {
           color: #64a5fc;
+        }
+        .close-loading {
+          display: inline;
         }
         main {
           flex-grow: 1;

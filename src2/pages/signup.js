@@ -20,7 +20,7 @@ export default function Signup() {
 
   const checkInvitationCode = async (event) => {
     event.preventDefault()
-    await axios.post('/api/check-invitation-code', { 'invitation_code': invitationCode })
+    await axios.post('/check-invitation-code', { 'invitation_code': invitationCode })
       .then(res => {
         if (res.data.invitation_code) {
           setSignupStatus('招待を確認済み')
@@ -35,7 +35,7 @@ export default function Signup() {
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await axios.post('/api/signup', {
+    await axios.post('/signup', {
       'invitation_code': invitationCode,
       'name': name,
       'name_id': nameID,
