@@ -9,10 +9,12 @@
           <%= link_to '管理画面', admin_root_path %>
           <br />
           ストレージ容量(利用中/利用可能)
-          <%= @current_account.storage_size %>/
-          <%= @current_account.storage_max_size %>
+          <%= @current_account.storage_size %>/<%= @current_account.storage_max_size %>
         </div>
       <% end %>
+      <div class='amiverse-index-box'>
+        投稿
+      </div>
       <div id="items">
         <% @items.each do |item| %>
           <%= render 'shared/item_account', item: item, reactions: @reactions %>

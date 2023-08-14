@@ -7,14 +7,14 @@ class EncodeJob < ApplicationJob
       video.video.open do |file|
         temp_file.write(file.read.force_encoding("UTF-8"))
       end
-      transcoded_file = Tempfile.new(['transcoded_video', '.mp4'])
+      #transcoded_file = Tempfile.new(['transcoded_video', '.mp4'])
       movie = FFMPEG::Movie.new(temp_file.path)
-      movie.transcode(transcoded_file.path, %w[-vcodec libx265 -acodec copy])
-      video.encoded_video.attach(
-        key: "variants/accounts/#{account.account_id}/videos/#{video.video_id}.mp4",
-        io: File.open(transcoded_file.path),
-        filename: "#{video.id}.mp4"
-      )
+      #movie.transcode(transcoded_file.path, %w[-vcodec libx265 -acodec copy])
+      #video.encoded_video.attach(
+      #  key: "variants/accounts/#{account.account_id}/videos/#{video.video_id}.mp4",
+      #  io: File.open(transcoded_file.path),
+      #  filename: "#{video.id}.mp4"
+      #)
       output_file = File.join(dir, 'output.m3u8')
       options = {
         hls_list_size: 0, # セグメントの数。0にすると無限
@@ -27,13 +27,14 @@ class EncodeJob < ApplicationJob
 
       s3_config = Rails.application.config.active_storage.service_configurations['minio']
       s3 = Aws::S3::Resource.new(
-        endpoint: s3_config[:endpoint],
-        region: s3_config[:region],
-        access_key_id: s3_config[:access_key_id],
-        secret_access_key: s3_config[:secret_access_key],
-        force_path_style: s3_config[:force_path_style]
+        endpoint: 'http://minio:9000',
+        region: 'amiverse',
+        access_key_id: 'minioroot',
+        secret_access_key: 'minioroot',
+        force_path_style: true
       )
 
+      s3.bucket('development').object(`variants/accounts/#{account.account_id}/videos/#{video.video_id}`).upload_stream('')
       Dir.glob("#{dir}/*").each do |file_path|
         s3.bucket('development').object(`variants/accounts/#{account.account_id}/videos/#{video.video_id}`).upload_file(file_path)
       end

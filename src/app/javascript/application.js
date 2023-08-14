@@ -4,6 +4,8 @@ import "controllers"
 import "@rails/actioncable"
 import "channels"
 
+console.log("JSのテスト！");
+
 window.onload = () => {
   let tabToggleTF = false
   let themeToggleTF = true

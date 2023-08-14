@@ -10,7 +10,6 @@ class ItemsController < ApplicationController
     @items = Item.offset(offset_item.to_i).limit(limit_item.to_i)
   end
   def show
-    @reactions = Reaction.all
     # ?reactionが?個
   end
   def new

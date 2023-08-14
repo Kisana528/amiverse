@@ -1,7 +1,7 @@
 <nav>
   <div class="nav-logo">
     <div class="nav-li">
-      <%= link_to root_path do %>
+      <%= link_to root_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">🍭</div>
           <div class="nav-list-info">APIv0.1</div>
@@ -11,7 +11,7 @@
   </div>
   <div class="nav-ul">
     <div class="nav-li">
-      <%= link_to root_path do %>
+      <%= link_to root_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">😀</div>
           <div class="nav-list-info">HOME</div>
@@ -19,7 +19,7 @@
       <% end %>
     </div>
     <div class="nav-li">
-      <%= link_to root_path do %>
+      <%= link_to root_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">🦄</div>
           <div class="nav-list-info">Discovery</div>
@@ -27,54 +27,54 @@
       <% end %>
     </div>
     <div class="nav-li">
-      <%= link_to items_path do %>
+      <%= link_to items_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">📚</div>
-          <div class="nav-list-info">items</div>
+          <div class="nav-list-info">TL</div>
         </div>
       <% end %>
     </div>
     <div class="nav-li">
-      <%= link_to reactions_path do %>
+      <%= link_to reactions_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">🎞️</div>
-          <div class="nav-list-info">reactions</div>
+          <div class="nav-list-info">LIVE</div>
         </div>
       <% end %>
     </div>
     <div class="nav-li">
-      <%= link_to root_path do %>
+      <%= link_to root_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">🎉</div>
-          <div class="nav-list-info">Notice</div>
+          <div class="nav-list-info">NOTICE</div>
         </div>
       <% end %>
     </div>
     <div class="nav-li">
-      <div id="theme-button">
+      <%= link_to root_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">📧</div>
           <div class="nav-list-info">DM</div>
         </div>
-      </div>
+      <% end %>
     </div>
     <div class="nav-li">
       <% if @current_account %>
-        <%= link_to account_path(@current_account.name_id) do %>
+        <%= link_to account_path(@current_account.name_id), style: "width: 100%;" do %>
           <div class="nav-list-container">
             <% if !@current_account.icon_id.blank? %>
               <%= image_tag ati(@current_account.account_id, 'icon', @current_account.icon_id), class: 'nav-list-image-icon' %>
             <% else %>
               <%= image_tag 'icon.webp', class: 'nav-list-image-icon' %>
             <% end %>
-            <div class="nav-list-info">Me</div>
+            <div class="nav-list-info"><%= @current_account.name %>@<%= @current_account.name_id %></div>
           </div>
         <% end %>
       <% else %>
         <%= link_to login_path do %>
           <div class="nav-list-container">
             <div class="nav-list-icon">💖</div>
-            <div class="nav-list-info">Login</div>
+            <div class="nav-list-info">LOGIN</div>
           </div>
         <% end %>
       <% end %>
@@ -82,7 +82,7 @@
   </div>
   <div class="nav-menu">
     <div class="nav-li">
-      <%= link_to settings_path do %>
+      <%= link_to settings_path, style: "width: 100%;" do %>
         <div class="nav-list-container">
           <div class="nav-list-icon">⚙️</div>
           <div class="nav-list-info">Settings</div>

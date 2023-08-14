@@ -1,14 +1,19 @@
-<h1>images</h1>
-<%= link_to 'new', storage_images_new_path %>
-
+<% provide(:title, '画像') %>
+<% provide(:main_header_text, '画像') %>
+<% content_for :main_content do %>
+  <%= link_to 'new', storage_images_new_path %>
+  <br />
   <% @images.each do |image| %>
-    <%= image.image_id %>
-    <%= image.uuid %>
-    <%= image.name %>
-    <%= image.description %>
-    <% if image.image.attached? %>
-      <%= image_tag osp(image.image.key) %>
-    <% else %>
-      <p>のいまげ</p>
-    <% end %>
+    <div>
+      名前:<%= image.name %>
+      ID:<%= image.image_id %>
+      説明:<%= image.description %>
+      <% if image.image.attached? %>
+        <%= image_tag osp(image.image.key), class: 'storage-images-image' %>
+      <% else %>
+        <div>のいまげ</div>
+      <% end %>
+    </div>
   <% end %>
+<% end %>
+<%= render 'shared/default_layout' %>

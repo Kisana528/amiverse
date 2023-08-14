@@ -1,16 +1,10 @@
 <%= form_with model: @account, url: yield(:url), data: { turbo: false } do |f| %>
   <%= render 'shared/error_messages', instead: @account %>
   <% type = yield(:type) %>
-  <%= f.label :icon, 'アイコン' %>
-  <%= f.file_field :icon %>
-  <br/>
   <div class="text-field-group">
     <%= f.text_field :icon_id, class: 'text-field-field', placeholder: ' ' %>
     <%= f.label :icon_id, 'アイコンID', class: 'text-field-label' %>
   </div>
-  <br/>
-  <%= f.label :banner, 'バナー' %>
-  <%= f.file_field :banner %>
   <br/>
   <div class="text-field-group">
     <%= f.text_field :banner_id, class: 'text-field-field', placeholder: ' ' %>

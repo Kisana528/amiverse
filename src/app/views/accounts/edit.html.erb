@@ -1,7 +1,9 @@
 <% provide(:title, 'アカウント編集') %>
+<% provide(:main_header_text, 'アカウント編集') %>
 <% provide(:url, update_account_path) %>
 <% provide(:type, 'edit') %>
 <% provide(:submit_button_text, 'アカウントを編集') %>
-<h1>アカウント編集</h1>
-  <p>こちらより、アカウントの編集ができます。</p>
-<%= render 'shared/account_form' %>
+<% content_for :main_content do %>
+  <%= render 'shared/account_form' %>
+<% end %>
+<%= render 'shared/default_layout' %>

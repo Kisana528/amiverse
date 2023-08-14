@@ -1,0 +1,33 @@
+<% provide(:title, 'SETTING') %>
+<% provide(:main_header_text, 'SETTING') %>
+<% content_for :main_content do %>
+<div class="settings-main">
+  <div class="settings-main-box">
+    <div>プロフィール</div>
+    <div><%= @current_account.name %></div>
+    <div>@<%= @current_account.name_id %></div>
+    <div>@aid:<%= @current_account.account_id %></div>
+    <div>ロケーション</div>
+    <div>バースデー</div>
+    <div>...</div>
+  </div>
+  <div class="settings-main-box">
+    <%= link_to 'ストレージ', storage_path %>
+    <div>容量(利用中/利用可能)</div>
+    <div>
+      <%= @current_account.storage_size %>/<%= @current_account.storage_max_size %>
+    </div>
+    <div>画像</div>
+    <div>動画</div>
+    <div>音声</div>
+    <div>...</div>
+  </div>
+</div>
+<div class="settings-lists">
+  <div>アカウント</div>
+  <div>表示</div>
+  <div>通知</div>
+  <div>その他</div>
+</div>
+<% end %>
+<%= render 'shared/default_layout' %>

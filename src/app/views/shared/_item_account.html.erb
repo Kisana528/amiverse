@@ -1,8 +1,8 @@
 <div class="item">
   <%= link_to account_path(item.account.name_id) do %>
     <div class="item-whose">
-      <% if !@current_account.icon_id.blank? %>
-        <%= image_tag ati(@current_account.account_id, 'icon', @current_account.icon_id), class: 'item_account_image' %>
+      <% if !item.account.icon_id.blank? %>
+        <%= image_tag ati(item.account.account_id, 'icon', item.account.icon_id), class: 'item_account_image' %>
       <% else %>
         <%= image_tag 'icon.webp', class: 'item_account_image' %>
       <% end %>

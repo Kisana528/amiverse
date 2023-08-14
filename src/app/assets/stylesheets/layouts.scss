@@ -9,6 +9,7 @@ main {
   border-left: 0.5px solid;
   box-sizing: border-box;
   background-color: var(--main-container-background-color);
+  overflow: hidden;
 }
 .main-header {
   height: 50px;
@@ -27,15 +28,16 @@ main {
   -webkit-text-fill-color: transparent;
   font-size: 20px;
 }
-@media (max-width: 400px) {
+@media (max-width: 700px) {
   /* FORM-1 */
   main {
     border: none;
     width: 100%;
     min-height: 100svh;
+    padding-bottom: 30px;
   }
 }
-@media (min-width: 600px) {
+@media (min-width: 1000px) {
   /* FORM-3 */
   main {
     border-right: 0.5px solid;

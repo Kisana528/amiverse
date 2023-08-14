@@ -1,0 +1,9 @@
+<% provide(:title, 'EXAMPLE TTL') %>
+<% provide(:main_header_text, 'EXAMPLE HDR') %>
+<% content_for :js do %>
+   <%= javascript_import_module_tag "dir/file" %>
+ <% end %>
+<% content_for :main_content do %>
+  <%# main content %>
+<% end %>
+<%= render 'shared/default_layout' %>

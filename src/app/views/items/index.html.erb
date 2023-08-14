@@ -1,14 +1,14 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>Items</h1>
-
-<div id="items">
-  <% @items.each do |item| %>
-    <%= render item %>
-    <p>
-      <%= link_to "Show this item", item_path(item.item_id) %>
-    </p>
-  <% end %>
-</div>
-
-<%= link_to "New item", new_item_path %>
+<% provide(:title, 'TL') %>
+<% provide(:main_header_text, 'TL') %>
+<% content_for :js do %>
+   <%= javascript_import_module_tag "items/index" %>
+ <% end %>
+<% content_for :main_content do %>
+  <div id="items">
+    <% @items.each do |item| %>
+      <%= render 'shared/item_account', item: item, reactions: @reactions %>
+    <% end %>
+  </div>
+  <%= link_to "New item", new_item_path %>
+<% end %>
+<%= render 'shared/default_layout' %>
