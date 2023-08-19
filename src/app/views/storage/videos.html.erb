@@ -1,14 +1,26 @@
-<h1>videos</h1>
-<%= link_to 'new', storage_videos_new_path %>
-
+<% provide(:title, 'VIDEOS') %>
+<% provide(:main_header_text, 'VIDEOS') %>
+<% content_for :js do %>
+   <%= javascript_import_module_tag "hls/hls" %>
+ <% end %>
+<% content_for :main_content do %>
+  <%= link_to 'new', storage_videos_new_path %>
   <% @videos.each do |video| %>
     <%= video.video_id %>
     <%= video.uuid %>
     <%= video.name %>
     <%= video.description %>
-    <% if video.video.attached? %>
-      <%= video_tag osp(video.video.key, '.mp4'), controls: true, width: '300px' %>
-    <% else %>
-      <p>のいまげ</p>
-    <% end %>
+    <video controls class='video-view' id='video-<%= video.video_id %>'></video>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <script>
+      var video = document.getElementById('video-<%= video.video_id %>');
+      var videoSrc = 'http://localhost:9000/development/variants/accounts/00000000000000/videos/<%= video.video_id %>/output.m3u8';
+      if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+      }
+    </script>
   <% end %>
+<% end %>
+<%= render 'shared/default_layout' %>

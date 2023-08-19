@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import {appContext} from '@/pages/_app'
 import ItemAccount from '@/components/item_account'
+import Hls from 'hls.js'
 
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
@@ -42,6 +43,16 @@ export default function Home() {
     return () => {ignore = true}
   },[loggedIn])
 
+  const videoRef = useRef(null)
+  const video = videoRef.current
+  const videoSrc = 'http://localhost:9000/development/variants/accounts/00000000000000/videos/xho6e3zyfd5g4w/output.m3u8'
+
+  if (Hls.isSupported()) {
+    const hls = new Hls()
+    hls.loadSource(videoSrc)
+    hls.attachMedia(video)
+  }
+
   const loggedInContent = (
     <>
       <div>
@@ -49,15 +60,21 @@ export default function Home() {
         <br />
         <Link href="/items">投稿を見る</Link>
         <br />
-        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="22" cy="24" r="6" fill="#D9D9D9"/>
-<circle cx="22" cy="50" r="6" fill="#D9D9D9"/>
-<circle cx="22" cy="76" r="6" fill="#D9D9D9"/>
-<rect x="34" y="19" width="50" height="10" rx="3" fill="#D9D9D9"/>
-<rect x="34" y="45" width="50" height="10" rx="3" fill="#D9D9D9"/>
-<rect x="34" y="71" width="50" height="10" rx="3" fill="#D9D9D9"/>
-</svg>
 
+
+
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="24" r="6" fill="#D9D9D9"/>
+          <circle cx="22" cy="50" r="6" fill="#D9D9D9"/>
+          <circle cx="22" cy="76" r="6" fill="#D9D9D9"/>
+          <rect x="34" y="19" width="50" height="10" rx="3" fill="#D9D9D9"/>
+          <rect x="34" y="45" width="50" height="10" rx="3" fill="#D9D9D9"/>
+          <rect x="34" y="71" width="50" height="10" rx="3" fill="#D9D9D9"/>
+        </svg>
+
+        <div className="video-view" >
+          <video ref={videoRef} controls />
+        </div>
 
       </div>
       <div>
@@ -126,6 +143,9 @@ export default function Home() {
         .main-container {
           background: var(--main-container-background-color);
           padding: 5px;
+        }
+        .video-view {
+          width: 100%;
         }
       `}</style>
     </>

@@ -16,9 +16,6 @@
     <div class="main-container dark-mode" id="main-container">
       <%= render 'layouts/nav' %>
       <main>
-        <div class='main-header'>
-          <%= yield :header %>
-        </div>
         <%= yield %>
         <% flash.each do |message_type, message| %>
           <div class="<%= message_type %>"><%= message %></div>

@@ -8,7 +8,7 @@
   width: 100%;
   aspect-ratio: 1/1;
   position: sticky;
-  top: 60px;
+  top: 0px;
   overflow: hidden;
 }
 .banner-container {
@@ -35,7 +35,7 @@
   backdrop-filter: blur(3px);
   //box-shadow: 0 -20px 25px 10px #dc24a138;
   position: sticky;
-  top: 59px;
+  top: 0px;
   z-index: 2;
   transition-duration: 0.5s;
   align-items: center;
@@ -101,7 +101,7 @@
   //box-shadow: 0 9px 12px 1px #dc24a138;
   z-index: 2;
   position: sticky;
-  top: 113px;
+  top: 54px;
   div {
     height: 30px;
     line-height: 30px;
