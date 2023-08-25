@@ -11,7 +11,10 @@ git fetch origin main
 git reset --hard origin/main
 docker-compose down
 docker-compose up -d --build
-docker container exec -it amiverse_app_1 bash
+docker compose run --rm app bash
+$bundle
+$EDITOR="nano" rails credentials:edit
+docker container exec -it amiverse-app-1 bash
 rails db:create
 rails db:seed
 ```
