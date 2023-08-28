@@ -8,10 +8,9 @@ local:
 
 minio:
   service: S3
-  endpoint: 'http://minio:9000'
-  access_key_id: minioroot
-  secret_access_key: minioroot
-  region: amiverse
-  bucket: <%= ENV["RAILS_ENV"] %>
-  #urlにバケット名を追加されるのを防ぐ
+  endpoint: <%= ENV["S3_ENDPOINT_0"] %>
+  access_key_id: <%= ENV["S3_USER"] %>
+  secret_access_key: <%= ENV["S3_PASSWORD"] %>
+  region: <%= ENV["S3_REGION"] %>
+  bucket: <%= ENV["S3_BUCKET"] %>
   force_path_style: true

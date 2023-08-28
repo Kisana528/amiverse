@@ -1,25 +1,40 @@
-# アプリ作成
-ブログで手順公開。
-## 汎用SNSです
-アカウント、投稿機能あります。
-ブロックチェーンに対応したいです。
-## 本番構築
+# 汎用マイクロブログSNSのようなもの
+## 特徴
+非中央集権・分散型SNSとして運用する機能があります。
+文章に加え、画像・動画の投稿もできます。
+投稿に多様なリアクションをつけられます。
+## 本番環境構築方法
+ダウンロード
 ```
-git clone https://github.com/Kisana528/amiverse.git
-chown -R kisana:kisana /amiverse
-git fetch origin main
-git reset --hard origin/main
-docker-compose down
-docker-compose up -d --build
-docker compose run --rm app bash
-$bundle
-$EDITOR="nano" rails credentials:edit
-docker container exec -it amiverse-app-1 bash
-rails db:create
-rails db:seed
+$git clone https://github.com/Kisana528/amiverse.git
+$chown -R user:group /amiverse
+$git fetch origin main
+$git reset --hard origin/main
 ```
-## 将来実装したい
-- Redis(セッションなど管理)
+app内bashに入る
+```
+$docker compose run --rm app bash
+```
+credentials作成
+```
+$$bundle
+$$EDITOR="nano" rails credentials:edit
+$$exit
+```
+Docker Composeで起動
+```
+$docker compose up -d --build
+```
+app内
+```
+$docker container exec -it amiverse-app-1 bash
+```
+db作成とマイグレート
+```
+$$rails db:create
+```
+## 実装予定
+- Redis(揮発性メモリ上でデータ管理)
 - Es(検索最適化)
 
 ## 開発ルール

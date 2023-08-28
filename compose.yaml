@@ -1,13 +1,21 @@
-version: '3.8'
 services:
   app:
     build: .
     tty: true
     stdin_open: true
     environment:
-      RAILS_ENV: production
+      RAILS_ENV: 'production'
       RAILS_SERVE_STATIC_FILES: 'true'
       RAILS_SECURE_COOKIES: 'true'
+      DB_HOST: 'db'
+      DB_USER: 'root'
+      DB_PASSWORD: 'mdbroot'
+      S3_ENDPOINT_0: 'http://minio:9000/'
+      S3_ENDPOINT_1: 'https://m.amiverse.net/'
+      S3_REGION: 'amiverse'
+      S3_BUCKET: 'production'
+      S3_USER: 'minioroot'
+      S3_PASSWORD: 'minioroot'
     working_dir: /app
     restart: always
     volumes:
@@ -29,7 +37,11 @@ services:
     tty: true
     stdin_open: true
     environment:
-      - WATCHPACK_POLLING=true
+      WATCHPACK_POLLING: true
+      NEXT_PUBLIC_GA_ID: 'G-'
+      NEXT_PUBLIC_APPNAME: 'https://amiverse.net/'
+      NEXT_PUBLIC_APINAME: 'https://api.amiverse.net/v1/'
+      NEXT_PUBLIC_WSNAME: 'wss://api.amiverse.net/cable/'
     working_dir: /app
     restart: always
     volumes:
@@ -41,10 +53,8 @@ services:
   db:
     image: mariadb:10.9.5
     environment:
-      TZ: "Asia/Tokyo"
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_USER: dockermdb
-      MARIADB_PASSWORD: dockermdb
+      TZ: 'Asia/Tokyo'
+      MARIADB_ROOT_PASSWORD: 'mdbroot'
     volumes:
       - db-vol:/var/lib/mysql
     stdin_open: true
@@ -56,9 +66,7 @@ services:
   phpmyadmin:
     image: phpmyadmin:5.2.1
     environment:
-      PMA_HOSTS: db
-      PMA_USER: root
-      PMA_PASSWORD: root
+      PMA_HOSTS: 'db'
     ports:
       - '8080:80'
     stdin_open: true
@@ -73,8 +81,8 @@ services:
       - minio-vol:/data
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: minioroot
-      MINIO_ROOT_PASSWORD: minioroot
+      MINIO_ROOT_USER: 'minioroot'
+      MINIO_ROOT_PASSWORD: 'minioroot'
     stdin_open: true
     tty: true
     restart: always

@@ -1,4 +1,5 @@
 class EncodeJob < ApplicationJob
+  require 'aws-sdk-s3'
   queue_as :default
 
   def perform(video, account)
@@ -20,8 +21,6 @@ class EncodeJob < ApplicationJob
       movie.transcode(output_file, options) {
         |progress| video.update(description: (progress * 100).round(2))
       }
-
-      s3_config = Rails.application.config.active_storage.service_configurations['minio']
       s3 = Aws::S3::Resource.new(
         endpoint: 'http://minio:9000',
         region: 'amiverse',
