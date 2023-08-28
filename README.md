@@ -7,31 +7,46 @@
 ダウンロード
 ```
 $git clone https://github.com/Kisana528/amiverse.git
-$chown -R user:group /amiverse
+$chown -R user:group amiverse
+$cd amiverse
 $git fetch origin main
 $git reset --hard origin/main
 ```
 app内bashに入る
 ```
-$docker compose run --rm app bash
+$docker compose run app bash
 ```
 credentials作成
 ```
 $$bundle
-$$EDITOR="nano" rails credentials:edit
+$$EDITOR="mate --wait" rails credentials:edit
+```
+db作成とマイグレート
+```
+$$rails db:create
+$$rails db:migrate
+```
+seedあれば./src/db/seeds.rbを保存後
+```
+$$rails db:seed
+```
+閉じる
+```
 $$exit
 ```
 Docker Composeで起動
 ```
 $docker compose up -d --build
 ```
-app内
+以上で完了。
+## メンテ
+compose起動中app内に入るには
 ```
 $docker container exec -it amiverse-app-1 bash
 ```
-db作成とマイグレート
+ログを確認するには
 ```
-$$rails db:create
+$docker compose logs --follow --tail '1000'
 ```
 ## 実装予定
 - Redis(揮発性メモリ上でデータ管理)
