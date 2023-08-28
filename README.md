@@ -26,6 +26,7 @@ db作成とマイグレート
 $$rails db:create
 $$rails db:migrate
 ```
+ブラウザで[MiniIO Console](http://localhost:9001/)を開きバケットとリージョンを設定。
 seedあれば./src/db/seeds.rbを保存後
 ```
 $$rails db:seed
