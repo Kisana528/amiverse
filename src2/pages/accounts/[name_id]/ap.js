@@ -43,7 +43,7 @@ export async function getServerSideProps({req, res, context, query}) {
     }
   }
 
-  res.setHeader('Content-Type', 'application/activity+json')
+  res.setHeader('Content-Type', 'application/activity+json; charset=utf-8')
   res.write(JSON.stringify(data))
   res.end()
   return { props: {} }
