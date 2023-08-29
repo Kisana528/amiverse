@@ -1,0 +1,26 @@
+<% provide(:title, 'SETTINGS') %>
+<% provide(:main_header_text, 'SETTINGS') %>
+<% content_for :main_content do %>
+<div class="settings-container">
+  <div class="settings-lists">
+    <div><%= link_to 'プロフィール', settings_profile_path %></div>
+    <div><%= link_to 'アカウント', settings_account_path %></div>
+    <div><%= link_to 'ストレージ', settings_storage_path %></div>
+    <div><%= link_to 'コンテンツ', settings_contents_path %></div>
+    <div><%= link_to 'アクティビティ', settings_activity_path %></div>
+    <div><%= link_to '通知', settings_notifications_path %></div>
+    <div><%= link_to '表示', settings_display_path %></div>
+    <div><%= link_to 'セキュリティと権限', settings_security_and_authority_path %></div>
+    <div><%= link_to 'アナリティクス', settings_analytics_path %></div>
+    <div><%= link_to '請求とお支払い', settings_bills_and_payments_path %></div>
+    <div><%= link_to 'その他', settings_others_path %></div>
+    <div class="settings-resource">
+      <div><%= link_to 'リソース', resources_path %></div>
+    </div>
+  </div>
+  <div class="settings-main">
+    <%= yield(:settings_content) %>
+  </div>
+</div>
+<% end %>
+<%= render 'shared/default_layout' %>

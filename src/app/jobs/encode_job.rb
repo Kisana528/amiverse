@@ -22,16 +22,16 @@ class EncodeJob < ApplicationJob
         |progress| video.update(description: (progress * 100).round(2))
       }
       s3 = Aws::S3::Resource.new(
-        endpoint: 'http://minio:9000',
-        region: 'amiverse',
-        access_key_id: 'minioroot',
-        secret_access_key: 'minioroot',
+        endpoint: ENV["S3_ENDPOINT_0"],
+        region: ENV["S3_REGION"],
+        access_key_id: ENV["S3_USER"],
+        secret_access_key: ENV["S3_PASSWORD"],
         force_path_style: true
       )
 
       Dir.glob("#{dir}/*").each do |file_path|
         file_name = File.basename(file_path)
-        s3.bucket('development').object("variants/accounts/#{account.account_id}/videos/#{video.video_id}/#{file_name}").upload_file(file_path)
+        s3.bucket(ENV["S3_BUCKET"]).object("variants/accounts/#{account.account_id}/videos/#{video.video_id}/#{file_name}").upload_file(file_path)
       end
 
       temp_file.close

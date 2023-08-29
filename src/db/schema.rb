@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_15_000704) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
   create_table "account_reaction_items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "reaction_id", null: false
@@ -93,10 +93,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_15_000704) do
     t.string "filename", null: false
     t.string "content_type"
     t.text "metadata"
-    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -112,12 +112,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_15_000704) do
     t.string "uuid", null: false
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.string "visibility", default: "", null: false
+    t.boolean "nsfw", default: false, null: false
+    t.string "nsfw_message", default: "", null: false
+    t.boolean "public_visibility", default: true, null: false
+    t.text "local_group_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "local_account_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_images_on_account_id"
     t.index ["image_id", "uuid"], name: "index_images_on_image_id_and_uuid", unique: true
+    t.check_constraint "json_valid(`local_account_visibility`)", name: "local_account_visibility"
+    t.check_constraint "json_valid(`local_group_visibility`)", name: "local_group_visibility"
   end
 
   create_table "invitations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -153,8 +159,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_15_000704) do
     t.text "flow", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.string "content", default: "", null: false
-    t.boolean "nsfw", default: false, null: false
     t.boolean "cw", default: false, null: false
+    t.string "cw_message", default: "", null: false
     t.text "version", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
@@ -200,12 +206,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_15_000704) do
     t.string "uuid", null: false
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.string "visibility", default: "", null: false
+    t.boolean "nsfw", default: false, null: false
+    t.string "nsfw_message", default: "", null: false
+    t.boolean "public_visibility", default: true, null: false
+    t.text "local_group_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "local_account_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_videos_on_account_id"
     t.index ["video_id", "uuid"], name: "index_videos_on_video_id_and_uuid", unique: true
+    t.check_constraint "json_valid(`local_account_visibility`)", name: "local_account_visibility"
+    t.check_constraint "json_valid(`local_group_visibility`)", name: "local_group_visibility"
   end
 
   add_foreign_key "account_reaction_items", "accounts"

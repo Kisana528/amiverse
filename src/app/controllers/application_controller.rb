@@ -80,7 +80,6 @@ class ApplicationController < ActionController::Base
         name_id: account.name_id
       },
       content: item.content,
-      nsfw: item.nsfw,
       cw: item.cw,
       flow: item.flow,
       item_type: item.item_type,

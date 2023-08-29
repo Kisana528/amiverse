@@ -14,7 +14,7 @@ $git reset --hard origin/main
 ```
 app内bashに入る
 ```
-$docker compose run app bash
+$docker compose run --rm app bash
 ```
 credentials作成
 ```

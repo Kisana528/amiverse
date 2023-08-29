@@ -57,7 +57,7 @@ export async function getServerSideProps({req, res, context, query}) {
         }
       ]
     }
-    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Content-Type', 'application/jrd+json; charset=utf-8')
     res.write(JSON.stringify(data))
   } else {
     res.statusCode = 400;

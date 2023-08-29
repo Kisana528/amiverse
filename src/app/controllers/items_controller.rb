@@ -2,8 +2,8 @@ class ItemsController < ApplicationController
   before_action :logged_in_account, only: %i[ index show new create update destroy ]
   before_action :set_item, only: %i[ show edit update destroy ]
   def index
-    offset_item = 1
-    limit_item = 10
+    offset_item = 0
+    limit_item = 9
     offset_item = params[:o_i] unless params[:o_i].nil?
     limit_item = params[:l_i] unless params[:l_i].nil?
 
@@ -67,7 +67,6 @@ class ItemsController < ApplicationController
     end
     def item_params
       params.require(:item).permit(:content,
-                                  :nsfw,
                                   :cw)
     end
 end

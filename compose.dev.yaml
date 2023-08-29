@@ -31,7 +31,7 @@ services:
       rails s -b 0.0.0.0"
 
   front:
-    image: node:lts-alpine3.17
+    image: node:lts
     tty: true
     stdin_open: true
     environment:
@@ -47,7 +47,7 @@ services:
     command: sh -c "npm install && npm update && npm run dev"
 
   db:
-    image: mariadb:10.9.5
+    image: mariadb:latest
     environment:
       TZ: 'Asia/Tokyo'
       MARIADB_ROOT_PASSWORD: 'mdbroot'
@@ -59,7 +59,7 @@ services:
       - '3306:3306'
 
   phpmyadmin:
-    image: phpmyadmin:5.2.1
+    image: phpmyadmin:latest
     environment:
       PMA_HOSTS: 'db'
     ports:
@@ -70,7 +70,7 @@ services:
       - db
 
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     volumes:
       - minio-vol:/data
     command: server /data --console-address ":9001"

@@ -8,8 +8,8 @@ class CreateItems < ActiveRecord::Migration[7.0]
       t.json :flow, null: false, default: []
       t.json :meta, null: false, default: []
       t.string :content, null: false, default: ''
-      t.boolean :nsfw, null: false, default: false
       t.boolean :cw, null: false, default: false
+      t.string :cw_message, null: false, default: ''
       t.json :version, null: false, default: []
       t.boolean :deleted, null: false, default: false
       t.timestamps

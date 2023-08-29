@@ -2,18 +2,35 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
-  # static
-  root 'amiverse#index'
-  get 'about' => 'amiverse#about'
-  get 'info' => 'amiverse#info'
-  get 'help' => 'amiverse#help'
-  get 'policy' => 'amiverse#policy'
-  get 'disclaimer' => 'amiverse#disclaimer'
-  get 'page1' => 'amiverse#page1'
-  get 'sitemap' => 'amiverse#sitemap'
+  # resource
+  root 'resources#index'
+  get 'about' => 'resources#about'
+  get 'info' => 'resources#info'
+  get 'help' => 'resources#help'
+  get 'privacy_policy' => 'resources#privacy_policy'
+  get 'disclaimer' => 'resources#disclaimer'
+  get 'page1' => 'resources#page1'
+  get 'sitemap' => 'resources#sitemap'
+  get 'tos' => 'resources#tos'
+  get 'feedback' => 'resources#feedback'
+  get 'help' => 'resources#help'
+  get 'resources' => 'resources#resources'
+  get 'release_notes' => 'resources#release_notes'
+  get 'blog' => 'resources#blog'
 
   # setting
   get 'settings' => 'settings#index'
+  get 'settings/profile' => 'settings#profile'
+  get 'settings/account' => 'settings#account'
+  get 'settings/storage' => 'settings#storage'
+  get 'settings/contents' => 'settings#contents'
+  get 'settings/activity' => 'settings#activity'
+  get 'settings/notifications' => 'settings#notifications'
+  get 'settings/display' => 'settings#display'
+  get 'settings/security_and_authority' => 'settings#security_and_authority'
+  get 'settings/analytics' => 'settings#analytics'
+  get 'settings/bills_and_payments' => 'settings#bills_and_payments'
+  get 'settings/others' => 'settings#others'
 
   # account
   get '@:name_id' => 'accounts#show', as: 'account'

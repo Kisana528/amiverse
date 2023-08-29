@@ -17,7 +17,7 @@ class StorageController < ApplicationController
   def index
   end
   def images
-    @images = Image.all
+    @images = Image.where(account_id: @current_account.id)
   end
   def new_image
     @image = Image.new

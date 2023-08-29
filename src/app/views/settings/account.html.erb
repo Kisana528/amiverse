@@ -1,0 +1,14 @@
+<% content_for :settings_content do %>
+  <%= form_with model: @current_account, url: update_account_path(@current_account.name_id), data: { turbo: false } do |f| %>
+    <div>アカウント</div>
+    <div>Eメール</div>
+    <div>共同運用</div>
+    <div>運用区分</div>
+    <div>データダウンロード</div>
+    <div>データ移行</div>
+    <div>アカウント凍結</div>
+    <div>アカウント削除</div>
+    <%= f.submit '保存' %>
+  <% end %>
+<% end %>
+<%= render 'settings/listed' %>

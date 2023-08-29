@@ -1,0 +1,29 @@
+<% content_for :settings_content do %>
+  <%= form_with model: @current_account, url: update_account_path(@current_account.name_id), data: { turbo: false } do |f| %>
+    <div>プロフィール</div>
+    <div>icon&banner</div>
+    <div class="text-field-group">
+      <%= f.text_field :name, class: 'text-field-field', placeholder: ' ' %>
+      <%= f.label :name, '名前', class: 'text-field-label' %>
+    </div>
+    <div class="text-field-group">
+      <%= f.text_field :name_id, class: 'text-field-field', placeholder: ' ' %>
+      <%= f.label :name_id, 'ID', class: 'text-field-label' %>
+    </div>
+    <div class="text-field-group">
+      <%= f.text_field :account_id, class: 'text-field-field', placeholder: ' ' %>
+      <%= f.label :account_id, '固有ID', class: 'text-field-label' %>
+    </div>
+    <div class="text-field-group">
+      <%= f.text_field :location, class: 'text-field-field', placeholder: ' ' %>
+      <%= f.label :location, '場所', class: 'text-field-label' %>
+    </div>
+    <div>バースデー</div>
+    <div>BIO</div>
+    <div>言語</div>
+    <div>追加情報</div>
+    <div>公開情報</div>
+    <%= f.submit '保存' %>
+  <% end %>
+<% end %>
+<%= render 'settings/listed' %>

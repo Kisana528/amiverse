@@ -23,23 +23,19 @@ module ApplicationHelper
     name = image_id + format
     true_key = File.join(dir, name)
     s3 = Aws::S3::Client.new(
-      endpoint: 'http://localhost:9000',
-      region: 'amiverse',
-      access_key_id: 'minioroot',
-      secret_access_key: 'minioroot',
+      endpoint: ENV["S3_ENDPOINT_0"],
+      region: ENV["S3_REGION"],
+      access_key_id: ENV["S3_USER"],
+      secret_access_key: ENV["S3_PASSWORD"],
       force_path_style: true
     )
     signer = Aws::S3::Presigner.new(client: s3)
     url = signer.presigned_url(
       :get_object,
-      bucket: 'development',
+      bucket: ENV["S3_BUCKET"],
       key: "variants/#{true_key}",
       expires_in: 12,)
-    if Rails.env.production?
-      return "https://m.amiverse.net/production/variants/#{true_key}"
-    else
-      return url
-    end
+    return url
   end
   def full_api_url(path)
     if Rails.env.production?

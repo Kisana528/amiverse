@@ -1,0 +1,14 @@
+.settings-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+.settings-lists {
+  width: 200px;
+}
+.settings-resource {
+  border-top: var(--font-color) 1px solid;
+}
+.settings-main {
+  width: 40%;
+  height: 100%;
+}

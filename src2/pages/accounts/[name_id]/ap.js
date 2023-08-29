@@ -12,7 +12,10 @@ export async function getServerSideProps({req, res, context, query}) {
       accountData = res.data
     })
   const data = {
-    "@context": "https://www.w3.org/ns/activitystreams",
+    "@context": [
+      "https://www.w3.org/ns/activitystreams",
+      "https://w3id.org/security/v1"
+    ],
     type: "Person",
     id: FullAppUrl(`@${accountData.name_id}`),
     url: FullAppUrl(`@${accountData.name_id}`),
