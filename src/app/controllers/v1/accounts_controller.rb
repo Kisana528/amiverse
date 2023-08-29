@@ -20,7 +20,6 @@ class V1::AccountsController < V1::ApplicationController
         flow: item.flow,
         meta: item.meta,
         content: item.content,
-        nsfw: item.nsfw,
         cw: item.cw,
         version: item.version,
         created_at: item.created_at,
