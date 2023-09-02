@@ -17,8 +17,8 @@ class V1::SessionsController < V1::ApplicationController
         account_id: account.account_id,
         name: account.name,
         name_id: account.name_id,
-        icon_url: ati(account.account_id, 'icon', account.icon_id),
-        banner_url: ati(account.account_id, 'banner', account.banner_id),
+        icon_url: signed_ati_url(account.account_id, 'icon', account.icon_id),
+        banner_url: signed_ati_url(account.account_id, 'banner', account.banner_id),
       }
     else
       render json: { logged_in: false }, status: 401

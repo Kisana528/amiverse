@@ -1,6 +1,3 @@
-<% content_for :js do %>
-   <%= javascript_import_module_tag "accounts/show" %>
- <% end %>
 <% content_for :main_content do %>
   <% provide(:title, 'アカウント詳細') %>
   <% if @account.present? %>
@@ -8,7 +5,7 @@
       <div class="top-container">
         <div class="banner-container" id="banner-container" >
           <% if !@account.banner_id.blank? %>
-            <%= image_tag ati(@account.account_id, 'banner', @account.banner_id), class: 'account-banner' %>
+            <%= image_tag signed_ati_url(@account.account_id, 'banner', @account.banner_id), class: 'account-banner' %>
           <% else %>
             <%= image_tag 'banner.webp', class: 'account-banner' %>
           <% end %>
@@ -18,7 +15,7 @@
         <div id="name-before"></div>
         <div class="icon-container">
           <% if !@account.icon_id.blank? %>
-            <%= image_tag ati(@account.account_id, 'icon', @account.icon_id), class: 'account-icon' %>
+            <%= image_tag signed_ati_url(@account.account_id, 'icon', @account.icon_id), class: 'account-icon' %>
           <% else %>
             <%= image_tag 'icon.webp', class: 'account-icon' %>
           <% end %>
@@ -57,5 +54,28 @@
   <% else %>
     <p>@<%= params[:name_id] %>というアカウントが見つかりませんでした。。。</p>
   <% end %>
+  <script>
+  if (document.getElementById('banner-container')) {
+  const scrollHandler = () => {
+    let elem = document.getElementById('banner-container')
+    let scrollY = window.scrollY / 2000 + 1
+    if (scrollY > 1.5) scrollY = 1.5
+    elem.style.transform = 'scale(' + scrollY + ')'
+  }
+  window.addEventListener('scroll', scrollHandler)
+  const header = document.getElementById('name-container')
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        header.classList.remove('fixed')
+        window.removeEventListener('scroll', scrollHandler)
+      } else {
+        header.classList.add('fixed')
+      }
+    }
+  })
+  observer.observe(document.getElementById('name-before'))
+}
+  </script>
 <% end %>
 <%= render 'shared/no_header' %>

@@ -8,22 +8,25 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
-  def osp(key, format = '.webp')
+  def signed_key_url(key, format = '.webp')
     dir = File.dirname(key)
     name = File.basename(key, '.*') + format
     true_key = File.join(dir, name)
-    if Rails.env.production?
-      return "https://m.amiverse.net/production/variants/#{true_key}"
-    else
-      return "http://localhost:9000/development/variants/#{true_key}"
-    end
+    return generate_signed_url(true_key)
   end
-  def ati(account_id, type, image_id, format = '.webp')
+  def signed_ati_url(account_id, type, image_id, format = ".webp")
     dir = "accounts/#{account_id}/#{type}"
     name = image_id + format
     true_key = File.join(dir, name)
+    return generate_signed_url(true_key)
+  end
+  def full_api_url(path)
+    return File.join(ENV["API_URL"], path)
+  end
+  private
+  def generate_signed_url(true_key)
     s3 = Aws::S3::Client.new(
-      endpoint: ENV["S3_ENDPOINT_0"],
+      endpoint: ENV["S3_ENDPOINT_1"],
       region: ENV["S3_REGION"],
       access_key_id: ENV["S3_USER"],
       secret_access_key: ENV["S3_PASSWORD"],
@@ -36,12 +39,5 @@ module ApplicationHelper
       key: "variants/#{true_key}",
       expires_in: 12,)
     return url
-  end
-  def full_api_url(path)
-    if Rails.env.production?
-      return "https://api.amiverse.net/#{path}"
-    else
-      return "http://localhost:3000/#{path}"
-    end
   end
 end

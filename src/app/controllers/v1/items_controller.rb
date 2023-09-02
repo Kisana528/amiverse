@@ -10,7 +10,7 @@ class V1::ItemsController < V1::ApplicationController
       account: {
         name_id: item.account.name_id,
         name: item.account.name,
-        icon_url: ati(item.account.account_id, 'icon', item.account.icon_id)
+        icon_url: signed_ati_url(item.account.account_id, 'icon', item.account.icon_id)
       },
       reactions: item.reactions.group(:reaction_id).count.map { |key, value| {
         reaction_id: key,
