@@ -1,5 +1,13 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
 
+  #sidekiq
+  mount Sidekiq::Web => '/sidekiq'
+  Sidekiq::Web.use(Rack::Auth::Basic) do |user, password|
+    [user, password] == [ENV['SIDEKIQ_USERNAME'], ENV['SIDEKIQ_PASSWORD']]
+  end
+
+  # action cable
   mount ActionCable.server => '/cable'
 
   # resource

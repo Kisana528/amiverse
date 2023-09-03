@@ -19,19 +19,29 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join("tmp/caching-dev.txt").exist?
-    config.action_controller.perform_caching = true
-    config.action_controller.enable_fragment_cache_logging = true
+  config.action_controller.perform_caching = true
+  config.action_controller.enable_fragment_cache_logging = true
 
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}"
-    }
-  else
-    config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
-  end
+  # config.cache_store = :memory_store
+  config.cache_store = :redis_cache_store, {
+    url: %w(redis://redis:6379/0),
+    expires_in: 30.minutes,
+    namespace: 'cache',
+  }
+  ENV["RAILS_SECURE_COOKIES"].present? ? secure_cookies = true : secure_cookies = false
+  config.session_store :redis_session_store,
+  domain: :all,
+  expires: 1.year.from_now,
+  secure: secure_cookies,
+  httponly: true,
+  servers: %w(redis://redis:6379/0),
+  key: 'ams',
+  redis: {
+    key_prefix: "session:"
+  }
+  config.public_file_server.headers = {
+    "Cache-Control" => "public, max-age=#{2.days.to_i}"
+  }
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :minio
@@ -73,4 +83,6 @@ Rails.application.configure do
   config.action_controller.forgery_protection_origin_check = false
 
   config.hosts << "app"
+
+  config.web_console.allowed_ips = '0.0.0.0/0'
 end

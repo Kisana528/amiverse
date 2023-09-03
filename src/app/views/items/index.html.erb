@@ -1,8 +1,5 @@
 <% provide(:title, 'TL') %>
 <% provide(:main_header_text, 'TL') %>
-<% content_for :js do %>
-   <%= javascript_import_module_tag "items/index" %>
- <% end %>
 <% content_for :main_content do %>
   <div id="items">
     <% @items.each do |item| %>

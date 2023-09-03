@@ -15,6 +15,24 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+  config.action_controller.enable_fragment_cache_logging = true
+
+  config.cache_store = :redis_cache_store, {
+    url: %w(redis://redis:6379/0),
+    expires_in: 30.minutes,
+    namespace: 'cache',
+  }
+  ENV["RAILS_SECURE_COOKIES"].present? ? secure_cookies = true : secure_cookies = false
+  config.session_store :redis_session_store,
+  domain: :all,
+  expires: 1.year.from_now,
+  secure: secure_cookies,
+  httponly: true,
+  servers: %w(redis://redis:6379/0),
+  key: 'ams',
+  redis: {
+    key_prefix: "session:"
+  }
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).

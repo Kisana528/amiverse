@@ -17,6 +17,9 @@ services:
       S3_BUCKET: 'development'
       S3_USER: 'minioroot'
       S3_PASSWORD: 'minioroot'
+      REDIS_URL: 'redis://redis:6379/'
+      SIDEKIQ_USERNAME: 'sidekiqroot'
+      SIDEKIQ_PASSWORD: 'sidekiqroot'
     working_dir: /app
     volumes:
       - ./src:/app
@@ -25,9 +28,11 @@ services:
     depends_on:
       - db
       - minio
+      - redis
     command: >
       bash -c "rm -f /app/tmp/pids/server.pid &&
       rm -rf /app/public/assets &&
+      gem cleanup &&
       bundle install -j4 &&
       rails s -b 0.0.0.0"
 
@@ -84,6 +89,49 @@ services:
       - '9000:9000'
       - '9001:9001'
 
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-vol:/data
+    ports:
+      - '6379:6379'
+
+  rediscommander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      REDIS_HOSTS: sidekiq:redis:6379,sidekiq2:redis:6379
+      TZ: JST-9
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+
+  sidekiq:
+    build: .
+    environment:
+      DB_HOST: 'db'
+      DB_USER: 'root'
+      DB_PASSWORD: 'mdbroot'
+      S3_ENDPOINT_0: 'http://minio:9000/'
+      S3_ENDPOINT_1: 'http://localhost:9000/'
+      S3_REGION: 'amiverse'
+      S3_BUCKET: 'development'
+      S3_USER: 'minioroot'
+      S3_PASSWORD: 'minioroot'
+      REDIS_URL: 'redis://redis:6379/'
+      SIDEKIQ_USERNAME: 'sidekiqroot'
+      SIDEKIQ_PASSWORD: 'sidekiqroot'
+    working_dir: /app
+    volumes:
+      - ./src:/app
+    depends_on:
+      - redis
+    command: >
+      bash -c "bundle install -j4 &&
+      bundle exec sidekiq -C config/sidekiq.yml"
+
+
 volumes:
   db-vol:
   minio-vol:
+  redis-vol:

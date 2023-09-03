@@ -21,7 +21,9 @@ gem 'active_storage_validations'
 gem 'rack-cors'
 gem 'streamio-ffmpeg'
 gem 'openssl'
-# gem "redis"
+gem 'sidekiq'
+gem "redis"
+gem 'redis-session-store'
 # gem "kredis"
 gem 'rubyzip', '2.3.0'
 group :development, :test do
