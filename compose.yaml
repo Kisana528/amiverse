@@ -4,7 +4,7 @@ services:
     tty: true
     stdin_open: true
     env_file:
-      - development.env
+      - production.env
     working_dir: /app
     restart: always
     volumes:
@@ -29,7 +29,7 @@ services:
     tty: true
     stdin_open: true
     env_file:
-      - development.env
+      - production.env
     working_dir: /app
     restart: always
     volumes:
@@ -41,7 +41,7 @@ services:
   db:
     image: mariadb:latest
     env_file:
-      - development.env
+      - production.env
     volumes:
       - db-vol:/var/lib/mysql
     stdin_open: true
@@ -53,7 +53,7 @@ services:
   phpmyadmin:
     image: phpmyadmin:latest
     env_file:
-      - development.env
+      - production.env
     ports:
       - '8080:80'
     stdin_open: true
@@ -68,7 +68,7 @@ services:
       - minio-vol:/data
     command: server /data --console-address ":9001"
     env_file:
-      - development.env
+      - production.env
     stdin_open: true
     tty: true
     restart: always
@@ -96,7 +96,7 @@ services:
   sidekiq:
     build: .
     env_file:
-      - development.env
+      - production.env
     working_dir: /app
     volumes:
       - ./src:/app
