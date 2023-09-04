@@ -12,18 +12,24 @@ module ApplicationHelper
     dir = File.dirname(key)
     name = File.basename(key, '.*') + format
     true_key = File.join(dir, name)
-    return generate_signed_url(true_key)
+    return generate_normal_url(true_key)
   end
   def signed_ati_url(account_id, type, image_id, format = ".webp")
     dir = "accounts/#{account_id}/#{type}"
     name = image_id + format
     true_key = File.join(dir, name)
-    return generate_signed_url(true_key)
+    return generate_normal_url(true_key)
   end
   def full_api_url(path)
     return File.join(ENV["API_URL"], path)
   end
   private
+  def generate_normal_url(true_key)
+    variant_key = File.join('variants', true_key)
+    bucket_key = File.join(ENV["S3_BUCKET"], variant_key)
+    url = File.join(ENV["S3_ENDPOINT_1"], bucket_key)
+    return url
+  end
   def generate_signed_url(true_key)
     s3 = Aws::S3::Client.new(
       endpoint: ENV["S3_ENDPOINT_1"],

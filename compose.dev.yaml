@@ -3,23 +3,8 @@ services:
     build: .
     tty: true
     stdin_open: true
-    environment:
-      RAILS_ENV: 'development'
-      RAILS_SERVE_STATIC_FILES: 'true'
-      RAILS_SECURE_COOKIES: ''
-      API_URL: 'http://localhost:3000/v1/'
-      DB_HOST: 'db'
-      DB_USER: 'root'
-      DB_PASSWORD: 'mdbroot'
-      S3_ENDPOINT_0: 'http://minio:9000/'
-      S3_ENDPOINT_1: 'http://localhost:9000/'
-      S3_REGION: 'amiverse'
-      S3_BUCKET: 'development'
-      S3_USER: 'minioroot'
-      S3_PASSWORD: 'minioroot'
-      REDIS_URL: 'redis://redis:6379/'
-      SIDEKIQ_USERNAME: 'sidekiqroot'
-      SIDEKIQ_PASSWORD: 'sidekiqroot'
+    env_file:
+      - development.env
     working_dir: /app
     volumes:
       - ./src:/app
@@ -40,11 +25,8 @@ services:
     image: node:lts
     tty: true
     stdin_open: true
-    environment:
-      WATCHPACK_POLLING: 'true'
-      NEXT_PUBLIC_APPNAME: 'http://localhost:3001/'
-      NEXT_PUBLIC_APINAME: 'http://localhost:3000/v1/'
-      NEXT_PUBLIC_WSNAME: 'ws://localhost:3000/cable/'
+    env_file:
+      - development.env
     working_dir: /app
     volumes:
       - ./src2:/app
@@ -54,9 +36,8 @@ services:
 
   db:
     image: mariadb:latest
-    environment:
-      TZ: 'Asia/Tokyo'
-      MARIADB_ROOT_PASSWORD: 'mdbroot'
+    env_file:
+      - development.env
     volumes:
       - db-vol:/var/lib/mysql
     stdin_open: true
@@ -66,8 +47,8 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:latest
-    environment:
-      PMA_HOSTS: 'db'
+    env_file:
+      - development.env
     ports:
       - '8080:80'
     stdin_open: true
@@ -80,9 +61,8 @@ services:
     volumes:
       - minio-vol:/data
     command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: 'minioroot'
-      MINIO_ROOT_PASSWORD: 'minioroot'
+    env_file:
+      - development.env
     stdin_open: true
     tty: true
     ports:
@@ -99,8 +79,8 @@ services:
   rediscommander:
     image: rediscommander/redis-commander:latest
     environment:
-      REDIS_HOSTS: sidekiq:redis:6379,sidekiq2:redis:6379
-      TZ: JST-9
+      REDIS_HOSTS: 'sidekiq:redis:6379,sidekiq2:redis:6379'
+      TZ: 'JST-9'
     ports:
       - "8081:8081"
     depends_on:
@@ -108,19 +88,8 @@ services:
 
   sidekiq:
     build: .
-    environment:
-      DB_HOST: 'db'
-      DB_USER: 'root'
-      DB_PASSWORD: 'mdbroot'
-      S3_ENDPOINT_0: 'http://minio:9000/'
-      S3_ENDPOINT_1: 'http://localhost:9000/'
-      S3_REGION: 'amiverse'
-      S3_BUCKET: 'development'
-      S3_USER: 'minioroot'
-      S3_PASSWORD: 'minioroot'
-      REDIS_URL: 'redis://redis:6379/'
-      SIDEKIQ_USERNAME: 'sidekiqroot'
-      SIDEKIQ_PASSWORD: 'sidekiqroot'
+    env_file:
+      - development.env
     working_dir: /app
     volumes:
       - ./src:/app

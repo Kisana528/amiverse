@@ -3,6 +3,10 @@
   border-bottom: 1px var(--border-color) solid;
   //display: flex;
 }
+.item-details {
+  display: flex;
+  justify-content: space-between;
+}
 .item-whose {
   display: flex;
   padding: 4px;
@@ -31,7 +35,19 @@
   line-height: 18px;
   font-size: 16px;
 }
+.item-r {
+  display: flex;
+  align-items: center;
+}
+.item-day {
+  line-height: 18px;
+  font-size: 14px;
+}
+.item-content-link {
+  display: block;
+}
 .item-content {
+  color: var(--font-color);
   min-height: 40px;
   padding: 5px;
   overflow-wrap: break-word;
@@ -42,7 +58,16 @@
 .item-image {
   width: 100%;
 }
+.item-reactions {
+  display: flex;
+  padding: 4px;
+  flex-wrap: wrap;
+}
 .item-reaction {
+  display: flex;
+  flex-wrap: wrap;
+}
+.item-panel {
   display: flex;
   padding: 4px;
   flex-wrap: wrap;
