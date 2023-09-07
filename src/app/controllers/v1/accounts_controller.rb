@@ -17,7 +17,6 @@ class V1::AccountsController < V1::ApplicationController
       items: @account.items.map {|item| {
         item_id: item.item_id,
         item_type: item.item_type,
-        flow: item.flow,
         meta: item.meta,
         content: item.content,
         cw: item.cw,

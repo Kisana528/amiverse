@@ -4,7 +4,6 @@ one:
   item_id: MyString
   uuid: MyString
   item_type: MyString
-  flow: 
   meta: 
   content: MyString
   nsfw: false
@@ -16,7 +15,6 @@ two:
   item_id: MyString
   uuid: MyString
   item_type: MyString
-  flow: 
   meta: 
   content: MyString
   nsfw: false

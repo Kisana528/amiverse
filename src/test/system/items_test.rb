@@ -17,7 +17,6 @@ class ItemsTest < ApplicationSystemTestCase
     fill_in "Content", with: @item.content
     check "Cw" if @item.cw
     check "Deleted" if @item.deleted
-    fill_in "Flow", with: @item.flow
     fill_in "Item", with: @item.item_id
     fill_in "Item type", with: @item.item_type
     fill_in "Meta", with: @item.meta
@@ -37,7 +36,6 @@ class ItemsTest < ApplicationSystemTestCase
     fill_in "Content", with: @item.content
     check "Cw" if @item.cw
     check "Deleted" if @item.deleted
-    fill_in "Flow", with: @item.flow
     fill_in "Item", with: @item.item_id
     fill_in "Item type", with: @item.item_type
     fill_in "Meta", with: @item.meta

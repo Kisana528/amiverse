@@ -93,10 +93,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.string "filename", null: false
     t.string "content_type"
     t.text "metadata"
-    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -156,9 +156,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.string "item_id", null: false
     t.string "uuid", null: false
     t.string "item_type", default: "", null: false
-    t.text "flow", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.string "reply_item_id", default: "", null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
-    t.string "content", default: "", null: false
+    t.text "content", default: "", null: false
+    t.boolean "markdown", default: false, null: false
+    t.boolean "html", default: false, null: false
     t.boolean "cw", default: false, null: false
     t.string "cw_message", default: "", null: false
     t.text "version", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
@@ -167,7 +169,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_items_on_account_id"
     t.index ["item_id", "uuid"], name: "index_items_on_item_id_and_uuid", unique: true
-    t.check_constraint "json_valid(`flow`)", name: "flow"
     t.check_constraint "json_valid(`meta`)", name: "meta"
     t.check_constraint "json_valid(`version`)", name: "version"
   end

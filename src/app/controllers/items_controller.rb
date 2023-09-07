@@ -67,6 +67,7 @@ class ItemsController < ApplicationController
     end
     def item_params
       params.require(:item).permit(:content,
+                                  :reply_item_id,
                                   :cw)
     end
 end

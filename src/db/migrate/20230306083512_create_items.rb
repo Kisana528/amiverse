@@ -5,9 +5,11 @@ class CreateItems < ActiveRecord::Migration[7.0]
       t.string :item_id, null: false
       t.string :uuid, null: false
       t.string :item_type, null: false, default: ''
-      t.json :flow, null: false, default: []
+      t.string :reply_item_id, null: false, default: ''
       t.json :meta, null: false, default: []
-      t.string :content, null: false, default: ''
+      t.text :content, null: false, default: ''
+      t.boolean :markdown, null: false, default: false
+      t.boolean :html, null: false, default: false
       t.boolean :cw, null: false, default: false
       t.string :cw_message, null: false, default: ''
       t.json :version, null: false, default: []

@@ -59,4 +59,22 @@
     <button>共有</button>
     <button>保存</button>
   </div>
+  <% if item.item %>
+    <div class="item-reply-to">
+      reply to: <%= item.item.account.name %>
+      <br />
+      content: <%= item.item.content %>
+      <br />
+    </div>
+  <% end %>
+  <% if item.items %>
+    <% item.items.each do |reply| %>
+      <div class="item-reply-from">
+        reply from: <%= reply.account.name %>
+        <br />
+        content: <%= reply.content %>
+        <br />
+      </div>
+    <% end %>
+  <% end %>
 </div>

@@ -81,7 +81,6 @@ class ApplicationController < ActionController::Base
       },
       content: item.content,
       cw: item.cw,
-      flow: item.flow,
       item_type: item.item_type,
       meta: item.meta,
       updated_at: item.updated_at,
