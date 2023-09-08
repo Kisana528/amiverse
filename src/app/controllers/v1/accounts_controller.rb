@@ -3,8 +3,8 @@ class V1::AccountsController < V1::ApplicationController
   def show
     render json: {name_id: @account.name_id,
       name: @account.name,
-      icon_url: signed_ati_url(@account.account_id, 'icon', @account.icon_id),
-      banner_url: signed_ati_url(@account.account_id, 'banner', @account.banner_id),
+      icon_url: generate_ati_url(@account.account_id, 'icon', @account.icon_id),
+      banner_url: generate_ati_url(@account.account_id, 'banner', @account.banner_id),
       bio: @account.bio,
       location: @account.location,
       birthday: @account.birthday,
@@ -32,7 +32,7 @@ class V1::AccountsController < V1::ApplicationController
           image_id: image.image_id,
           name: image.name,
           description: image.description,
-          url: signed_ati_url(image.account.account_id, 'images', image.image_id)
+          url: generate_ati_url(image.account.account_id, 'images', image.image_id)
         }}
       }}
     }

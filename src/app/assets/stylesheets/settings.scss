@@ -3,12 +3,34 @@
   justify-content: space-evenly;
 }
 .settings-lists {
-  width: 200px;
+  width: 180px;
+}
+.settings-list {
+  padding: 5px;
+  border-radius: 10px;
+}
+.settings-list-hover:hover {
+  background: rgb(83, 7, 0);
+}
+.settings-list-a {
+  width: 100%;
+}
+.settings-lists-selected {
+  background: #e21;
 }
 .settings-resource {
   border-top: var(--font-color) 1px solid;
 }
 .settings-main {
-  width: 40%;
+  width: 60%;
   height: 100%;
+}
+@media (max-width: 700px) {
+  /* FORM-1 */
+  .settings-container {
+    flex-direction: column-reverse;
+  }
+}
+@media (min-width: 1000px) {
+  /* FORM-3 */
 }

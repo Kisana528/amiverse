@@ -29,15 +29,14 @@
 // 名前
 
 .name-container {
-  height: 104px;
+  height: 64px;
   display: flex;
-  background: #dc24a138;
+  background: var(--transparent-background-color);
   backdrop-filter: blur(3px);
   //box-shadow: 0 -20px 25px 10px #dc24a138;
   position: sticky;
   top: 0px;
   z-index: 2;
-  transition-duration: 0.5s;
   align-items: center;
 }
 #name-before {
@@ -52,7 +51,7 @@
   }
 }
 .account-icon {
-  width: 100px;
+  width: 60px;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: top;
@@ -61,22 +60,10 @@
   display: block;
 }
 .meta-container {
+  display: flex;
+  align-items: center;
   h1 {
     margin: 0;
-  }
-}
-// 接着
-.fixed {
-  background-color: #000000;
-  color: #fff;
-  border-radius: 0;
-  height: 54px;
-  .account-icon {
-    width: 50px;
-  }
-  .meta-container {
-    display: flex;
-    align-items: center;
   }
 }
 
@@ -84,7 +71,8 @@
 
 .profile-container {
   padding: 10px;
-  background: var(--background-color);
+  background: var(--transparent-background-color);
+  backdrop-filter: blur(3px);
   z-index: 1;
   position: relative;
   p {
@@ -97,11 +85,12 @@
 .account-tab-container {
   display: flex;
   border-radius: 0;
-  background: var(--account-tab-color);
+  background: var(--transparent-background-color);
+  backdrop-filter: blur(3px);
   //box-shadow: 0 9px 12px 1px #dc24a138;
   z-index: 2;
   position: sticky;
-  top: 54px;
+  top: 64px;
   div {
     height: 30px;
     line-height: 30px;

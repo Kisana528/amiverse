@@ -17,8 +17,8 @@ export async function getServerSideProps({req, res, context, query}) {
       "https://w3id.org/security/v1"
     ],
     type: "Person",
-    id: FullAppUrl(`@${accountData.name_id}`),
-    url: FullAppUrl(`@${accountData.name_id}`),
+    id: FullAppUrl(`accounts/${accountData.name_id}`),
+    url: FullAppUrl(`accounts/${accountData.name_id}`),
     tag: [],
     published: accountData.created_at,
     discoverable: true,

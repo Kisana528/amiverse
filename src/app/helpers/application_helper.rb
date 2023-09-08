@@ -8,13 +8,13 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
-  def signed_key_url(key, format = '.webp')
+  def generate_key_url(key, format = '.webp')
     dir = File.dirname(key)
     name = File.basename(key, '.*') + format
     true_key = File.join(dir, name)
     return generate_normal_url(true_key)
   end
-  def signed_ati_url(account_id, type, image_id, format = ".webp")
+  def generate_ati_url(account_id, type, image_id, format = ".webp")
     dir = "accounts/#{account_id}/#{type}"
     name = image_id + format
     true_key = File.join(dir, name)

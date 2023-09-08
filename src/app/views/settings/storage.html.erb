@@ -1,7 +1,88 @@
+<% provide(:title, 'ストレージ - 設定') %>
+<% provide(:selected_settings_menu, 'storage') %>
+<% content_for :js do %>
+  <%= javascript_import_module_tag "hls/hls" %>
+<% end %>
 <% content_for :settings_content do %>
   <div>ストレージ</div>
-  <div>一覧</div>
-  <div>絞り込み</div>
-  <div>既定値</div>
+  <details>
+    <summary>画像</summary>
+    <div>
+      <%= form_with model: @image, url: storage_images_create_path, data: { turbo: false } do |f| %>
+        <% if @image.errors.any? %>
+          <div>
+            <div>
+              送信内容に<%= @image.errors.count %>つのエラーがあります。
+            </div>
+            <ul>
+            <% @image.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+            </ul>
+          </div>
+        <% end %>
+        <%= f.label :image, 'image' %>
+        <%= f.file_field :image %>
+        <br/>
+        <div class="text-field-group">
+          <%= f.text_field :name, class: 'text-field-field', placeholder: '名前' %>
+          <%= f.label :name, '名前', class: 'text-field-label' %>
+        </div>
+        <br/>
+        <div class="text-field-group">
+          <%= f.text_field :description, class: 'text-field-field', placeholder: 'description' %>
+          <%= f.label :description, 'description', class: 'text-field-label' %>
+        </div>
+        <br/>
+        <%= f.submit '送信' %>
+      <% end %>
+    </div>
+    <% @images.each do |image| %>
+      <div>
+        名前:<%= image.name %>
+        ID:<%= image.image_id %>
+        説明:<%= image.description %>
+        <% if image.image.attached? %>
+          <%= image_tag generate_key_url(image.image.key), class: 'storage-images-image' %>
+        <% else %>
+          <div>のいまげ</div>
+        <% end %>
+      </div>
+    <% end %>
+  </details>
+  <details>
+    <summary>動画</summary>
+    <% @videos.each do |video| %>
+      <%= video.video_id %>
+      <%= video.uuid %>
+      <%= video.name %>
+      <%= video.description %>
+      <video controls class='video-view' id='video-<%= video.video_id %>'></video>
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+      <script>
+        var video = document.getElementById('video-<%= video.video_id %>');
+        var videoSrc = 'http://localhost:9000/development/variants/accounts/00000000000000/videos/<%= video.video_id %>/output.m3u8';
+        if (Hls.isSupported()) {
+          var hls = new Hls();
+          hls.loadSource(videoSrc);
+          hls.attachMedia(video);
+        }
+      </script>
+    <% end %>
+  </details>
+  <details>
+    <summary>既定値</summary>
+    <%= form_with model: @current_account, url: update_account_path(@current_account.name_id), data: { turbo: false } do |f| %>
+      <div>
+        <%= f.label :image_nsfw, 'アップロード時、画像をNSFWに設定する' %>
+        <%= f.radio_button :image_nsfw, 'アップロード時、画像をNSFWに設定する' %>
+      </div>
+      <div>
+        <%= f.label :video_nsfw, 'アップロード時、動画をNSFWに設定する' %>
+        <%= f.radio_button :video_nsfw, 'アップロード時、動画をNSFWに設定する' %>
+      </div>
+      <%= f.submit '保存' %>
+    <% end %>
+  </details>
 <% end %>
 <%= render 'settings/listed' %>

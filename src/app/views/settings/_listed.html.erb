@@ -1,26 +1,74 @@
-<% provide(:title, 'SETTINGS') %>
-<% provide(:main_header_text, 'SETTINGS') %>
+<% provide(:main_header_text, '設定') %>
 <% content_for :main_content do %>
-<div class="settings-container">
-  <div class="settings-lists">
-    <div><%= link_to 'プロフィール', settings_profile_path %></div>
-    <div><%= link_to 'アカウント', settings_account_path %></div>
-    <div><%= link_to 'ストレージ', settings_storage_path %></div>
-    <div><%= link_to 'コンテンツ', settings_contents_path %></div>
-    <div><%= link_to 'アクティビティ', settings_activity_path %></div>
-    <div><%= link_to '通知', settings_notifications_path %></div>
-    <div><%= link_to '表示', settings_display_path %></div>
-    <div><%= link_to 'セキュリティと権限', settings_security_and_authority_path %></div>
-    <div><%= link_to 'アナリティクス', settings_analytics_path %></div>
-    <div><%= link_to '請求とお支払い', settings_bills_and_payments_path %></div>
-    <div><%= link_to 'その他', settings_others_path %></div>
-    <div class="settings-resource">
-      <div><%= link_to 'リソース', resources_path %></div>
+  <div class="settings-container">
+    <div class="settings-lists">
+      <%= link_to settings_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'index' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          🔍検索
+        </div>
+      <% end %>
+      <%= link_to settings_profile_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'profile' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          🙋プロフィール
+        </div>
+      <% end %>
+      <%= link_to settings_account_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'account' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          💳アカウント
+        </div>
+      <% end %>
+      <%= link_to settings_storage_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'storage' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          📀ストレージ
+        </div>
+      <% end %>
+      <%= link_to settings_contents_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'contents' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          📺コンテンツ
+        </div>
+      <% end %>
+      <%= link_to settings_activity_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'activity' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          🧭アクティビティ
+        </div>
+      <% end %>
+      <%= link_to settings_notifications_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'notifications' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+        🔔通知
+        </div>
+      <% end %>
+      <%= link_to settings_display_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'display' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          📱表示
+        </div>
+      <% end %>
+      <%= link_to settings_security_and_authority_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'security_and_authority' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          🔏セキュリティと権限
+        </div>
+      <% end %>
+      <%= link_to settings_analytics_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'analytics' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          📈アナリティクス
+        </div>
+      <% end %>
+      <%= link_to settings_bills_and_payments_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'bills_and_payments' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          👛請求とお支払い
+        </div>
+      <% end %>
+      <%= link_to settings_others_path, class: 'settings-list-a' do %>
+        <div class="settings-list <%= yield(:selected_settings_menu) == 'others' ? 'settings-lists-selected' : 'settings-list-hover' %>">
+          📑その他
+        </div>
+      <% end %>
+      <div class="settings-resource">
+        <div><%= link_to '📰リソース', resources_path %></div>
+      </div>
+    </div>
+    <div class="settings-main">
+      <%= yield(:settings_content) %>
     </div>
   </div>
-  <div class="settings-main">
-    <%= yield(:settings_content) %>
-  </div>
-</div>
 <% end %>
 <%= render 'shared/default_layout' %>

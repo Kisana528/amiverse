@@ -1,0 +1,10 @@
+ja:
+  time:
+      formats:
+          long: "%Y年%m月%d日(%a) %H時%M分%"
+  sessions:
+    create:
+      success: 'ログインしました。aa'
+      danger: 'ログインに失敗しました。もう一度試してください。'
+    destroy:
+      success: 'ログアウトしました。'

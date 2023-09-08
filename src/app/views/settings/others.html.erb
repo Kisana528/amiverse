@@ -1,4 +1,7 @@
+<% provide(:title, 'その他 - 設定') %>
+<% provide(:selected_settings_menu, 'others') %>
 <% content_for :settings_content do %>
   <div>その他</div>
+  <%= button_to("Log out", logout_path, method: :delete) %>
 <% end %>
 <%= render 'settings/listed' %>

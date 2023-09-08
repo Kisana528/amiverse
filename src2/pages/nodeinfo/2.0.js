@@ -3,7 +3,7 @@ import FullAppUrl from '@/components/full_app_url'
 
 export async function getServerSideProps({ req, res, context, query }) {
   const data = {
-    "version": "2.1",
+    "version": "2.0",
     "software": { "name": "amiverse", "version": "0.1.0" },
     "protocols": ["activitypub"],
     "services": { "inbound": [], "outbound": ["atom1.0", "rss2.0"] },
@@ -35,4 +35,4 @@ export async function getServerSideProps({ req, res, context, query }) {
   return { props: {} }
 }
 
-export default function Nodeinfo2_1() { }
+export default function Nodeinfo2_0() { }

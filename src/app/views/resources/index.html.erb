@@ -17,7 +17,7 @@
       </div>
       <div id="items">
         <% @items.each do |item| %>
-          <%= render 'shared/item_account', item: item, reactions: @reactions %>
+          <%= render 'shared/show_item', item: item, reactions: @reactions %>
         <% end %>
       </div>
     <% else %>

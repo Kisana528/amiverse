@@ -10,7 +10,7 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", media: 'all', "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= yield(:js) %>
+    <%= yield(:head) %>
   </head>
   <body>
     <div class="main-container dark-mode" id="main-container">

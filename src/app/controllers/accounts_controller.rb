@@ -12,8 +12,8 @@ class AccountsController < ApplicationController
     pre_icon_id = @account.icon_id
     pre_banner_id = @account.banner_id
     if @account.update(account_update_params)
-      check_and_variant_image(params[:account][:icon_id], pre_icon_id, 'icon')
-      check_and_variant_image(params[:account][:banner_id], pre_banner_id, 'banner')
+      generate_varinat_image(params[:account][:icon_id], pre_icon_id, 'icon')
+      generate_varinat_image(params[:account][:banner_id], pre_banner_id, 'banner')
       flash[:success] = "更新成功!"
       redirect_to account_path(@account.name_id)
     else

@@ -3,7 +3,7 @@
 <% content_for :main_content do %>
   <div id="items">
     <% @items.each do |item| %>
-      <%= render 'shared/item_account', item: item, reactions: @reactions %>
+      <%= render 'shared/show_item', item: item, reactions: @reactions %>
     <% end %>
   </div>
   <%= link_to "New item", new_item_path %>

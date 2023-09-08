@@ -1,7 +1,44 @@
+<% provide(:title, 'プロフィール - 設定') %>
+<% provide(:selected_settings_menu, 'profile') %>
 <% content_for :settings_content do %>
   <%= form_with model: @current_account, url: update_account_path(@current_account.name_id), data: { turbo: false } do |f| %>
     <div>プロフィール</div>
-    <div>icon&banner</div>
+    <div>
+      <details>
+        <summary>アイコン</summary>
+        <% @images.each do |image| %>
+          <div>
+            <%= f.radio_button :icon_id, image.image_id %>
+            名前:<%= image.name %>
+            ID:<%= image.image_id %>
+            説明:<%= image.description %>
+            <% if image.image.attached? %>
+              <%= image_tag generate_key_url(image.image.key), class: 'storage-images-image' %>
+            <% else %>
+              <div>のいまげ</div>
+            <% end %>
+          </div>
+        <% end %>
+      </details>
+    </div>
+    <div>
+      <details>
+        <summary>バナー</summary>
+        <% @images.each do |image| %>
+          <div>
+            <%= f.radio_button :banner_id, image.image_id %>
+            名前:<%= image.name %>
+            ID:<%= image.image_id %>
+            説明:<%= image.description %>
+            <% if image.image.attached? %>
+              <%= image_tag generate_key_url(image.image.key), class: 'storage-images-image' %>
+            <% else %>
+              <div>のいまげ</div>
+            <% end %>
+          </div>
+        <% end %>
+      </details>
+    </div>
     <div class="text-field-group">
       <%= f.text_field :name, class: 'text-field-field', placeholder: ' ' %>
       <%= f.label :name, '名前', class: 'text-field-label' %>
@@ -11,18 +48,29 @@
       <%= f.label :name_id, 'ID', class: 'text-field-label' %>
     </div>
     <div class="text-field-group">
-      <%= f.text_field :account_id, class: 'text-field-field', placeholder: ' ' %>
-      <%= f.label :account_id, '固有ID', class: 'text-field-label' %>
-    </div>
-    <div class="text-field-group">
       <%= f.text_field :location, class: 'text-field-field', placeholder: ' ' %>
       <%= f.label :location, '場所', class: 'text-field-label' %>
     </div>
-    <div>バースデー</div>
-    <div>BIO</div>
-    <div>言語</div>
-    <div>追加情報</div>
-    <div>公開情報</div>
+    <div>
+      <%= f.label :birthday, '誕生日' %>
+      <%= f.datetime_field :birthday %>
+    </div>
+    <div>
+      <%= f.label :bio, '自己紹介' %>
+      <%= f.text_area :bio %>
+    </div>
+    <div>
+      <%= f.label :lang, '言語' %>
+      <%= f.select :lang, [['日本語', 1], ['English', 2]], { include_blank: true, selected: 1 } %>
+    </div>
+    <div>
+      <%= f.label :lang, '追加情報' %>
+      <%= f.text_field :bio %>
+    </div>
+    <div>
+      <%= f.label :public_visibility, '公開情報' %>
+      <%= f.radio_button :public_visibility, '非公開' %>
+    </div>
     <%= f.submit '保存' %>
   <% end %>
 <% end %>

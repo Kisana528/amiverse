@@ -3,9 +3,6 @@
  *= require_self
  */
 
-body {
-  margin: 0;
-}
 :root {
   /* Main Settings */
   --color-1: white;
@@ -35,14 +32,11 @@ body {
 }
 :root .light-mode {
   --background-color: #cecece;
-  --main-container-background-color: #ffffff;
+  --main-background-color: #ffffff;
   --font-color: black;
   --link-color: var(--light-0);
   --border-color: #000000;
-  --name-color: #4cfec354;
-  --fixed-name-color: #ffffff99;
-  --profile-color: #ccd7ec;
-  --account-tab-color: #88d095;
+  --transparent-background-color: #0000003f;
   --content-color: #fff;
   --shadow-color: #808080;
   --blur-color: #0008;
@@ -50,18 +44,19 @@ body {
 }
 :root .dark-mode {
   --background-color: #1d1d1d;
-  --main-container-background-color: #141414;
+  --main-background-color: #141414;
   --font-color: white;
   --link-color: var(--dark-0);
   --border-color: #fff;
-  --name-color: #dc59d194;
-  --fixed-name-color: #00000099;
-  --profile-color: #2c2f35;
-  --account-tab-color: #2c3d2f;
+  --transparent-background-color: #00000060;
   --content-color: #141414;
   --shadow-color: #808080;
   --blur-color: #0008;
   --primary-color: darkblue;
+}
+body {
+  margin: 0;
+  background: #1d1d1d;
 }
 a {
   color: var(--link-color);

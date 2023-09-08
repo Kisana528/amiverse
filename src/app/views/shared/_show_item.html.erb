@@ -3,7 +3,7 @@
     <%= link_to account_path(item.account.name_id) do %>
       <div class="item-whose">
         <% if !item.account.icon_id.blank? %>
-          <%= image_tag signed_ati_url(item.account.account_id, 'icon', item.account.icon_id), class: 'item_account_image' %>
+          <%= image_tag generate_ati_url(item.account.account_id, 'icon', item.account.icon_id), class: 'item_account_image' %>
         <% else %>
           <%= image_tag 'icon.webp', class: 'item_account_image' %>
         <% end %>
@@ -35,7 +35,7 @@
   <% end %>
     <div class="item-media">
       <% item.images.each do |image| %>
-        <%= image_tag signed_ati_url(image.account.account_id, 'images', image.image_id), class: 'item-image' %>
+        <%= image_tag generate_ati_url(image.account.account_id, 'images', image.image_id), class: 'item-image' %>
       <% end %>
     </div>
   <div class="item-reactions">

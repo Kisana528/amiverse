@@ -9,7 +9,7 @@
       ID:<%= image.image_id %>
       説明:<%= image.description %>
       <% if image.image.attached? %>
-        <%= image_tag signed_key_url(image.image.key), class: 'storage-images-image' %>
+        <%= image_tag generate_key_url(image.image.key), class: 'storage-images-image' %>
       <% else %>
         <div>のいまげ</div>
       <% end %>

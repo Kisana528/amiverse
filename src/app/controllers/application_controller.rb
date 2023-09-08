@@ -45,9 +45,9 @@ class ApplicationController < ActionController::Base
     public_key_pem = rsa_key.public_key.to_pem
     { private_key: private_key_pem, public_key: public_key_pem }
   end
-  def check_and_variant_image(icon_id, pre_icon_id, type)
-    if icon_id.present? && pre_icon_id != icon_id
-      image = Image.find_by(image_id: icon_id)
+  def generate_varinat_image(image_id, pre_image_id, type)
+    if image_id.present? && pre_image_id != image_id
+      image = Image.find_by(image_id: image_id)
       image.resize_image(@account.name, @account.name_id, type)
     end
   end

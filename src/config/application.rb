@@ -35,5 +35,8 @@ module App
     config.active_job.queue_adapter = :sidekiq
     config.active_record.default_timezone = :local
     config.time_zone = 'Tokyo'
+    config.i18n.default_locale = :ja
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+    I18n.available_locales = [:en, :ja]
   end
 end

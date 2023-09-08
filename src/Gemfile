@@ -26,6 +26,7 @@ gem "redis"
 gem 'redis-session-store'
 # gem "kredis"
 gem 'rubyzip', '2.3.0'
+gem 'rails-i18n'
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 end
