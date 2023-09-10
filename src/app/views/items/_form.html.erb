@@ -1,5 +1,5 @@
 <% item = Item.new %>
-<%= form_with(model: item) do |form| %>
+<%= form_with model: item, url: items_path do |form| %>
   <%= render "shared/error_messages", instead: item %>
 
   <div>
