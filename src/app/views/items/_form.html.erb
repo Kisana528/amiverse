@@ -1,23 +1,11 @@
+<% item = Item.new %>
 <%= form_with(model: item) do |form| %>
-  <% if item.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+  <%= render "shared/error_messages", instead: item %>
 
-      <ul>
-        <% item.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-<details>
-  <summary>あなたのストレージの画像</summary>
-  <% images.each do |image| %>
-    <%= form.check_box :selected_images, { multiple: true }, image.image_id, nil %>
-    <%= form.label image.image_id %>
-  <% end %>
-</details>
+  <div>
+    <%= form.label '返信先', style: "display: block" %>
+    <%= form.text_field :reply_item_id, value: (defined? initial_reply_item_id)  ? initial_reply_item_id : '' %>
+  </div>
 
   <div>
     <%= form.label :content, style: "display: block" %>
@@ -25,14 +13,17 @@
   </div>
 
   <div>
-    <%= form.label :reply_item_id, style: "display: block" %>
-    <%= form.text_field :reply_item_id %>
-  </div>
-
-  <div>
     <%= form.label :cw, style: "display: block" %>
     <%= form.check_box :cw %>
   </div>
+
+  <details>
+    <summary>あなたのストレージの画像</summary>
+    <% Image.where(account_id: @current_account.id).each do |image| %>
+      <%= form.check_box :selected_images, { multiple: true }, image.image_id, nil %>
+      <%= form.label image.image_id %>
+    <% end %>
+  </details>
 
   <div>
     <%= form.submit %>

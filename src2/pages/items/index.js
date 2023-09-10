@@ -30,7 +30,7 @@ export default function Items() {
   useEffect(() => {
     if (!ignore && loggedIn) {
       const fetchItems = async () => {
-        const response = await axios.get('/items')
+        const response = await axios.post('items')
         const data = response.data
         setItems(data)
       }

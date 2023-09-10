@@ -1,7 +1,7 @@
 <% if instead.errors.any? %>
   <div>
     <div>
-      送信内容に<%= instead.errors.count %>つのエラーがあります。
+      送信内容に<%= pluralize(instead.errors.count, "error") %>つのエラーがあります。
     </div>
     <ul>
       <% instead.errors.full_messages.each do |msg| %>

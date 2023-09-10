@@ -17,8 +17,8 @@ export async function getServerSideProps({req, res, context, query}) {
       "https://w3id.org/security/v1"
     ],
     type: "Person",
-    id: FullAppUrl(`accounts/${accountData.name_id}`),
-    url: FullAppUrl(`accounts/${accountData.name_id}`),
+    id: FullAppUrl(`@${accountData.name_id}`),
+    url: FullAppUrl(`@${accountData.name_id}`),
     tag: [],
     published: accountData.created_at,
     discoverable: true,
@@ -37,8 +37,8 @@ export async function getServerSideProps({req, res, context, query}) {
     followers: FullAppUrl(`@${accountData.name_id}/followers`),
     following: FullAppUrl(`@${accountData.name_id}/following`),
     publicKey: {
-      id: `https://amiverse.net/@${accountData.name_id}#main-key`,
-      owner: `https://amiverse.net/@${accountData.name_id}`,
+      id: FullAppUrl(`@${accountData.name_id}#main-key`),
+      owner: FullAppUrl(`@${accountData.name_id}`),
       publicKeyPem: accountData.public_key
     }
   }

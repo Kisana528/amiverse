@@ -37,6 +37,19 @@ class V1::AccountsController < V1::ApplicationController
       }}
     }
   end
+  def update
+    pre_icon_id = @account.icon_id
+    pre_banner_id = @account.banner_id
+    if @account.update(account_update_params)
+      generate_varinat_image(params[:account][:icon_id], pre_icon_id, 'icon')
+      generate_varinat_image(params[:account][:banner_id], pre_banner_id, 'banner')
+      flash[:success] = "更新成功!"
+      redirect_to account_path(@account.name_id)
+    else
+      flash.now[:danger] = "更新できませんでした。"
+      render 'edit'
+    end
+  end
   private
   def set_account
     @account = Account.find_by(
@@ -47,6 +60,19 @@ class V1::AccountsController < V1::ApplicationController
       suspended: false,
       frozen: false,
       deleted: false
+    )
+  end
+  def account_params
+    params.require(:account).permit(
+      :name,
+      :name_id,
+      :icon_id,
+      :banner_id,
+      :bio,
+      :location,
+      :birthday,
+      :password,
+      :password_confirmation
     )
   end
 end

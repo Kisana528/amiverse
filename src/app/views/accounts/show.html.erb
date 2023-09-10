@@ -45,8 +45,8 @@
       <div class="content-container">
         <p>開始</p>
         <div id="items">
-          <% @account.items.each do |item| %>
-            <%= render 'shared/show_item', item: item, reactions: @reactions %>
+          <% @account.items.where(reply_item_id: '').each do |item| %>
+            <%= render 'items/item', item: item, show_reply_from: true %>
           <% end %>
         </div>
       </div>
@@ -55,4 +55,4 @@
     <p>@<%= params[:name_id] %>というアカウントが見つかりませんでした。。。</p>
   <% end %>
 <% end %>
-<%= render 'shared/no_header' %>
+<%= render 'layouts/no_header' %>

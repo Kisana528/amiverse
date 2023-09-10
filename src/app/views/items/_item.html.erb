@@ -1,15 +1,89 @@
 <div class="item">
-  <% item.images.each do |image| %>
-    <%= image.image_id %>
-    <%= image_tag show_image_path(image.image_id), class: 'item-image' %>
+  <div class="item-details">
+    <%= link_to account_path(item.account.name_id) do %>
+      <div class="item-whose">
+        <% if !item.account.icon_id.blank? %>
+          <%= image_tag generate_ati_url(item.account.account_id, 'icon', item.account.icon_id), class: 'item_account_image' %>
+        <% else %>
+          <%= image_tag 'icon.webp', class: 'item_account_image' %>
+        <% end %>
+        <div class="item-account">
+          <div class="item-account-profile">
+            <div class="item-account-name">
+              <%= item.account.name %>
+            </div>
+            <div class="item-account-name-id">
+              @<%= item.account.name_id %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="item-r">
+      <div class="item-day">
+        <%= item.created_at.strftime("%Y年 %m月 %d日") %>
+        <br />
+        <%= item.created_at.strftime("%k時 %M分 %S秒") %>
+      </div>
+      <div class="item-menu">・・・</div>
+    </div>
+  </div>
+  <%= link_to item_path(item.item_id), class: 'item-content-link' do %>
+    <div class="item-content">
+      <%= item.content %>
+    </div>
   <% end %>
-  <br />
-  <strong>Item type:</strong>
-  <%= item.item_type %>
-  <br />
-  <strong>Content:</strong>
-  <%= item.content %>
-  <br />
-  <strong>Cw:</strong>
-  <%= item.cw %>
+    <div class="item-media">
+      <% item.images.each do |image| %>
+        <%= image_tag generate_ati_url(image.account.account_id, 'images', image.image_id), class: 'item-image' %>
+      <% end %>
+    </div>
+  <div class="item-reactions">
+    <% item.reactions.group(:reaction_id).count.each do |key, value| %>
+      <div class="item-reaction">
+        <%= button_to item.reactions.find_by(reaction_id: key).content, react_path(item.item_id, key) %>
+        <span><%= value %></span>
+      </div>
+    <% end %>
+  </div>
+  <div class="item-panel">
+    <details>
+      <summary>返信</summary>
+      <%= render 'items/form', initial_reply_item_id: item.item_id %>
+    </details>
+    <details>
+      <summary>再投稿</summary>
+      a
+    </details>
+    <details>
+      <summary>引用投稿</summary>
+      あ
+    </details>
+    <details>
+      <summary>リアクション追加</summary>
+      <% Reaction.all.each do |reaction| %>
+        <%= button_to reaction.content, react_path(item.item_id, reaction.reaction_id), method: :post %>
+      <% end %>
+    </details>
+    <details>
+      <summary>共有</summary>
+      <%= render 'items/form' %>
+    </details>
+    <details>
+      <summary>保存</summary>
+      <%= render 'items/form' %>
+    </details>
+  </div>
+  <% if defined? show_reply_from %>
+    <div class="item-reply">
+      <% if !item.items.empty? %>
+        <div class="item-reply-from">
+          📩返信
+        </div>
+        <% item.items.each do |reply| %>
+          <%= render 'items/item', item: reply %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

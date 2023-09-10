@@ -68,7 +68,10 @@
   flex-wrap: wrap;
 }
 .item-panel {
-  display: flex;
   padding: 4px;
-  flex-wrap: wrap;
+}
+.item-reply {
+  margin-left: 10px;
+  border-left: #d453cc 2px solid;
+  padding-left: 10px;
 }

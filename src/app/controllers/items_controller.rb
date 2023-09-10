@@ -13,8 +13,6 @@ class ItemsController < ApplicationController
     # ?reactionが?個
   end
   def new
-    @item = Item.new
-    @images = Image.where(account_id: @current_account.id)
   end
   def edit
   end
