@@ -6,6 +6,7 @@ class CreateItems < ActiveRecord::Migration[7.0]
       t.string :uuid, null: false
       t.string :item_type, null: false, default: ''
       t.string :reply_item_id, null: false, default: ''
+      t.string :quote_item_id, null: false, default: ''
       t.json :meta, null: false, default: []
       t.text :content, null: false, default: ''
       t.boolean :markdown, null: false, default: false

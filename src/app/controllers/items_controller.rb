@@ -34,6 +34,12 @@ class ItemsController < ApplicationController
           end
         end
       end
+      if reply_to = Item.find_by(item_id: params[:item][:reply_item_id])
+        Reply.create(reply_from: @item, reply_to: reply_to)
+      end
+      if quote_to = Item.find_by(item_id: params[:item][:quote_item_id])
+        Quote.create(quote_from: @item, quote_to: quote_to)
+      end
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
       item = create_item_broadcast_format(@item)
@@ -65,7 +71,6 @@ class ItemsController < ApplicationController
     end
     def item_params
       params.require(:item).permit(:content,
-                                  :reply_item_id,
                                   :cw)
     end
 end

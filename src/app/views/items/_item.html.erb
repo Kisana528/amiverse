@@ -47,40 +47,46 @@
     <% end %>
   </div>
   <div class="item-panel">
-    <details>
+    <details class="item-details">
       <summary>返信</summary>
-      <%= render 'items/form', initial_reply_item_id: item.item_id %>
+      <div class="item-details-container">
+        <%= render 'items/form', initial_reply_item_id: item.item_id %>
+      </div>
     </details>
     <details>
-      <summary>再投稿</summary>
-      a
-    </details>
-    <details>
-      <summary>引用投稿</summary>
-      あ
+      <summary>引用</summary>
+      <div class="item-details-container">
+        <%= render 'items/form', initial_quote_item_id: item.item_id %>
+      </div>
     </details>
     <details>
       <summary>リアクション追加</summary>
-      <% Reaction.all.each do |reaction| %>
-        <%= button_to reaction.content, react_path(item.item_id, reaction.reaction_id), method: :post %>
-      <% end %>
+      <div class="item-details-container">
+        <% Reaction.all.each do |reaction| %>
+          <%= button_to reaction.content, react_path(item.item_id, reaction.reaction_id), method: :post %>
+        <% end %>
+      </div>
     </details>
     <details>
       <summary>共有</summary>
-      <%= render 'items/form' %>
+      <div class="item-details-container">
+        https://amiverse.net/items/<%= item.item_id %>
+      </div>
     </details>
     <details>
       <summary>保存</summary>
-      <%= render 'items/form' %>
+      <div class="item-details-container">
+        ダウンロード・ブックマーク
+      </div>
     </details>
   </div>
   <% if defined? show_reply_from %>
     <div class="item-reply">
-      <% if !item.items.empty? %>
+      <% if !item.reply_from_items.empty? %>
         <div class="item-reply-from">
           📩返信
         </div>
-        <% item.items.each do |reply| %>
+        <% item.reply_from_items.each do |reply| %>
           <%= render 'items/item', item: reply %>
         <% end %>
       <% end %>

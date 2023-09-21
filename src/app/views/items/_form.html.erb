@@ -1,11 +1,8 @@
 <% item = Item.new %>
 <%= form_with model: item, url: items_path do |form| %>
   <%= render "shared/error_messages", instead: item %>
-
-  <div>
-    <%= form.label '返信先', style: "display: block" %>
-    <%= form.text_field :reply_item_id, value: (defined? initial_reply_item_id)  ? initial_reply_item_id : '' %>
-  </div>
+  <%= form.hidden_field :reply_item_id, value: (defined? initial_reply_item_id)  ? initial_reply_item_id : '' %>
+  <%= form.hidden_field :quote_item_id, value: (defined? initial_quote_item_id)  ? initial_quote_item_id : '' %>
 
   <div>
     <%= form.label :content, style: "display: block" %>

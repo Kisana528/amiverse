@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_16_144608) do
   create_table "account_reaction_items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "reaction_id", null: false
@@ -93,10 +93,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.string "filename", null: false
     t.string "content_type"
     t.text "metadata"
+    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
-    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -157,6 +157,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.string "uuid", null: false
     t.string "item_type", default: "", null: false
     t.string "reply_item_id", default: "", null: false
+    t.string "quote_item_id", default: "", null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "content", default: "", null: false
     t.boolean "markdown", default: false, null: false
@@ -173,6 +174,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.check_constraint "json_valid(`version`)", name: "version"
   end
 
+  create_table "quotes", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "quote_to_id", default: "", null: false
+    t.string "quote_from_id", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "reactions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "reaction_id", null: false
@@ -184,6 +192,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_135817) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_reactions_on_account_id"
+  end
+
+  create_table "replies", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "reply_to_id", default: "", null: false
+    t.string "reply_from_id", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

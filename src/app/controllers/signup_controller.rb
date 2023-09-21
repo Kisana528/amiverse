@@ -1,35 +1,52 @@
 class SignupController < ApplicationController
-  before_action :logged_out_account, only: %i[p1 p2 p3]
+  before_action :logged_out_account, only: %i[check new create create_admin]
+  before_action :exists_admin, only: [:check]
   def index
   end
-  def p1
+  def check
+    render 'check' and return
   end
-  def p2
+  def new
     invitation = check_invitation_code(params[:invitation_code])
     if !invitation
-      render 'p1' and return
+      render 'check' and return
     end
     session[:invitation_code] = params[:invitation_code]
     @account = Account.new
   end
-  def p3
+  def create
     @account = Account.new(account_params)
     invitation = check_invitation_code(session[:invitation_code])
     if !invitation
-      render 'p2' and return
+      render 'new' and return
     end
     @account.account_id = unique_random_id(Account, 'account_id')
     key_pair = generate_rsa_key_pair
     @account.private_key = key_pair[:private_key]
     @account.public_key = key_pair[:public_key]
-    #account_icon_banner_attach('')
     if @account.save
       invitation.update(uses: invitation.uses + 1)
       flash[:success] = "アカウントが作成されました"
       session[:invitation_code].clear
     else
       flash.now[:danger] = "間違っています。"
-      render 'p2'
+      render 'new'
+    end
+  end
+  def create_admin
+    @account = Account.new(account_params)
+    @account.account_id = '00000000000000'
+    key_pair = generate_rsa_key_pair
+    @account.private_key = key_pair[:private_key]
+    @account.public_key = key_pair[:public_key]
+    @account.activated = true
+    @account.administrator = true
+    if @account.save
+      flash[:success] = "管理者アカウントが作成されました"
+      render 'create'
+    else
+      flash.now[:danger] = "間違っています。"
+      render 'new'
     end
   end
   private

@@ -3,6 +3,12 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   before_action :set_current_account
   private
+  def exists_admin
+    if Account.all.empty?
+      @account = Account.new
+      render 'signup/new' and return
+    end
+  end
   def admin_account
     unless logged_in? && @current_account.administrator
       render :file => "#{Rails.root}/public/404.html",  layout: false, status: :not_found

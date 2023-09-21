@@ -52,9 +52,10 @@ Rails.application.routes.draw do
 
   # signup
   get 'signup' => 'signup#index'
-  get 'signup/invitation' => 'signup#p1'
-  post 'signup/profile' => 'signup#p2'
-  post 'signup/create' => 'signup#p3'
+  get 'signup/invitation' => 'signup#check'
+  post 'signup/profile' => 'signup#new'
+  post 'signup/create' => 'signup#create'
+  post 'signup/create_admin' => 'signup#create_admin'
 
   # session
   get 'sessions' => 'sessions#index'

@@ -70,6 +70,15 @@
 .item-panel {
   padding: 4px;
 }
+.item-panel > details {
+  display: inline-block;
+}
+.item-details-container{
+  position: absolute;
+  background: #59a059;
+  padding: 10px;
+  border-radius: 5px;
+}
 .item-reply {
   margin-left: 10px;
   border-left: #d453cc 2px solid;

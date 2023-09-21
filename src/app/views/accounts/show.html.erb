@@ -46,7 +46,9 @@
         <p>開始</p>
         <div id="items">
           <% @account.items.where(reply_item_id: '').each do |item| %>
-            <%= render 'items/item', item: item, show_reply_from: true %>
+            <% if item.reply_to_items.empty? %>
+              <%= render 'items/item', item: item, show_reply_from: true %>
+            <% end %>
           <% end %>
         </div>
       </div>
