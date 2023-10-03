@@ -47,20 +47,21 @@
     <% end %>
   </div>
   <div class="item-panel">
+    <div style="display: inline-block;">返信先<%= item.reply_to_items.count %></div>
     <details class="item-details">
-      <summary>返信</summary>
+      <summary>返信<%= item.reply_from_items.count %></summary>
       <div class="item-details-container">
         <%= render 'items/form', initial_reply_item_id: item.item_id %>
       </div>
     </details>
     <details>
-      <summary>引用</summary>
+      <summary>引用<%= item.quote_from_items.count %></summary>
       <div class="item-details-container">
         <%= render 'items/form', initial_quote_item_id: item.item_id %>
       </div>
     </details>
     <details>
-      <summary>リアクション追加</summary>
+      <summary>リアクション<%= item.reactions.count %></summary>
       <div class="item-details-container">
         <% Reaction.all.each do |reaction| %>
           <%= button_to reaction.content, react_path(item.item_id, reaction.reaction_id), method: :post %>

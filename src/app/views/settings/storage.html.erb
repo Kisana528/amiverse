@@ -1,8 +1,5 @@
 <% provide(:title, 'ストレージ - 設定') %>
 <% provide(:selected_settings_menu, 'storage') %>
-<% content_for :js do %>
-  <%= javascript_import_module_tag "hls/hls" %>
-<% end %>
 <% content_for :settings_content do %>
   <div>ストレージ</div>
   <details>
@@ -52,6 +49,25 @@
   </details>
   <details>
     <summary>動画</summary>
+    <div>
+      <%= form_with model: @video, url: storage_videos_create_path, data: { turbo: false } do |f| %>
+      <%= render 'shared/error_messages', instead: @video %>
+      <%= f.label :video, 'video' %>
+      <%= f.file_field :video %>
+      <br/>
+      <div class="text-field-group">
+        <%= f.text_field :name, class: 'text-field-field', placeholder: ' ' %>
+        <%= f.label :name, '名前', class: 'text-field-label' %>
+      </div>
+      <br/>
+      <div class="text-field-group">
+        <%= f.text_field :description, class: 'text-field-field', placeholder: ' ' %>
+        <%= f.label :description, 'description', class: 'text-field-label' %>
+      </div>
+      <br/>
+      <%= f.submit '送信' %>
+    <% end %>
+    </div>
     <% @videos.each do |video| %>
       <%= video.video_id %>
       <%= video.uuid %>

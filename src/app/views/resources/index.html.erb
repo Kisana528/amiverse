@@ -13,7 +13,7 @@
         </div>
       <% end %>
       <div class='amiverse-index-box'>
-        投稿
+        <%= render "items/form", item: Item.new %>
       </div>
       <div id="items">
         <% @items.each do |item| %>

@@ -4,6 +4,11 @@ class Account < ApplicationRecord
   has_many :invitations
   has_many :reaction
   has_many :account_reaction_items
+  has_many :follows
+  has_many :follow_from, class_name: 'Follow', primary_key: 'name_id', foreign_key: 'follow_from_id'
+  has_many :follow_to, class_name: 'Follow', primary_key: 'name_id', foreign_key: 'follow_to_id'
+  has_many :following, through: :follow_to, source: :follow_from
+  has_many :follower, through: :follow_from, source: :follow_to
   attr_accessor :remember_token, :activation_token
   BASE_64_URL_REGEX  = /\A[a-zA-Z0-9_-]*\z/
   validates :account_id,

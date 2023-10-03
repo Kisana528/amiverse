@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   get '@:name_id' => 'accounts#show', as: 'account'
   get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon'
   get '@:name_id/banner' => 'accounts#show_banner', as: 'show_banner'
+  post '@:name_id/follow' => 'accounts#follow', as: 'follow'
   get '@:name_id/edit' => 'accounts#edit', as: 'edit_account'
   patch '@:name_id/update' => 'accounts#update', as: 'update_account'
   get '@:name_id/password_edit' => 'accounts#password_edit', as: 'password_edit_account'
@@ -65,12 +66,12 @@ Rails.application.routes.draw do
 
   # invitation
   get 'invitations' => 'invitations#index'
-  get 'i-:invitation_code' => 'invitations#show', as: 'invitation'
-  get 'i-:invitation_code/new' => 'invitations#new', as: 'new_invitation'
-  post 'i-:invitation_code/create' => 'invitations#create', as: 'create_invitation'
-  get 'i-:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
-  patch 'i-:invitation_code/update' => 'invitations#update', as: 'update_invitation'
-  delete 'i-:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
+  get 'invitations/new' => 'invitations#new', as: 'new_invitation'
+  post 'invitations/create' => 'invitations#create'
+  get 'invitations/:invitation_code' => 'invitations#show', as: 'invitation'
+  get 'invitations/:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
+  patch 'invitations/:invitation_code/update' => 'invitations#update', as: 'update_invitation'
+  delete 'invitations/:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
 
   # item
   resources :items, param: 'item_id'
@@ -110,12 +111,12 @@ Rails.application.routes.draw do
 
     # invitation
     get 'invitations' => 'invitations#index'
-    get 'i-:invitation_code' => 'invitations#show', as: 'invitation'
-    get 'i-:invitation_code/new' => 'invitations#new', as: 'new_invitation'
-    post 'i-:invitation_code/create' => 'invitations#create', as: 'create_invitation'
-    get 'i-:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
-    patch 'i-:invitation_code/update' => 'invitations#update', as: 'update_invitation'
-    delete 'i-:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
+    get 'invitations/:invitation_code' => 'invitations#show', as: 'invitation'
+    get 'invitations/new' => 'invitations#new', as: 'new_invitation'
+    post 'invitations/:invitation_code/create' => 'invitations#create', as: 'create_invitation'
+    get 'invitations/:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
+    patch 'invitations/:invitation_code/update' => 'invitations#update', as: 'update_invitation'
+    delete 'invitations/:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
 
     # session
     get 'sessions' => 'sessions#index', as: 'sessions'

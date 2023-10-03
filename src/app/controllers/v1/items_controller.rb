@@ -16,6 +16,12 @@ class V1::ItemsController < V1::ApplicationController
         reaction_id: key,
         content: item.reactions.find_by(reaction_id: key).content,
         count: value
+      }},
+      items_to: item.reply_to_items.map {|item| {
+        item_id: item.item_id
+      }},
+      items_from: item.reply_from_items.map {|item| {
+        item_id: item.item_id
       }}
     }}
   end

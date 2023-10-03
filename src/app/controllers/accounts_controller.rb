@@ -4,6 +4,25 @@ class AccountsController < ApplicationController
   before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
   def show
   end
+  def follow
+    account = Account.find_by(name_id: params[:name_id])
+    this_follow_params = {
+      follow_to_id: account.name_id,
+      follow_from_id: @current_account.name_id
+    }
+    if Follow.exists?(this_follow_params)
+      Follow.where(this_follow_params).delete_all
+      flash[:success] = 'フォローを取り消しました'
+    else
+      follow = Follow.new(this_follow_params)
+      if follow.save!
+        flash[:success] = 'フォローしました'
+      else
+        flash[:success] = '失敗しました'
+      end
+    end
+    redirect_to root_path
+  end
   def edit
     @account = @current_account
   end

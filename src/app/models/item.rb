@@ -1,7 +1,7 @@
 class Item < ApplicationRecord
   belongs_to :account
   has_many :replies
-  has_many :quote
+  has_many :quotes
   has_many :reply_from, class_name: 'Reply', primary_key: 'item_id', foreign_key: 'reply_from_id'
   has_many :reply_to, class_name: 'Reply', primary_key: 'item_id', foreign_key: 'reply_to_id'
   has_many :reply_from_items, through: :reply_to, source: :reply_from
