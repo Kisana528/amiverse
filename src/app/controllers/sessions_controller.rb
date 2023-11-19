@@ -8,12 +8,12 @@ class SessionsController < ApplicationController
   end
   def create
     account = Account.find_by(name_id: params[:session][:name_id].downcase,
-                              activated: true,
-                              locked: false,
-                              silenced: false,
-                              suspended: false,
-                              frozen: false,
-                              deleted: false)
+      activated: true,
+      locked: false,
+      silenced: false,
+      suspended: false,
+      frozen: false,
+      deleted: false)
     if account && account.authenticate(params[:session][:password])
       log_in account
       remember(account, request.remote_ip, request.user_agent, request.uuid)
@@ -28,9 +28,19 @@ class SessionsController < ApplicationController
   end
   def update
   end
-  def destroy
+  def logout
     log_out if logged_in?
     flash[:success] = "ログアウトしました。"
     redirect_to root_url
+  end
+  def delete
+    session = Session.find(params[:id])
+    if session.update(deleted: true)
+      flash[:success] = "更新成功!"
+      redirect_to root_url
+    else
+      flash.now[:danger] = "更新できませんでした。"
+      render 'settings/security_and_authority'
+    end
   end
 end

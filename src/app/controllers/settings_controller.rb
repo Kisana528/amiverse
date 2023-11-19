@@ -13,4 +13,7 @@ class SettingsController < ApplicationController
     @image = Image.new
     @video = Video.new
   end
+  def security_and_authority
+    @sessions = Session.where(account_id: @current_account.id, deleted: false)
+  end
 end

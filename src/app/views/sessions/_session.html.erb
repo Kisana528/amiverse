@@ -1,5 +1,3 @@
-<% provide(:title, 'セッション') %>
-<h1>セッション</h1>
 <div style="overflow-y:scroll;">
   <table>
     <tr>
@@ -15,17 +13,17 @@
       <th>created_at</th>
       <th>updated_at</th>
     </tr>
-    <% @sessions.each do |s| %>
+    <% sessions.each do |s| %>
       <tr>
         <td><%= s.id %></td>
-        <td><%= link_to '詳細', root_path() %></td>
+        <td><%= button_to '削除', sessions_delete_path(id: s.id), method: :delete %></td>
         <td><%= s.account_id %></td>
         <td><%= s.name %></td>
         <td><%= s.description %></td>
         <td><%= s.remote_ip %></td>
         <td><%= s.user_agent %></td>
         <td><%= s.uuid %></td>
-        <td><%= s.boolean %></td>
+        <td><%= s.deleted %></td>
         <td><%= s.created_at %></td>
         <td><%= s.updated_at %></td>
       </tr>

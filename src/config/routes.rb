@@ -62,7 +62,8 @@ Rails.application.routes.draw do
   get 'sessions' => 'sessions#index'
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create', as: 'create_session'
-  delete 'logout' => 'sessions#destroy'
+  delete 'logout' => 'sessions#logout'
+  delete 'sessions/delete' => 'sessions#delete'
 
   # invitation
   get 'invitations' => 'invitations#index'
