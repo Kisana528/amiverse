@@ -35,6 +35,7 @@ $$rails db:seed
 閉じる
 ```
 $$exit
+$docker compose down
 ```
 Docker Composeで起動
 ```
