@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {appContext} from '@/pages/_app'
 import ItemAccount from '@/components/item_account'
 import Hls from 'hls.js'
+import {MaterialSymbols10k, MaterialSymbolsHomeRounded, JisakuMenuBar} from '@/lib/svg'
 
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
@@ -61,16 +62,9 @@ export default function Home() {
         <Link href="/items">投稿を見る</Link>
         <br />
 
-
-
-        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="22" cy="24" r="6" fill="#D9D9D9"/>
-          <circle cx="22" cy="50" r="6" fill="#D9D9D9"/>
-          <circle cx="22" cy="76" r="6" fill="#D9D9D9"/>
-          <rect x="34" y="19" width="50" height="10" rx="3" fill="#D9D9D9"/>
-          <rect x="34" y="45" width="50" height="10" rx="3" fill="#D9D9D9"/>
-          <rect x="34" y="71" width="50" height="10" rx="3" fill="#D9D9D9"/>
-        </svg>
+        <MaterialSymbols10k width="2em" height="2em" />
+        <MaterialSymbolsHomeRounded width="2em" height="2em" />
+        <JisakuMenuBar width="2em" height="2em" />
 
         <div className="video-view" >
           <video ref={videoRef} controls />
