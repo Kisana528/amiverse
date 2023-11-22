@@ -46,6 +46,11 @@ export async function getServerSideProps({req, res, context, query}) {
       aliases: [FullAppUrl(`@${name_id}`)],
       links: [
         {
+          "rel":"http://webfinger.net/rel/profile-page",
+          "type":"text/html",
+          "href":FullAppUrl(`@${name_id}`)
+        },
+        {
           "rel":"self",
           "type":"application/activity+json",
           "href":FullAppUrl(`@${name_id}/ap`)
