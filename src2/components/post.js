@@ -1,6 +1,8 @@
+'use client'
 import React, { useState, useContext } from 'react'
 import axios from '@/lib/axios'
 import { appContext } from '@/pages/_app'
+import { createObject } from './create_object'
 
 export default function Post() {
   const setFlash = useContext(appContext).setFlash
@@ -12,13 +14,15 @@ export default function Post() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (loggedIn) {
-      await axios.post('/api/items/create', { content, nsfw, cw })
+      await axios.post('/items/create', { content, cw })
         .then(res => {
           if (res.data.success) {
             setFlash('投稿したよ')
             setContent('')
             setNsfw(false)
             setCw(false)
+            //ここでサーバーからap配信
+            createObject(content)
           } else {
             setFlash('間違った入力')
           }

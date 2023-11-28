@@ -22,7 +22,6 @@ export default function Items() {
       },
       received(data) {
         // Called when there's incoming data on the websocket for this channel
-        const new_items = [...items, data]
         setItems((prevItems)=>([...prevItems, data]))
       }
     })
@@ -36,6 +35,8 @@ export default function Items() {
       }
       fetchItems()
       created()
+      console.log(items)
+
     }
     return () => {ignore = true}
   },[loggedIn])

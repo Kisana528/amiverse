@@ -78,21 +78,29 @@ class ApplicationController < ActionController::Base
     @current_account = current_account
   end
   def create_item_broadcast_format(item)
-    account = Account.find(item.account_id)
-    return_item = {
-      account: {
-        account_id: account.id,
-        name: account.name,
-        name_id: account.name_id
-      },
+    return serialize_item(item)
+  end
+  def serialize_item(item)
+    {
       content: item.content,
-      cw: item.cw,
-      item_type: item.item_type,
-      meta: item.meta,
-      updated_at: item.updated_at,
-      created_at: item.created_at,
       item_id: item.item_id,
+      created_at: item.created_at,
+      account: {
+        name_id: item.account.name_id,
+        name: item.account.name,
+        icon_url: generate_ati_url(item.account.account_id, 'icon', item.account.icon_id)
+      },
+      reactions: item.reactions.group(:reaction_id).count.map { |key, value| {
+        reaction_id: key,
+        content: item.reactions.find_by(reaction_id: key).content,
+        count: value
+      }},
+      items_to: item.reply_to_items.map {|item| {
+        item_id: item.item_id
+      }},
+      items_from: item.reply_from_items.map {|item| {
+        item_id: item.item_id
+      }}
     }
-    return return_item
   end
 end

@@ -19,7 +19,7 @@ export async function getServerSideProps({req, res, context, query}) {
         accountData = res.data
       })
       .catch(err => {
-        accountData = res.data
+        accountData = err.data
       })
     const data = {
       "@context": [
@@ -68,6 +68,7 @@ export async function getServerSideProps({req, res, context, query}) {
       following: FullAppUrl(`@${accountData.name_id}/following`),
       publicKey: {
         id: FullAppUrl(`@${accountData.name_id}#main-key`),
+        type: "Key",
         owner: FullAppUrl(`@${accountData.name_id}`),
         publicKeyPem: accountData.public_key
       }
