@@ -1,6 +1,8 @@
 class V1::ItemsController < V1::ApplicationController
   before_action :api_logged_in_account, only: %i[ create ]
   before_action :set_item, only: %i[ show ]
+  require "net/http"
+
   def index
     @items = Item.all
     render json: @items.map {|item|
@@ -20,8 +22,31 @@ class V1::ItemsController < V1::ApplicationController
     @item.uuid = SecureRandom.uuid
     @item.item_type = 'plane'
     if @item.save
-      item = create_item_broadcast_format(@item)
+      item = serialize_item(@item)
+      
+      #uri = URI.parse("http://front:3000/api/create_object")
+      #req = Net::HTTP.new(uri.host, uri.port)
+      #res = req.post(uri.path, item.to_json)
+
+      #http_req(
+      #  'http://front:3000/api/create_object/',
+      #  item.to_json
+      #)
       ActionCable.server.broadcast 'items_channel', item
+      #to_host = 'misskey.io'
+      #current_time = Time.now
+      #formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
+      #to_be_signed = `(request-target): post /inbox
+      #host: #{to_host}
+      #date: #{formatted_time}`
+      #account_private_key = @item.account.private_key
+      #sign = generate_signature(to_be_signed, account_private_key)
+      #item['sign'] = sign
+      #http_req(
+      #  'http://front:3000/api/create_object/',
+      #  item.to_json
+      #)
+      #ActionCable.server.broadcast 'items_channel', item
       render json: {success: true} 
     else
       render json: {success: false} 

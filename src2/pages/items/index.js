@@ -44,12 +44,12 @@ export default function Items() {
   return (
     <div className="main-container">
       <h1>items</h1>
+      <Post />
       <div id="items">
         {items.map(item => (
           <ItemAccount key={item.item_id} item={item} />
         ))}
       </div>
-      <Post />
       <style jsx>{`
         .main-container {
           background: var(--main-container-background-color);

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include ApplicationHelper
   include SessionsHelper
+  require 'net/https'
   before_action :set_current_account
   private
   def exists_admin
@@ -51,6 +52,11 @@ class ApplicationController < ActionController::Base
     public_key_pem = rsa_key.public_key.to_pem
     { private_key: private_key_pem, public_key: public_key_pem }
   end
+  def generate_signature(data, private_key_pem)
+    private_key = OpenSSL::PKey::RSA.new(private_key_pem)
+    signature = private_key.sign(OpenSSL::Digest::SHA256.new, data)
+    return Base64.strict_encode64(signature)
+  end
   def generate_varinat_image(image_id, pre_image_id, type)
     if image_id.present? && pre_image_id != image_id
       image = Image.find_by(image_id: image_id)
@@ -81,7 +87,7 @@ class ApplicationController < ActionController::Base
     return serialize_item(item)
   end
   def serialize_item(item)
-    {
+    return {
       content: item.content,
       item_id: item.item_id,
       created_at: item.created_at,
@@ -102,5 +108,13 @@ class ApplicationController < ActionController::Base
         item_id: item.item_id
       }}
     }
+  end
+  def http_req(url, data)
+    uri = URI.parse(url)
+    req = Net::HTTP.new(uri.host, uri.port)
+    #request = Net::HTTP::Post.new(uri.path, { 'Content-Type' => 'application/json' })
+    #request.body = data.to_json
+    #response = http.request(request)
+    res = req.post(uri.path, data)
   end
 end
