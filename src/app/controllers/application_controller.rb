@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include ApplicationHelper
   include SessionsHelper
-  require 'net/https'
+  require 'net/http'
   before_action :set_current_account
   private
   def exists_admin
@@ -109,12 +109,10 @@ class ApplicationController < ActionController::Base
       }}
     }
   end
-  def http_req(url, data)
+  def http_req(url, headers, data)
     uri = URI.parse(url)
     req = Net::HTTP.new(uri.host, uri.port)
-    #request = Net::HTTP::Post.new(uri.path, { 'Content-Type' => 'application/json' })
-    #request.body = data.to_json
-    #response = http.request(request)
-    res = req.post(uri.path, data)
+    res = req.post(uri.path, data, headers)
+    return res
   end
 end

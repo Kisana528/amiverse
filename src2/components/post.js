@@ -1,8 +1,6 @@
-'use client'
 import React, { useState, useContext } from 'react'
 import axios from '@/lib/axios'
 import { appContext } from '@/pages/_app'
-import { createObject } from './create_object'
 
 export default function Post() {
   const setFlash = useContext(appContext).setFlash
@@ -21,14 +19,13 @@ export default function Post() {
             setContent('')
             setNsfw(false)
             setCw(false)
-            //ここでサーバーからap配信
-            createObject(content)
+            /* apiに送信後、frontからuse serverでapを配信したい */
           } else {
             setFlash('間違った入力')
           }
         })
         .catch(err => {
-          setFlash('投稿通信例外')
+          setFlash(`投稿通信例外${err}`)
         })
     } else {
       setFlash('ろぐいんしてください')

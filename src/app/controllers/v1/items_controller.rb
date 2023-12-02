@@ -23,30 +23,29 @@ class V1::ItemsController < V1::ApplicationController
     @item.item_type = 'plane'
     if @item.save
       item = serialize_item(@item)
-      
-      #uri = URI.parse("http://front:3000/api/create_object")
-      #req = Net::HTTP.new(uri.host, uri.port)
-      #res = req.post(uri.path, item.to_json)
-
-      #http_req(
-      #  'http://front:3000/api/create_object/',
-      #  item.to_json
-      #)
       ActionCable.server.broadcast 'items_channel', item
-      #to_host = 'misskey.io'
-      #current_time = Time.now
-      #formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
-      #to_be_signed = `(request-target): post /inbox
-      #host: #{to_host}
-      #date: #{formatted_time}`
-      #account_private_key = @item.account.private_key
-      #sign = generate_signature(to_be_signed, account_private_key)
-      #item['sign'] = sign
-      #http_req(
-      #  'http://front:3000/api/create_object/',
-      #  item.to_json
-      #)
-      #ActionCable.server.broadcast 'items_channel', item
+      to_host = 'misskey.io'
+      current_time = Time.now
+      formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
+      to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}"
+      account_private_key = @item.account.private_key
+
+      sign = generate_signature(to_be_signed, account_private_key)
+      item['time'] = formatted_time
+      item['host'] = to_host
+      item['sign'] = sign
+      item['signed_data'] = to_be_signed
+      header = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date",signature="' + sign + '"'
+      http_req(
+        'https://misskey.io/inbox',
+        { 'Content-Type' => 'application/json',
+          'Host' => 'test',
+          'Date' => formatted_time,
+          'Signature' => header
+        },
+        create_wrap(@item).to_json
+      )
+      
       render json: {success: true} 
     else
       render json: {success: false} 
@@ -56,4 +55,30 @@ class V1::ItemsController < V1::ApplicationController
   def set_item
     @item = Item.find_by(item_id: params[:item_id])
   end
+  def create_wrap(item)
+    {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "type": "Create",
+      "id": "https://amiverse.net/items/#{item.item_id}/create",
+      "published": item.created_at,
+      "to": [
+        "https://amiverse.net/#{item.account.name_id}/followers",
+        "https://www.w3.org/ns/activitystreams#Public"
+      ],
+      "actor": "https://amiverse.net/#{item.account.name_id}",
+      "object": {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "type": "Note",
+        "id": "https://amiverse.net/items/#{item.item_id}",
+        "url": "https://amiverse.net/items/#{item.item_id}",
+        "published": item.created_at,
+        "to": [
+          "https://amiverse.net/#{item.account.name_id}/followers",
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "attributedTo": "https://amiverse.net/#{item.account.name_id}/followers",
+        "content": item.content
+      }
+    }
+  end 
 end
