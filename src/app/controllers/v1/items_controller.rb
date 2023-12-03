@@ -28,7 +28,7 @@ class V1::ItemsController < V1::ApplicationController
       current_time = Time.now
       formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
       send_body = create_wrap(@item).to_json
-      digest = Digest::SHA256.hexdigest(send_body.to_s)
+      digest = Digest::SHA256.base64digest(send_body.to_s)
       to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}\ndigest: sha-256=#{digest}"
       account_private_key = @item.account.private_key
 
@@ -43,12 +43,12 @@ class V1::ItemsController < V1::ApplicationController
         { 'Content-Type' => 'application/activity+json',
           'Host' => to_host,
           'Date' => formatted_time,
-          'Digest' => 'sha-256=' + digest,
+          'Digest' => 'SHA-256=' + digest,
           'Signature' => signature
         },
         send_body
       )
-      @item.update(cw_message: res.body.to_s)
+      #@item.update(cw_message: res.body.to_s)
       Rails.logger.info('------SHA-256------')
       Rails.logger.info(digest)
       Rails.logger.info('------tobesigned------')
