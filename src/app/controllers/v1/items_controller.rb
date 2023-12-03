@@ -1,6 +1,7 @@
 class V1::ItemsController < V1::ApplicationController
   before_action :api_logged_in_account, only: %i[ create ]
   before_action :set_item, only: %i[ show ]
+  require 'digest'
 
   def index
     @items = paged_items(params[:page])
@@ -26,7 +27,9 @@ class V1::ItemsController < V1::ApplicationController
       to_host = 'mstdn.jp'
       current_time = Time.now
       formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
-      to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}"
+      send_body = create_wrap(@item).to_json
+      digest = Digest::SHA256.digest(send_body.to_s)
+      to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}\ndigest: sha-256=#{digest}"
       account_private_key = @item.account.private_key
 
       sign = generate_signature(to_be_signed, account_private_key)
@@ -34,17 +37,21 @@ class V1::ItemsController < V1::ApplicationController
       item['host'] = to_host
       item['sign'] = sign
       item['signed_data'] = to_be_signed
-      header = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date",signature="' + sign + '"'
-      res = https_req(
-        'https://mstdn.jp/inbox',
+      header = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date digest",signature="' + sign + '"'
+      req,res = https_req(
+        'https://' + to_host + '/inbox',
         { 'Content-Type' => 'application/activity+json',
           'Host' => to_host,
           'Date' => formatted_time,
+          'Digest' => 'sha-256=' + digest,
           'Signature' => header
         },
-        create_wrap(@item).to_json
+        send_body
       )
+      @item.update(cw_message: '------request------' + res.body.to_s + '------request------' + res.to_s)
       Rails.logger.info('------request------')
+      Rails.logger.info(req)
+      Rails.logger.info('------response------')
       Rails.logger.info(res)
       Rails.logger.info(res.body)
       

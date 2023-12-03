@@ -128,6 +128,6 @@ class ApplicationController < ActionController::Base
     req = Net::HTTP.new(uri.host, uri.port)
     req.use_ssl = true
     res = req.post(uri.path, data, headers)
-    return res
+    return req,res
   end
 end
