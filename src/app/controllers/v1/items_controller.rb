@@ -31,13 +31,8 @@ class V1::ItemsController < V1::ApplicationController
       digest = Digest::SHA256.base64digest(send_body.to_s)
       to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}\ndigest: sha-256=#{digest}"
       account_private_key = @item.account.private_key
-
       sign = generate_signature(to_be_signed, account_private_key)
-      item['time'] = formatted_time
-      item['host'] = to_host
-      item['sign'] = sign
-      item['signed_data'] = to_be_signed
-      signature = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date digest",signature="' + sign + '"'
+      signature = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="' + sign + '"'
       req,res = https_req(
         'https://' + to_host + '/inbox',
         { 'Content-Type' => 'application/activity+json',
@@ -52,7 +47,11 @@ class V1::ItemsController < V1::ApplicationController
       Rails.logger.info('------SHA-256------')
       Rails.logger.info(digest)
       Rails.logger.info('------tobesigned------')
+      Rails.logger.info(to_be_signed.to_s)
+      Rails.logger.info('------sendBody------')
       Rails.logger.info(send_body.to_s)
+      Rails.logger.info('------sign------')
+      Rails.logger.info(sign.to_s)
       Rails.logger.info('------responseBody------')
       Rails.logger.info(res.body)
       Rails.logger.info('------end------')

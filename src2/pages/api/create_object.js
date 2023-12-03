@@ -2,7 +2,6 @@ import axios from '@/lib/axios'
 
 export default function handler(req, res) {
   const data = req.body
-  console.log(data)
   
   //axios
   /*axios.post('http://app:3000/v1/@' + query.name_id)
