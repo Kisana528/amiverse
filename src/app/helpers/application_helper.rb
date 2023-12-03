@@ -23,6 +23,11 @@ module ApplicationHelper
   def full_api_url(path)
     return File.join(ENV["API_URL"], path)
   end
+  def to_page(current_page, where_to_go)
+    current_page = current_page.to_i
+    page = where_to_go == 'next' ? [current_page + 1, 2].max : where_to_go == 'prev' ? [current_page - 1, 1].max : 2
+    return page
+  end
   private
   def generate_normal_url(true_key)
     variant_key = File.join('variants', true_key)

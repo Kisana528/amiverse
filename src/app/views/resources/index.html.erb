@@ -19,6 +19,8 @@
         <% @items.each do |item| %>
           <%= render 'items/item', item: item, reactions: @reactions %>
         <% end %>
+        <%= link_to "次のページ", root_path(page: to_page(params[:page], 'next')) %>
+        <%= link_to "前のページ", root_path(page: to_page(params[:page], 'prev')) %>
       </div>
     <% else %>
       <div class='amiverse-index-box'>

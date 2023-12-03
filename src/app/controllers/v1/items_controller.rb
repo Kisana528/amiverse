@@ -1,10 +1,9 @@
 class V1::ItemsController < V1::ApplicationController
   before_action :api_logged_in_account, only: %i[ create ]
   before_action :set_item, only: %i[ show ]
-  require "net/http"
 
   def index
-    @items = Item.all
+    @items = paged_items(params[:page])
     render json: @items.map {|item|
       serialize_item(item)
     }
@@ -24,7 +23,7 @@ class V1::ItemsController < V1::ApplicationController
     if @item.save
       item = serialize_item(@item)
       ActionCable.server.broadcast 'items_channel', item
-      to_host = 'misskey.io'
+      to_host = 'mstdn.jp'
       current_time = Time.now
       formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
       to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}"
@@ -36,15 +35,18 @@ class V1::ItemsController < V1::ApplicationController
       item['sign'] = sign
       item['signed_data'] = to_be_signed
       header = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date",signature="' + sign + '"'
-      http_req(
-        'https://misskey.io/inbox',
-        { 'Content-Type' => 'application/json',
-          'Host' => 'test',
+      res = https_req(
+        'https://mstdn.jp/inbox',
+        { 'Content-Type' => 'application/activity+json',
+          'Host' => to_host,
           'Date' => formatted_time,
           'Signature' => header
         },
         create_wrap(@item).to_json
       )
+      Rails.logger.info('------request------')
+      Rails.logger.info(res)
+      Rails.logger.info(res.body)
       
       render json: {success: true} 
     else

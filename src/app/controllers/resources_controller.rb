@@ -1,7 +1,7 @@
 class ResourcesController < ApplicationController
   before_action :logged_in_account, only: [:page1]
   def index
-    @items = Item.all.limit(5).order(created_at: :desc)
+    @items = paged_items(params[:page])
   end
   def about
   end

@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   include SessionsHelper
   require 'net/http'
+  require 'net/https'
   before_action :set_current_account
   private
   def exists_admin
@@ -83,6 +84,13 @@ class ApplicationController < ActionController::Base
   def set_current_account
     @current_account = current_account
   end
+  def paged_items(param)
+    param = param.to_i
+    page = param < 1 ? 1 : param
+    offset_item = (page - 1) * 10 # 開始位置
+    limit_item = 10 # 表示件数
+    return Item.offset(offset_item.to_i).limit(limit_item.to_i).order(created_at: :desc)
+  end
   def create_item_broadcast_format(item)
     return serialize_item(item)
   end
@@ -112,6 +120,13 @@ class ApplicationController < ActionController::Base
   def http_req(url, headers, data)
     uri = URI.parse(url)
     req = Net::HTTP.new(uri.host, uri.port)
+    res = req.post(uri.path, data, headers)
+    return res
+  end
+  def https_req(url, headers, data)
+    uri = URI.parse(url)
+    req = Net::HTTP.new(uri.host, uri.port)
+    req.use_ssl = true
     res = req.post(uri.path, data, headers)
     return res
   end

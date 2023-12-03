@@ -11,12 +11,13 @@ export default function Home() {
   const loginFormTrigger = useContext(appContext).loginFormTrigger
   const [loadItems, setloadItems] = useState(true)
   const [items, setItems] = useState([])
+  const [page, setPage] = useState(1)
 
   let ignore = false
   useEffect(() => {
     if (!ignore && loggedIn) {
       const fetchItems = async () => {
-        const response = await axios.post('/items')
+        const response = await axios.post('/items', {'page':page})
         const data = response.data
         setItems(data)
         setloadItems(false)
