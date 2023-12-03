@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
     uri = URI.parse(url)
     req = Net::HTTP.new(uri.host, uri.port)
     res = req.post(uri.path, data, headers)
-    return res
+    return req,res
   end
   def https_req(url, headers, data)
     uri = URI.parse(url)

@@ -28,7 +28,7 @@ class V1::ItemsController < V1::ApplicationController
       current_time = Time.now
       formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
       send_body = create_wrap(@item).to_json
-      digest = Digest::SHA256.digest(send_body.to_s)
+      digest = Digest::SHA256.hexdigest(send_body.to_s)
       to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}\ndigest: sha-256=#{digest}"
       account_private_key = @item.account.private_key
 
@@ -37,23 +37,25 @@ class V1::ItemsController < V1::ApplicationController
       item['host'] = to_host
       item['sign'] = sign
       item['signed_data'] = to_be_signed
-      header = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date digest",signature="' + sign + '"'
+      signature = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",headers="(request-target) host date digest",signature="' + sign + '"'
       req,res = https_req(
         'https://' + to_host + '/inbox',
         { 'Content-Type' => 'application/activity+json',
           'Host' => to_host,
           'Date' => formatted_time,
           'Digest' => 'sha-256=' + digest,
-          'Signature' => header
+          'Signature' => signature
         },
         send_body
       )
-      @item.update(cw_message: '------request------' + res.body.to_s + '------request------' + res.to_s)
-      Rails.logger.info('------request------')
-      Rails.logger.info(req)
-      Rails.logger.info('------response------')
-      Rails.logger.info(res)
+      @item.update(cw_message: res.body.to_s)
+      Rails.logger.info('------SHA-256------')
+      Rails.logger.info(digest)
+      Rails.logger.info('------tobesigned------')
+      Rails.logger.info(send_body.to_s)
+      Rails.logger.info('------responseBody------')
       Rails.logger.info(res.body)
+      Rails.logger.info('------end------')
       
       render json: {success: true} 
     else

@@ -1,6 +1,6 @@
 import axios from '@/lib/axios'
 
-export async function getServerSideProps({req, res, context, query}) {
+export async function getServerSideProps(req, res, context, query) {
   let accountData
   if (query.name_id) {
     await axios.post('http://app:3000/v1/@' + query.name_id)

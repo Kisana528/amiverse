@@ -13,7 +13,7 @@ export default function handler(req, res) {
     .catch(err => {
       //アカウント取得例外
     })*/
-
+    res.write(JSON.stringify({'status': 'ok'}))
   res.status(200).json({
     status: 'OK!'
   })
