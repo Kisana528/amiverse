@@ -117,17 +117,17 @@ class ApplicationController < ActionController::Base
       }}
     }
   end
-  def http_req(url, headers, data)
+  def http_post(url, headers, data)
     uri = URI.parse(url)
     req = Net::HTTP.new(uri.host, uri.port)
     res = req.post(uri.path, data, headers)
-    return req,res
+    return req, res
   end
-  def https_req(url, headers, data)
+  def https_post(url, headers, data)
     uri = URI.parse(url)
     req = Net::HTTP.new(uri.host, uri.port)
     req.use_ssl = true
     res = req.post(uri.path, data, headers)
-    return req,res
+    return req, res
   end
 end

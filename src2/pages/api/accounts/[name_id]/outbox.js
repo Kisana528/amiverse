@@ -1,9 +1,9 @@
 import axios from '@/lib/axios'
 
-export async function getServerSideProps(req, res, context, query) {
+export default async function handler(req, res) {
   let accountData
-  if (query.name_id) {
-    await axios.post('http://app:3000/v1/@' + query.name_id)
+  if (req.query.name_id) {
+    await axios.post('http://app:3000/v1/@' + req.query.name_id)
       .then(res => {
         accountData = res.data
         console.log(accountData.items.length)
@@ -34,7 +34,8 @@ export async function getServerSideProps(req, res, context, query) {
           "@context": "https://www.w3.org/ns/activitystreams",
           "type": "Note",
           "id": `https://amiverse.net/items/${item.item_id}`,
-          "url": `https://amiverse.net/items/${item.item_id}`,          "published": "2023-01-16T06:48:29Z",
+          "url": `https://amiverse.net/items/${item.item_id}`,
+          "published": "2023-01-16T06:48:29Z",
           "to": [
             `https://amiverse.net/${accountData.name_id}/followers`,
             "https://www.w3.org/ns/activitystreams#Public"
@@ -48,7 +49,4 @@ export async function getServerSideProps(req, res, context, query) {
   res.setHeader('Content-Type', 'application/activity+json; charset=utf-8')
   res.write(JSON.stringify(data))
   res.end()
-  return { props: {} }
 }
-
-export default function Outbox() {}

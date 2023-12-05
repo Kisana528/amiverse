@@ -1,6 +1,7 @@
 class V1::ItemsController < V1::ApplicationController
   before_action :api_logged_in_account, only: %i[ create ]
   before_action :set_item, only: %i[ show ]
+  include ActivityPub
   require 'digest'
 
   def index
@@ -22,40 +23,8 @@ class V1::ItemsController < V1::ApplicationController
     @item.uuid = SecureRandom.uuid
     @item.item_type = 'plane'
     if @item.save
-      item = serialize_item(@item)
-      ActionCable.server.broadcast 'items_channel', item
-      to_host = 'mstdn.jp'
-      current_time = Time.now
-      formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
-      send_body = create_wrap(@item).to_json
-      digest = Digest::SHA256.base64digest(send_body.to_s)
-      to_be_signed = "(request-target): post /inbox\nhost: #{to_host}\ndate: #{formatted_time}\ndigest: sha-256=#{digest}"
-      account_private_key = @item.account.private_key
-      sign = generate_signature(to_be_signed, account_private_key)
-      signature = 'keyId="https://amiverse.net/@' + @item.account.name_id + '#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="' + sign + '"'
-      req,res = https_req(
-        'https://' + to_host + '/inbox',
-        { 'Content-Type' => 'application/activity+json',
-          'Host' => to_host,
-          'Date' => formatted_time,
-          'Digest' => 'SHA-256=' + digest,
-          'Signature' => signature
-        },
-        send_body
-      )
-      #@item.update(cw_message: res.body.to_s)
-      Rails.logger.info('------SHA-256------')
-      Rails.logger.info(digest)
-      Rails.logger.info('------tobesigned------')
-      Rails.logger.info(to_be_signed.to_s)
-      Rails.logger.info('------sendBody------')
-      Rails.logger.info(send_body.to_s)
-      Rails.logger.info('------sign------')
-      Rails.logger.info(sign.to_s)
-      Rails.logger.info('------responseBody------')
-      Rails.logger.info(res.body)
-      Rails.logger.info('------end------')
-      
+      deliver(create_note(@item), @current_account.private_key, @current_account.name_id)
+      ActionCable.server.broadcast('items_channel', serialize_item(@item))
       render json: {success: true} 
     else
       render json: {success: false} 
@@ -65,30 +34,4 @@ class V1::ItemsController < V1::ApplicationController
   def set_item
     @item = Item.find_by(item_id: params[:item_id])
   end
-  def create_wrap(item)
-    {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "type": "Create",
-      "id": "https://amiverse.net/items/#{item.item_id}/create",
-      "published": item.created_at,
-      "to": [
-        "https://amiverse.net/#{item.account.name_id}/followers",
-        "https://www.w3.org/ns/activitystreams#Public"
-      ],
-      "actor": "https://amiverse.net/#{item.account.name_id}",
-      "object": {
-        "@context": "https://www.w3.org/ns/activitystreams",
-        "type": "Note",
-        "id": "https://amiverse.net/items/#{item.item_id}",
-        "url": "https://amiverse.net/items/#{item.item_id}",
-        "published": item.created_at,
-        "to": [
-          "https://amiverse.net/#{item.account.name_id}/followers",
-          "https://www.w3.org/ns/activitystreams#Public"
-        ],
-        "attributedTo": "https://amiverse.net/#{item.account.name_id}/followers",
-        "content": item.content
-      }
-    }
-  end 
 end

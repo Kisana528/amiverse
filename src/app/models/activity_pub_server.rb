@@ -1,0 +1,2 @@
+class ActivityPubServer < ApplicationRecord
+end
