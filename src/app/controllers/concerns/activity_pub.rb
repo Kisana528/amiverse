@@ -25,24 +25,30 @@ module ActivityPub
       }
     }
   end
-  def deliver(body, private_key, name_id, host='mstdn.jp', path='/inbox')
+  def deliver(body, private_key, name_id, host, path)
+    body = body.to_json
     current_time = Time.now
     formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
-    digest = Digest::SHA256.base64digest(body.to_s) #hexdigest?
+    digest = Digest::SHA256.base64digest(body) #hexdigest?
     to_be_signed = "(request-target): post /inbox\nhost: #{host}\ndate: #{formatted_time}\ndigest: sha-256=#{digest}"
     sign = generate_signature(to_be_signed, private_key)
     signature = 'keyId="https://amiverse.net/@' + name_id + '#main-key",algorithm="rsa-sha256",headers="(request-target) host date digest",signature="' + sign + '"'
-    req,res = http_post(
-      #'https://' + host + '/inbox',
-      'http://front:3000/@kisana/inbox',
+    req,res = https_post(
+      'https://' + host + path,
       { 'Content-Type' => 'application/activity+json',
         'Host' => host,
         'Date' => formatted_time,
         'Digest' => 'SHA-256=' + digest,
         'Signature' => signature
       },
-      body.to_json
+      body
     )
-    Rails.logger.info('ok')
+    ActivityPubDelivered.create(
+      host: host,
+      path: path,
+      digest: digest,
+      signature: signature,
+      content: body,
+      response: res.body)
   end
 end

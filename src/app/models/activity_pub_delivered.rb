@@ -1,0 +1,2 @@
+class ActivityPubDelivered < ApplicationRecord
+end

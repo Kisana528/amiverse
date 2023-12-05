@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  server_id: 1
+  host: MyString
+  digest: MyString
+  signature: MyText
+  content: MyText
+
+two:
+  server_id: 1
+  host: MyString
+  digest: MyString
+  signature: MyText
+  content: MyText
