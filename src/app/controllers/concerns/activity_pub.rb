@@ -25,7 +25,7 @@ module ActivityPub
       }
     }
   end
-  def deliver(body, private_key, name_id, host, path)
+  def deliver(body, private_key, name_id, host, path, public_key)
     body = body.to_json
     current_time = Time.now
     formatted_time = current_time.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
@@ -43,6 +43,15 @@ module ActivityPub
       },
       body
     )
+    # 検証開始
+    result = verify_signature(public_key, sign, to_be_signed)
+    Rails.logger.info('-----結果発表------')
+    Rails.logger.info(result ? 'ok' : 'ng')
+    Rails.logger.info('-----内容は------')
+    Rails.logger.info(to_be_signed)
+    Rails.logger.info('-----署名は------')
+    Rails.logger.info(sign)
+    # 検証終了
     ActivityPubDelivered.create(
       host: host,
       path: path,

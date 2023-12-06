@@ -9,13 +9,13 @@ class InvitationsController < ApplicationController
   end
 
   def new
-    @Invitation = Invitation.new
+    @invitation = Invitation.new
   end
 
   def create
-    @Invitation = Invitation.new(invitation_params)
-    @Invitation.account_id = @current_account.id
-    if @Invitation.save
+    @invitation = Invitation.new(invitation_params)
+    @invitation.account_id = @current_account.id
+    if @invitation.save
       flash[:success] = "招待を作成しました。"
       redirect_to root_path
     else
@@ -32,6 +32,6 @@ class InvitationsController < ApplicationController
   end
   private
   def invitation_params
-    params.permit(:name, :invitation_code, :max_uses, :expires_at)
+    params.require(:invitation).permit(:name, :invitation_code, :max_uses, :expires_at)
   end
 end

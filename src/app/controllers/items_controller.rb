@@ -1,6 +1,8 @@
 class ItemsController < ApplicationController
   before_action :logged_in_account, only: %i[ index show new create update destroy ]
   before_action :set_item, only: %i[ show edit update destroy ]
+  include ActivityPub
+
   def index
     offset_item = 0
     limit_item = 9
@@ -43,6 +45,7 @@ class ItemsController < ApplicationController
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
       item = create_item_broadcast_format(@item)
+      deliver(create_note(@item), @current_account.private_key, @current_account.name_id, params[:item][:host], params[:item][:path], @current_account.public_key)
       ActionCable.server.broadcast 'items_channel', item
     else
       flash[:success] = '失敗しました。'

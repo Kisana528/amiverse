@@ -112,9 +112,9 @@ Rails.application.routes.draw do
 
     # invitation
     get 'invitations' => 'invitations#index'
-    get 'invitations/:invitation_code' => 'invitations#show', as: 'invitation'
     get 'invitations/new' => 'invitations#new', as: 'new_invitation'
-    post 'invitations/:invitation_code/create' => 'invitations#create', as: 'create_invitation'
+    post 'invitations/create' => 'invitations#create', as: 'create_invitation'
+    get 'invitations/:invitation_code' => 'invitations#show', as: 'invitation'
     get 'invitations/:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
     patch 'invitations/:invitation_code/update' => 'invitations#update', as: 'update_invitation'
     delete 'invitations/:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
@@ -128,6 +128,10 @@ Rails.application.routes.draw do
 
     # item
     get 'items' => 'items#index', as: 'items'
+
+    # test
+    get 'test/new'
+    post 'test/verify'
 
   end
 

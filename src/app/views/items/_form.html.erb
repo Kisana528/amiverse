@@ -5,6 +5,16 @@
   <%= form.hidden_field :quote_item_id, value: (defined? initial_quote_item_id)  ? initial_quote_item_id : '' %>
 
   <div>
+    <%= form.label :host, style: "display: block" %>
+    <%= form.text_field :host %>
+  </div>
+  
+  <div>
+    <%= form.label :path, style: "display: block" %>
+    <%= form.text_field :path %>
+  </div>
+
+  <div>
     <%= form.label :content, style: "display: block" %>
     <%= form.text_field :content %>
   </div>
