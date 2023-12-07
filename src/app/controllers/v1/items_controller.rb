@@ -22,7 +22,7 @@ class V1::ItemsController < V1::ApplicationController
     @item.uuid = SecureRandom.uuid
     @item.item_type = 'plane'
     if @item.save
-      deliver(create_note(@item), @current_account.private_key, @current_account.name_id, 'mstdn.jp', '/inbox', @current_account.public_key)
+      deliver(create_note(@item), @current_account.private_key, @current_account.name_id, 'https://mstdn.jp/inbox', '/inbox', @current_account.public_key)
       ActionCable.server.broadcast('items_channel', serialize_item(@item))
       render json: {success: true}
     else
