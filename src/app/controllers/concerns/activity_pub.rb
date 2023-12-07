@@ -67,7 +67,7 @@ module ActivityPub
       Date: str_time,
       Digest: "SHA-256=#{s256}",
       Signature: [
-        "keyId=\"https://#{str_host}/@#{str_name}#Key\"",
+        "keyId=\"https://#{str_host}/@#{str_name}#main-key\"",
         'algorithm="rsa-sha256"',
         'headers="(request-target) host date digest"',
         "signature=\"#{b64}\""

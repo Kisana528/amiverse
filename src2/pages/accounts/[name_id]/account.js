@@ -53,7 +53,7 @@ export async function getServerSideProps({req, res, context, query}) {
       published: accountData.created_at,
       discoverable: true,
       attachment: [],
-      manuallyApprovesFollowers: true,
+      manuallyApprovesFollowers: false,
       name: accountData.name,
       summary: "",
       icon: {
