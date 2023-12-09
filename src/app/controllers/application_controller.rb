@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     signature = private_key.sign(OpenSSL::Digest::SHA256.new, data)
     return Base64.strict_encode64(signature)
   end
-  def verify_signature(public_key_pem, signature, message)
+  def verify_signature(public_key_pem, message, signature)
     public_key = OpenSSL::PKey::RSA.new(public_key_pem)
     signature = Base64.decode64(signature)
     return public_key.verify(OpenSSL::Digest::SHA256.new, signature, message)

@@ -5,13 +5,13 @@
   <%= form.hidden_field :quote_item_id, value: (defined? initial_quote_item_id)  ? initial_quote_item_id : '' %>
 
   <div>
-    <%= form.label :host, style: "display: block" %>
-    <%= form.text_field :host %>
+    <%= form.label :from_url, style: "display: block" %>
+    <%= form.text_field :from_url %>
   </div>
   
   <div>
-    <%= form.label :path, style: "display: block" %>
-    <%= form.text_field :path %>
+    <%= form.label :to_url, style: "display: block" %>
+    <%= form.text_field :to_url %>
   </div>
 
   <div>

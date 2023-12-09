@@ -45,7 +45,12 @@ class ItemsController < ApplicationController
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
       item = create_item_broadcast_format(@item)
-      deliver(create_note(@item), @current_account.private_key, @current_account.name_id, params[:item][:host], params[:item][:path], @current_account.public_key)
+      
+      from_url = 'https://amiverse.net'
+      to_url = 'https://mstdn.jp/inbox'
+      from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
+      to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
+      deliver(create_note(@item), @current_account.name_id, @current_account.private_key, from_url, to_url, @current_account.public_key)
       ActionCable.server.broadcast 'items_channel', item
     else
       flash[:success] = '失敗しました。'

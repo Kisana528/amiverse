@@ -25,59 +25,60 @@ module ActivityPub
       }
     }
   end
-  def deliver(body, private_key, name_id, host, path, public_key)
-    headers = sign_headers body, name_id, 'amiverse.net', host, private_key
+  def deliver(body, name_id, private_key, from_url, to_url, public_key)
+    headers, digest, to_be_signed, sign = sign_headers(body, name_id, private_key, from_url, to_url)
     req,res = https_post(
-      host,
+      to_url,
       headers,
       body.to_json
     )
     # 検証開始
-    #result = verify_signature(public_key, sign, to_be_signed)
+    result = verify_signature(public_key, to_be_signed, sign)
     Rails.logger.info('-----結果発表------')
+    Rails.logger.info(result ? 'ok' : 'ng')
     Rails.logger.info(res.body)
     Rails.logger.info('-----内容は------')
     Rails.logger.info(body.to_json)
+    Rails.logger.info('-----署名は------')
+    Rails.logger.info(to_be_signed)
+    Rails.logger.info(sign)
     Rails.logger.info('-----headersは------')
     Rails.logger.info(headers)
     # 検証終了
     ActivityPubDelivered.create(
-      host: host,
+      host: to_url,
+      digest: digest,
+      signature: sign,
       content: body.to_json,
       response: res.body)
   end
-  def post_activity(req, body, headers)
-    puts "POST #{req} #{body.to_json}"
-    HTTP[headers].post(req, json: body)
-    nil
-  end
-  def sign_headers(body, str_name, str_host, str_inbox, private_key)
-    str_time = Time.now.utc.httpdate
-    s256 = Digest::SHA256.base64digest(body.to_json)
-    private_key = OpenSSL::PKey::RSA.new(private_key)
-    sig = private_key.sign(OpenSSL::Digest::SHA256.new, [
-      "(request-target): post #{URI.parse(str_inbox).path}",
-      "host: #{URI.parse(str_inbox).host}",
-      "date: #{str_time}",
-      "digest: SHA-256=#{s256}"
-    ].join("\n"))
-    b64 = Base64.strict_encode64(sig)
+  def sign_headers(body, name_id, private_key, from_url, to_url)
+    from_host = URI.parse(from_url).host
+    to_host = URI.parse(to_url).host
+    current_time = Time.now.utc.httpdate
+    digest = Digest::SHA256.base64digest(body.to_json)
+    to_be_signed = [
+      "(request-target): post /inbox",
+      "host: #{to_host}",
+      "date: #{current_time}",
+      "digest: sha-256=#{digest}"].join("\n")
+    sign = generate_signature(to_be_signed, private_key)
     headers = {
-      Host: URI.parse(str_inbox).host,
-      Date: str_time,
-      Digest: "SHA-256=#{s256}",
+      Host: to_host,
+      Date: current_time,
+      Digest: "SHA-256=#{digest}",
       Signature: [
-        "keyId=\"https://#{str_host}/@#{str_name}#main-key\"",
+        "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
         'algorithm="rsa-sha256"',
         'headers="(request-target) host date digest"',
-        "signature=\"#{b64}\""
+        "signature=\"#{sign}\""
       ].join(','),
-      Accept: 'application/json',
-      'Accept-Encoding': 'gzip',
-      'Cache-Control': 'max-age=0',
+      #Accept: 'application/json',
+      #'Accept-Encoding': 'gzip',
+      #'Cache-Control': 'max-age=0',
       'Content-Type': 'application/activity+json',
-      'User-Agent': "test (+https://#{str_host}/)"
+      'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }
-    headers
+    return headers, digest, to_be_signed, sign
   end
 end
