@@ -75,7 +75,7 @@ module ActivityPub
     from_host = URI.parse(from_url).host
     to_host = URI.parse(to_url).host
     current_time = Time.now.utc.httpdate
-    digest = Digest::SHA256.base64digest(body.to_json)
+    digest = Digest::SHA256.hexdigest(body.to_json)
     to_be_signed = [
       "(request-target): post /inbox",
       "host: #{to_host}",
