@@ -132,6 +132,7 @@ Rails.application.routes.draw do
     # test
     get 'test/new'
     post 'test/verify'
+    post 'test/digest'
 
   end
 

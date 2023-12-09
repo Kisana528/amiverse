@@ -80,22 +80,24 @@ module ActivityPub
       "(request-target): post /inbox",
       "host: #{to_host}",
       "date: #{current_time}",
-      "digest: sha-256=#{digest}"].join("\n")
+      "digest: sha-256=#{digest}",
+      "content-type: application/json"].join("\n")
     sign = generate_signature(to_be_signed, private_key)
+    statement = [
+      "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
+      'algorithm="rsa-sha256"',
+      'headers="(request-target) host date digest content-type"',
+      "signature=\"#{sign}\""
+    ].join(',') # content-lengthも必要?
     headers = {
       Host: to_host,
       Date: current_time,
       Digest: "SHA-256=#{digest}",
-      Signature: [
-        "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
-        'algorithm="rsa-sha256"',
-        'headers="(request-target) host date digest"',
-        "signature=\"#{sign}\""
-      ].join(','),
-      #Accept: 'application/json',
+      Signature: statement,
+      Authorization: "Signature #{statement}",
+      Accept: 'application/json',
       #'Accept-Encoding': 'gzip',
       #'Cache-Control': 'max-age=0',
-      'Content-Type': 'application/activity+json',
       'Content-Type': 'application/json',
       'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }

@@ -1,10 +1,10 @@
 import axios from '@/lib/axios'
 
 export default function handler(req, res) {
-  let data = {'inbox':'content'}
+  let data = {'default':'value'}
   if (req.method === "POST") {
-    data = req.body
-    console.log(req)
+    data.headers = JSON.parse(JSON.stringify(req.headers))
+    data.body = JSON.parse(JSON.stringify(req.body))
     axios.post('http://app:3000/v1/activitypub/inbox', JSON.stringify(data))
     .then(res => {
       console.log(res.data)

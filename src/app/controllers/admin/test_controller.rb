@@ -3,9 +3,12 @@ class Admin::TestController < Admin::ApplicationController
   end
   def verify
     result = verify_signature(params[:public_key], params[:signature], params[:message])
-    Rails.logger.info('-----結果発表------')
-    Rails.logger.info(result ? 'ok' : 'ng')
-    render 'index'
+    flash.now[:success] = result ? 'ok' : 'ng'
+    render 'new'
+  end
+  def digest
+    flash.now[:success] = Digest::SHA256.hexdigest(params[:digest]) + Digest::SHA256.base64digest(params[:digest])
+    render 'new'
   end
   private
 end
