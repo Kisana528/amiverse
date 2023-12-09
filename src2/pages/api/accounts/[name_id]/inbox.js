@@ -4,7 +4,7 @@ export default function handler(req, res) {
   let data = {'inbox':'content'}
   if (req.method === "POST") {
     data = req.body
-    console.log(data)
+    console.log(req)
     axios.post('http://app:3000/v1/activitypub/inbox', JSON.stringify(data))
     .then(res => {
       console.log(res.data)

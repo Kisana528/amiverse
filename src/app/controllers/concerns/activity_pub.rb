@@ -52,6 +52,25 @@ module ActivityPub
       content: body.to_json,
       response: res.body)
   end
+  def front_deliver(body, name_id, private_key, from_url, to_url, public_key)
+    headers, digest, to_be_signed, sign = sign_headers(body, name_id, private_key, from_url, to_url)
+    req,res = http_post(
+      'http://front:3000/outbox',
+      {Authorization: 'Bearer token-here',
+      'Content-Type' => 'application/json'
+      },{
+      to_url: to_url,
+      headers: headers,
+      body: body}.to_json
+    )
+    Rails.logger.info(res.body)
+    ActivityPubDelivered.create(
+      host: to_url,
+      digest: digest,
+      signature: sign,
+      content: body.to_json,
+      response: res.body)
+  end
   def sign_headers(body, name_id, private_key, from_url, to_url)
     from_host = URI.parse(from_url).host
     to_host = URI.parse(to_url).host
@@ -77,6 +96,7 @@ module ActivityPub
       #'Accept-Encoding': 'gzip',
       #'Cache-Control': 'max-age=0',
       'Content-Type': 'application/activity+json',
+      'Content-Type': 'application/json',
       'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }
     return headers, digest, to_be_signed, sign

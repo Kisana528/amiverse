@@ -50,7 +50,7 @@ class ItemsController < ApplicationController
       to_url = 'https://mstdn.jp/inbox'
       from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
       to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
-      deliver(create_note(@item), @current_account.name_id, @current_account.private_key, from_url, to_url, @current_account.public_key)
+      front_deliver(create_note(@item), @current_account.name_id, @current_account.private_key, from_url, to_url, @current_account.public_key)
       ActionCable.server.broadcast 'items_channel', item
     else
       flash[:success] = '失敗しました。'
