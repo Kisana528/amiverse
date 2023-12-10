@@ -71,7 +71,7 @@ module ActivityPub
       "host: #{to_host}",
       "date: #{current_time}",
       "digest: SHA-256=#{digest}",
-      "content-type: application/json"].join("\n")
+      "content-type: application/activity+json"].join("\n")
     sign = generate_signature(to_be_signed, private_key)
     statement = [
       "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
@@ -85,10 +85,10 @@ module ActivityPub
       Digest: "SHA-256=#{digest}",
       Signature: statement,
       Authorization: "Signature #{statement}",
-      Accept: 'application/json',
+      #Accept: 'application/json',
       #'Accept-Encoding': 'gzip',
       #'Cache-Control': 'max-age=0',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/activity+json',
       'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }
     return headers, digest, to_be_signed, sign, statement
