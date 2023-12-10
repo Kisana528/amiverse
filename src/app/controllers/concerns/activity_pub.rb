@@ -26,34 +26,23 @@ module ActivityPub
     }
   end
   def deliver(body, name_id, private_key, from_url, to_url, public_key)
-    headers, digest, to_be_signed, sign = sign_headers(body, name_id, private_key, from_url, to_url)
+    headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
     req,res = https_post(
       to_url,
       headers,
       body.to_json
     )
-    # 検証開始
-    result = verify_signature(public_key, to_be_signed, sign)
-    Rails.logger.info('-----結果発表------')
-    Rails.logger.info(result ? 'ok' : 'ng')
-    Rails.logger.info(res.body)
-    Rails.logger.info('-----内容は------')
-    Rails.logger.info(body.to_json)
-    Rails.logger.info('-----署名は------')
-    Rails.logger.info(to_be_signed)
-    Rails.logger.info(sign)
-    Rails.logger.info('-----headersは------')
-    Rails.logger.info(headers)
-    # 検証終了
     ActivityPubDelivered.create(
-      host: to_url,
+      to_url: to_url,
       digest: digest,
+      to_be_signed: to_be_signed,
       signature: sign,
+      statement: statement,
       content: body.to_json,
       response: res.body)
   end
   def front_deliver(body, name_id, private_key, from_url, to_url, public_key)
-    headers, digest, to_be_signed, sign = sign_headers(body, name_id, private_key, from_url, to_url)
+    headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
     req,res = http_post(
       'http://front:3000/outbox',
       {Authorization: 'Bearer token-here',
@@ -63,11 +52,12 @@ module ActivityPub
       headers: headers,
       body: body}.to_json
     )
-    Rails.logger.info(res.body)
     ActivityPubDelivered.create(
-      host: to_url,
+      to_url: to_url,
       digest: digest,
+      to_be_signed: to_be_signed,
       signature: sign,
+      statement: statement,
       content: body.to_json,
       response: res.body)
   end
@@ -101,6 +91,6 @@ module ActivityPub
       'Content-Type': 'application/json',
       'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }
-    return headers, digest, to_be_signed, sign
+    return headers, digest, to_be_signed, sign, statement
   end
 end

@@ -49,8 +49,8 @@ class ApplicationController < ActionController::Base
   end
   def generate_rsa_key_pair
     rsa_key = OpenSSL::PKey::RSA.new(2048)
-    private_key_pem = rsa_key.to_pem
-    public_key_pem = rsa_key.public_key.to_pem
+    private_key_pem = rsa_key.private_to_pem
+    public_key_pem = rsa_key.public_to_pem
     { private_key: private_key_pem, public_key: public_key_pem }
   end
   def generate_signature(data, private_key_pem)

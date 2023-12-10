@@ -108,10 +108,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
 
   create_table "activity_pub_delivereds", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "server_id"
-    t.string "host"
-    t.string "path"
+    t.string "to_url"
     t.string "digest"
+    t.text "to_be_signed"
     t.text "signature"
+    t.text "statement"
     t.text "content", size: :long, collation: "utf8mb4_bin"
     t.text "response"
     t.datetime "created_at", null: false
