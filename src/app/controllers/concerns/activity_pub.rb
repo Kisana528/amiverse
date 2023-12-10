@@ -6,6 +6,8 @@ module ActivityPub
       "id": "https://amiverse.net/items/#{item.item_id}/create",
       "published": item.created_at,
       "to": [
+        "https://mstdn.jp/users/kisana",
+        "https://misskey.io/users/9arqrxdfco",
         "https://amiverse.net/#{item.account.name_id}/followers",
         "https://www.w3.org/ns/activitystreams#Public"
       ],
@@ -17,6 +19,8 @@ module ActivityPub
         "url": "https://amiverse.net/items/#{item.item_id}",
         "published": item.created_at,
         "to": [
+          "https://mstdn.jp/users/kisana",
+          "https://misskey.io/users/9arqrxdfco",
           "https://amiverse.net/#{item.account.name_id}/followers",
           "https://www.w3.org/ns/activitystreams#Public"
         ],
