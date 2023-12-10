@@ -70,7 +70,7 @@ module ActivityPub
       "(request-target): post /inbox",
       "host: #{to_host}",
       "date: #{current_time}",
-      "digest: sha-256=#{digest}",
+      "digest: SHA-256=#{digest}",
       "content-type: application/json"].join("\n")
     sign = generate_signature(to_be_signed, private_key)
     statement = [
