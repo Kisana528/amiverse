@@ -122,10 +122,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
 
   create_table "activity_pub_receiveds", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "server_id"
-    t.text "content", size: :long, collation: "utf8mb4_bin"
+    t.string "received_at"
+    t.text "headers", size: :long, collation: "utf8mb4_bin"
+    t.text "body", size: :long, collation: "utf8mb4_bin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.check_constraint "json_valid(`content`)", name: "content"
+    t.check_constraint "json_valid(`body`)", name: "body"
+    t.check_constraint "json_valid(`headers`)", name: "headers"
   end
 
   create_table "activity_pub_servers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

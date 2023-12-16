@@ -97,4 +97,17 @@ module ActivityPub
     }
     return headers, digest, to_be_signed, sign, statement
   end
+  def check_digest(body,a)
+    digest = Digest::SHA256.base64digest(body.to_json)
+    received_digest = data['headers']['digest'].split('=')[1]
+    signature = data['headers']['signature']
+    segments = signature.split(',')
+    obj_segments = {}
+    segments.each do |segment|
+      key, value = segment.split('=')
+      key = key.gsub('"', '').strip
+      value = value.gsub('"', '').strip
+      obj_segments[key] = value
+    end
+  end
 end
