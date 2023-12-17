@@ -4,6 +4,7 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.string :account_id, null: false
       t.string :name, null: false, default: ''
       t.string :name_id, null: false
+      t.string :fediverse_id, null: false, default: ''
       t.string :icon_id, null: false, default: ''
       t.string :banner_id, null: false, default: ''
       t.string :online_status, null: false, default: ''
@@ -14,6 +15,7 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.json :local_group_visibility, null: false, default: []
       t.json :local_account_visibility, null: false, default: []
       t.json :role, null: false, default: []
+      t.boolean :outsider, null: false, default: false
       t.boolean :activated, null: false, default: false
       t.boolean :administrator, null: false, default: false
       t.boolean :moderator, null: false, default: false
@@ -43,6 +45,6 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.bigint :storage_max_size, null: false, default: 1000000000
       t.timestamps
     end
-    add_index :accounts, [:account_id, :name_id, :email], unique: true
+    add_index :accounts, [:account_id, :name_id, :fediverse_id], unique: true
   end
 end

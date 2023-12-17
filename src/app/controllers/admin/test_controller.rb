@@ -8,7 +8,7 @@ class Admin::TestController < Admin::ApplicationController
     Rails.logger.info(pub)
   end
   def verify
-    result = verify_signature(params[:public_key], params[:signature], params[:message])
+    result = verify_signature(params[:public_key], params[:signature], params[:message].to_json)
     Rails.logger.info('======目印======')
     Rails.logger.info(result ? 'ok' : 'ng')
     render 'new'

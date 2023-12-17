@@ -5,6 +5,12 @@ class CreateActivityPubReceiveds < ActiveRecord::Migration[7.0]
       t.string :received_at
       t.json :headers
       t.json :body
+      t.json :context
+      t.string :fediverse_id
+      t.string :account_id
+      t.string :type
+      t.text :summary
+      t.string :status
 
       t.timestamps
     end

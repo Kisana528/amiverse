@@ -5,36 +5,43 @@ class Account < ApplicationRecord
   has_many :reaction
   has_many :account_reaction_items
   has_many :follows
-  has_many :follow_from, class_name: 'Follow', primary_key: 'name_id', foreign_key: 'follow_from_id'
-  has_many :follow_to, class_name: 'Follow', primary_key: 'name_id', foreign_key: 'follow_to_id'
+  has_many :follow_from, class_name: 'Follow', primary_key: 'account_id', foreign_key: 'follow_from_id'
+  has_many :follow_to, class_name: 'Follow', primary_key: 'account_id', foreign_key: 'follow_to_id'
   has_many :follower, through: :follow_to, source: :follow_from
   has_many :following, through: :follow_from, source: :follow_to
   attr_accessor :remember_token, :activation_token
   BASE_64_URL_REGEX  = /\A[a-zA-Z0-9_-]*\z/
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :account_id,
     presence: true,
     length: { in: 5..25, allow_blank: true },
     uniqueness: { case_sensitive: false }
-  validates :name_id,
-    presence: true,
-    length: { in: 5..50, allow_blank: true },
-    format: { with: BASE_64_URL_REGEX, allow_blank: true },
-    uniqueness: { case_sensitive: false }
-  validate :image_id_presence
-  validates :icon_id,
-    format: { with: BASE_64_URL_REGEX, allow_blank: true }
-  validates :banner_id,
-    format: { with: BASE_64_URL_REGEX, allow_blank: true }
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-  validates :email,
-    length: { maximum: 255, allow_blank: true },
-    format: { with: VALID_EMAIL_REGEX, allow_blank: true },
-    uniqueness: { case_sensitive: false, allow_blank: true }
-  validates :password,
-    presence: true,
-    length: { in: 8..63, allow_blank: true },
-    allow_nil: true
-  has_secure_password validations: true
+  with_options unless: -> { validation_context == :skip } do
+    validates :name_id,
+      presence: true,
+      length: { in: 5..50, allow_blank: true },
+      format: { with: BASE_64_URL_REGEX, allow_blank: true },
+      uniqueness: { case_sensitive: false }
+    validate :image_id_presence
+    validates :icon_id,
+      format: { with: BASE_64_URL_REGEX, allow_blank: true }
+    validates :banner_id,
+      format: { with: BASE_64_URL_REGEX, allow_blank: true }
+    validates :email,
+      length: { maximum: 255, allow_blank: true },
+      format: { with: VALID_EMAIL_REGEX, allow_blank: true },
+      uniqueness: { case_sensitive: false, allow_blank: true }
+    validates :password,
+      presence: true,
+      length: { in: 8..63, allow_blank: true },
+      allow_nil: true
+    validate do |record|
+      record.errors.add(:password, :blank) unless record.password_digest.present?
+    end
+    validates_length_of :password, maximum: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED
+    validates_confirmation_of :password, allow_blank: true
+  end
+  has_secure_password validations: false
   #validates :icon,
   #  size: { less_than: 1.megabytes },
   #  content_type: %w[ image/jpeg image/png image/gif image/webp ]

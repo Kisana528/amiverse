@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
+ActiveRecord::Schema[7.0].define(version: 17) do
   create_table "account_reaction_items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "reaction_id", null: false
@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
     t.string "account_id", null: false
     t.string "name", default: "", null: false
     t.string "name_id", null: false
+    t.string "fediverse_id", default: "", null: false
     t.string "icon_id", default: "", null: false
     t.string "banner_id", default: "", null: false
     t.string "online_status", default: "", null: false
@@ -38,6 +39,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
     t.text "local_group_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "local_account_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "role", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.boolean "outsider", default: false, null: false
     t.boolean "activated", default: false, null: false
     t.boolean "administrator", default: false, null: false
     t.boolean "moderator", default: false, null: false
@@ -67,7 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
     t.bigint "storage_max_size", default: 1000000000, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "name_id", "email"], name: "index_accounts_on_account_id_and_name_id_and_email", unique: true
+    t.index ["account_id", "name_id", "fediverse_id"], name: "index_accounts_on_account_id_and_name_id_and_fediverse_id", unique: true
     t.check_constraint "json_valid(`achievements`)", name: "achievements"
     t.check_constraint "json_valid(`lang`)", name: "lang"
     t.check_constraint "json_valid(`local_account_visibility`)", name: "local_account_visibility"
@@ -125,18 +127,46 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
     t.string "received_at"
     t.text "headers", size: :long, collation: "utf8mb4_bin"
     t.text "body", size: :long, collation: "utf8mb4_bin"
+    t.text "context", size: :long, collation: "utf8mb4_bin"
+    t.string "fediverse_id"
+    t.string "account_id"
+    t.string "type"
+    t.text "summary"
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.check_constraint "json_valid(`body`)", name: "body"
+    t.check_constraint "json_valid(`context`)", name: "context"
     t.check_constraint "json_valid(`headers`)", name: "headers"
   end
 
   create_table "activity_pub_servers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.string "url"
+    t.string "server_id", default: "", null: false
+    t.string "name", default: "", null: false
+    t.string "host", default: "", null: false
+    t.text "description", default: "", null: false
+    t.string "icon_url", default: "", null: false
+    t.string "favicon_id", default: "", null: false
+    t.integer "accounts", default: 0, null: false
+    t.integer "items", default: 0, null: false
+    t.integer "followers", default: 0, null: false
+    t.integer "following", default: 0, null: false
+    t.string "memo", default: "", null: false
+    t.string "software_name", default: "", null: false
+    t.string "software_version", default: "", null: false
+    t.boolean "open_registrations", default: false, null: false
+    t.boolean "not_responding", default: false, null: false
+    t.boolean "blocked", default: false, null: false
+    t.boolean "deleted", default: false, null: false
+    t.string "theme_color", default: "", null: false
+    t.string "maintainer_name", default: "", null: false
+    t.string "maintainer_email", default: "", null: false
+    t.timestamp "first_retrieved_at"
+    t.timestamp "last_received_at"
+    t.timestamp "info_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["server_id", "host"], name: "index_activity_pub_servers_on_server_id_and_host", unique: true
   end
 
   create_table "follows", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -189,6 +219,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
     t.datetime "updated_at", null: false
     t.index ["image_id"], name: "index_item_images_on_image_id"
     t.index ["item_id"], name: "index_item_images_on_item_id"
+  end
+
+  create_table "item_videos", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "video_id", null: false
+    t.string "description", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_item_videos_on_item_id"
+    t.index ["video_id"], name: "index_item_videos_on_video_id"
   end
 
   create_table "items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -285,6 +326,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_103608) do
   add_foreign_key "invitations", "accounts"
   add_foreign_key "item_images", "images"
   add_foreign_key "item_images", "items"
+  add_foreign_key "item_videos", "items"
+  add_foreign_key "item_videos", "videos"
   add_foreign_key "items", "accounts"
   add_foreign_key "reactions", "accounts"
   add_foreign_key "sessions", "accounts"

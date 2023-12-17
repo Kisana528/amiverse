@@ -1,14 +1,14 @@
 class V1::ActivityPubController < V1::ApplicationController
+  include ActivityPub
+
   def inbox
     # frontで受け取ったactivityを解析・保存
     data = JSON.parse(request.body.read)
-    # frontから来たか検証
-    # digestやsignなど検証
+    # frontから来たか検証 if data['key'] == ENV['key']
+    # digestやsignなど検証 check_sign(data)
     # データ処理
-    ActivityPubReceived.create(received_at: data['received_at'].to_s,
-    headers: data['headers'].to_json,
-    body: data['body'].to_json)
-    render json: { status: 'success', message: 'Post created successfully' }
+    status = read(JSON.parse(data['body']))
+    render json: { status: status }
   end
   def outbox
     # データ出力
