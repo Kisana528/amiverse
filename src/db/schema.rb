@@ -130,7 +130,8 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.text "context", size: :long, collation: "utf8mb4_bin"
     t.string "fediverse_id"
     t.string "account_id"
-    t.string "type"
+    t.string "activity_type"
+    t.text "object", size: :long, collation: "utf8mb4_bin"
     t.text "summary"
     t.string "status"
     t.datetime "created_at", null: false
@@ -138,6 +139,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.check_constraint "json_valid(`body`)", name: "body"
     t.check_constraint "json_valid(`context`)", name: "context"
     t.check_constraint "json_valid(`headers`)", name: "headers"
+    t.check_constraint "json_valid(`object`)", name: "object"
   end
 
   create_table "activity_pub_servers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

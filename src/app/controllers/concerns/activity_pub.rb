@@ -110,31 +110,51 @@ module ActivityPub
       }
     }
   end
+  def create_accept(data)
+    {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "type": "Accept",
+      "id": "https://amiverse.net/items/#{item.item_id}/create",
+      "published": item.created_at,
+      "to": to,
+      "object": data
+    }
+  end
+  def create(type, id, actor, object)
+    {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "type": type,
+      "id": id,
+      "actor": actor,
+      "object": object
+    }
+  end
   def read(data)
-    context = data['@context']
-    id = data['id']
-    account = account(data['actor'])
-    object = data['object'] unless data['object'].nil?
-    other_attributes = {}
+    body = JSON.parse(data['body'])
+    headers = data['headers']
+    context = body['@context']
+    id = body['id']
+    return 'Error:actorが存在しません。' unless account = account(body['actor'])
+    object = body['object'] unless body['object'].nil?
     status = 'Info:処理中。'
-    case data['type']
+    case body['type']
     ## アカウント、投稿系
     when 'Follow'
-      this_follow_params = {
-        follow_to_id: account(object).account_id,
-        follow_from_id: account.account_id
-      }
-      if Follow.exists?(this_follow_params)
-        #Follow.where(this_follow_params).delete_all
-        status = 'Error:すでにフォロー済みかもしれません。'
-        return
-      else
-        follow = Follow.new(this_follow_params)
-        if follow.save!
+      if follow_to_account = account(object)
+        this_follow_params = {
+          follow_to_id: follow_to_account.account_id,
+          follow_from_id: account.account_id
+        }
+        if Follow.exists?(this_follow_params)
+          #Follow.where(this_follow_params).delete_all
+          status = 'Error:すでにフォロー済みかもしれません。'
+        elsif Follow.create!(this_follow_params)
           status = 'Success:フォローしました。'
         else
           status = 'Error:フォローに失敗しました。'
         end
+      else
+        status = 'Error:objectが存在しません。'
       end
       # 鍵垢でなければすぐにAcceptを返却
     when 'Like'
@@ -153,16 +173,18 @@ module ActivityPub
     else
       #その他
     end
-    ActivityPubReceived.create!(
-      received_at: data['received_at'].to_s,
-      headers: data['headers'].to_json,
-      body: data['body'].to_json,
-      context: context,
-      fediverse_id: id,
-      account_id: account.account_id,
-      summary: object,
-      type: data['type'].to_s
-    )
+    received_params = {
+      received_at: body['received_at'].to_s,
+      headers: headers.to_json,
+      body: body.to_json,
+      context: context.to_json,
+      fediverse_id: id.to_s,
+      account_id: account.account_id.to_s,
+      status: status
+    }
+    received_params[:object] = object.to_json if object.present?
+    received_params[:activity_type] = body['type'].to_s if body['type'].present?
+    ActivityPubReceived.create!(received_params)
     return status
   end
   def server(host)
@@ -178,6 +200,7 @@ module ActivityPub
         uri.to_s,
         {}
       )
+      return unless res.code == 200
       data = JSON.parse(res.body)
       server_params = {
         server_id: unique_random_id(ActivityPubServer, 'server_id'),
@@ -197,13 +220,15 @@ module ActivityPub
     end
     #サーバーobj返却
     return server
+    rescue
+      return nil
   end
   def account(uri)
     #サーバー判定
     if URI.parse(uri).host == URI.parse(ENV['APP_HOST']).host
       account = Account.find_by(name_id: uri.split(/[@\/]/).last)
     else
-      server = server(URI.parse(uri).host)
+      return unless server = server(URI.parse(uri).host)
       #アカウントあるかないか
       unless account = Account.find_by(fediverse_id: uri)
         #なければ作成する
@@ -212,22 +237,27 @@ module ActivityPub
           uri,
           {'Accept' => 'application/activity+json'}
         )
+        return unless res.code == 200
         data = JSON.parse(res.body)
         account = Account.new(
           name: data['name'],
           name_id: get_name_id(data['id'], data['preferredUsername']),
           account_id: unique_random_id(Account, 'account_id'),
           fediverse_id: uri,
+          #serverと紐づけ
+          outsider: true,
+          activated: true,
+          bio: data['summary'],
+          explorable: data['discoverable'],
+          locked: data['manuallyApprovesFollowers'],
           public_key: data['publicKey']['publicKeyPem']
         )
-        if account.save(context: :skip)
-          return account
-        else
-          return { status: 'Error/アカウントを保存できませんでした。'}
-        end
+        account.save!(context: :skip)
       end
     end
     return account
+    rescue
+      return nil
   end
   def get_name_id(uri, preferredUsername)
     host = URI.parse(uri).host

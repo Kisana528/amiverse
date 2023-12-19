@@ -8,7 +8,8 @@ class CreateActivityPubReceiveds < ActiveRecord::Migration[7.0]
       t.json :context
       t.string :fediverse_id
       t.string :account_id
-      t.string :type
+      t.string :activity_type
+      t.json :object
       t.text :summary
       t.string :status
 

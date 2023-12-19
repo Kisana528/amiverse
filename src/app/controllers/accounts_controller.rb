@@ -59,23 +59,27 @@ class AccountsController < ApplicationController
     @account = find_account_by_nid(params[:name_id])
   end
   def account_params
-    params.require(:account).permit(:name,
-                                    :name_id,
-                                    :icon_id,
-                                    :banner_id,
-                                    :bio,
-                                    :location,
-                                    :birthday,
-                                    :password,
-                                    :password_confirmation)
+    params.require(:account).permit(
+      :name,
+      :name_id,
+      :icon_id,
+      :banner_id,
+      :bio,
+      :location,
+      :birthday,
+      :password,
+      :password_confirmation
+    )
   end
   def account_update_params
-    params.require(:account).permit(:name,
-                                    :name_id,
-                                    :icon_id,
-                                    :banner_id,
-                                    :bio,
-                                    :location,
-                                    :birthday)
+    params.require(:account).permit(
+      :name,
+      :name_id,
+      :icon_id,
+      :banner_id,
+      :bio,
+      :location,
+      :birthday
+    )
   end
 end

@@ -7,7 +7,7 @@ class V1::ActivityPubController < V1::ApplicationController
     # frontから来たか検証 if data['key'] == ENV['key']
     # digestやsignなど検証 check_sign(data)
     # データ処理
-    status = read(JSON.parse(data['body']))
+    status = read(data)
     render json: { status: status }
   end
   def outbox

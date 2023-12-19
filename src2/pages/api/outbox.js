@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     if (req.headers['content-type'] == 'application/json'){
       console.log('content-type: OK')
-      if (req.headers.authorization == 'Bearer token-here'){
+      if (req.headers.authorization == `Bearer ${process.env.SERVER_PASSWORD}`){
         console.log('認証OK')
         data = req.body
         console.log(data.to_url, data.body)
