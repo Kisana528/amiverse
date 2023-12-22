@@ -1,87 +1,28 @@
 module ActivityPub
-  def deliver(body, name_id, private_key, from_url, to_url, public_key)
-    headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
-    req,res = https_post(
-      to_url,
-      headers,
-      body.to_json
-    )
-    ActivityPubDelivered.create(
-      to_url: to_url,
-      digest: digest,
-      to_be_signed: to_be_signed,
-      signature: sign,
-      statement: statement,
-      content: body.to_json,
-      response: res.body)
+  def follow()
   end
-  def front_deliver(body, name_id, private_key, from_url, to_url, public_key)
-    headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
-    req,res = http_post(
-      'http://front:3000/outbox',
-      {Authorization: 'Bearer token-here',
-      'Content-Type' => 'application/json'
-      },{
-      to_url: to_url,
-      headers: headers,
-      body: body}.to_json
-    )
-    ActivityPubDelivered.create(
-      to_url: to_url,
-      digest: digest,
-      to_be_signed: to_be_signed,
-      signature: sign,
-      statement: statement,
-      content: body.to_json,
-      response: res.body)
-  end
-  def sign_headers(body, name_id, private_key, from_url, to_url)
-    from_host = URI.parse(from_url).host
-    to_host = URI.parse(to_url).host
-    current_time = Time.now.utc.httpdate
-    digest = Digest::SHA256.base64digest(body.to_json)
-    to_be_signed = [
-      "(request-target): post /inbox",
-      "host: #{to_host}",
-      "date: #{current_time}",
-      "digest: SHA-256=#{digest}",
-      "content-type: application/activity+json"].join("\n")
-    sign = generate_signature(to_be_signed, private_key)
-    statement = [
-      "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
-      'algorithm="rsa-sha256"',
-      'headers="(request-target) host date digest content-type"',
-      "signature=\"#{sign}\""
-    ].join(',') # content-lengthも必要?
-    headers = {
-      Host: to_host,
-      Date: current_time,
-      Digest: "SHA-256=#{digest}",
-      Signature: statement,
-      Authorization: "Signature #{statement}",
-      #Accept: 'application/json',
-      #'Accept-Encoding': 'gzip',
-      #'Cache-Control': 'max-age=0',
-      'Content-Type': 'application/activity+json',
-      'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
+  def accept_follow(body:, account:)
+    body = {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "id": "https://amiverse.net/@#{account.name_id}/follow_accept",
+      "type": "Accept",
+      "actor": "https://amiverse.net/@#{account.name_id}",
+      "object": body.to_json
     }
-    return headers, digest, to_be_signed, sign, statement
+    deliver(
+      body: body,
+      name_id: name_id,
+      private_key: account.private_key
+    )
   end
-  def check_sign(body,a)
-    digest = Digest::SHA256.base64digest(body.to_json)
-    received_digest = data['headers']['digest'].split('=')[1]
-    signature = data['headers']['signature']
-    segments = signature.split(',')
-    obj_segments = {}
-    segments.each do |segment|
-      key, value = segment.split('=')
-      key = key.gsub('"', '').strip
-      value = value.gsub('"', '').strip
-      obj_segments[key] = value
-    end
+  def undo_follow()
   end
-  def create_note(item)
-    {
+  def like()
+  end
+  def undo_like()
+  end
+  def create_note(item:)
+    body = {
       "@context": "https://www.w3.org/ns/activitystreams",
       "type": "Create",
       "id": "https://amiverse.net/items/#{item.item_id}/create",
@@ -109,25 +50,13 @@ module ActivityPub
         "content": item.content
       }
     }
+    deliver(
+      body: body,
+      name_id: item.account.name_id,
+      private_key: item.account.private_key
+    )
   end
-  def create_accept(data)
-    {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "type": "Accept",
-      "id": "https://amiverse.net/items/#{item.item_id}/create",
-      "published": item.created_at,
-      "to": to,
-      "object": data
-    }
-  end
-  def create(type, id, actor, object)
-    {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "type": type,
-      "id": id,
-      "actor": actor,
-      "object": object
-    }
+  def delete_note()
   end
   def read(data)
     body = JSON.parse(data['body'])
@@ -157,6 +86,7 @@ module ActivityPub
         status = 'Error:objectが存在しません。'
       end
       # 鍵垢でなければすぐにAcceptを返却
+      accept_follow(body: body, account: follow_to_account)
     when 'Like'
       #actorがobjectをいいねする
     when 'Dislike'
@@ -258,6 +188,93 @@ module ActivityPub
     return account
     rescue
       return nil
+  end
+  def deliver(
+      body:,
+      name_id:,
+      private_key:,
+      from_url: 'https://amiverse.net',
+      to_url: 'https://mstdn.jp/inbox'
+    )
+    headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
+    req,res = https_post(
+      to_url,
+      headers,
+      body.to_json
+    )
+    ActivityPubDelivered.create(
+      to_url: to_url,
+      digest: digest,
+      to_be_signed: to_be_signed,
+      signature: sign,
+      statement: statement,
+      content: body.to_json,
+      response: res.body)
+  end
+  def front_deliver(body, name_id, private_key, from_url, to_url, public_key)
+    headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
+    req,res = http_post(
+      'http://front:3000/outbox',
+      {Authorization: 'Bearer token-here',
+      'Content-Type' => 'application/json'
+      },{
+      to_url: to_url,
+      headers: headers,
+      body: body}.to_json
+    )
+    ActivityPubDelivered.create(
+      to_url: to_url,
+      digest: digest,
+      to_be_signed: to_be_signed,
+      signature: sign,
+      statement: statement,
+      content: body.to_json,
+      response: res.body)
+  end
+  def sign_headers(body, name_id, private_key, from_url, to_url)
+    from_host = URI.parse(from_url).host
+    to_host = URI.parse(to_url).host
+    current_time = Time.now.utc.httpdate
+    digest = Digest::SHA256.base64digest(body.to_json)
+    to_be_signed = [
+      "(request-target): post /inbox",
+      "host: #{to_host}",
+      "date: #{current_time}",
+      "digest: SHA-256=#{digest}",
+      "content-type: application/activity+json"].join("\n")
+    sign = generate_signature(to_be_signed, private_key)
+    statement = [
+      "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
+      'algorithm="rsa-sha256"',
+      'headers="(request-target) host date digest content-type"',
+      "signature=\"#{sign}\""
+    ].join(',') # content-lengthも必要?
+    headers = {
+      Host: to_host,
+      Date: current_time,
+      Digest: "SHA-256=#{digest}",
+      Signature: statement,
+      Authorization: "Signature #{statement}",
+      #Accept: 'application/json',
+      #'Accept-Encoding': 'gzip',
+      #'Cache-Control': 'max-age=0',
+      'Content-Type': 'application/activity+json',
+      'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
+    }
+    return headers, digest, to_be_signed, sign, statement
+  end
+  def check_sign(body,a)
+    digest = Digest::SHA256.base64digest(body.to_json)
+    received_digest = data['headers']['digest'].split('=')[1]
+    signature = data['headers']['signature']
+    segments = signature.split(',')
+    obj_segments = {}
+    segments.each do |segment|
+      key, value = segment.split('=')
+      key = key.gsub('"', '').strip
+      value = value.gsub('"', '').strip
+      obj_segments[key] = value
+    end
   end
   def get_name_id(uri, preferredUsername)
     host = URI.parse(uri).host
