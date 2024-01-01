@@ -3,11 +3,12 @@ import consumer from "channels/consumer"
 const appItems = consumer.subscriptions.create("ItemsChannel", {
   connected() {
     // Called when the subscription is ready for use on the server
-    console.log('connectd : ', this)
+    console.log('connected : ', this)
   },
 
   disconnected() {
     // Called when the subscription has been terminated by the server
+    console.log('disconnected')
   },
 
   received(data) {
