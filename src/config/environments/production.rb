@@ -60,8 +60,8 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
-  config.action_cable.url = "wss://api.amiverse.net/cable"
-  config.action_cable.allowed_request_origins = [ "https://api.amiverse.net", "https://amiverse.net" ]
+  config.action_cable.url = ENV["NEXT_PUBLIC_WSNAME"]
+  config.action_cable.allowed_request_origins = [ ENV["APP_HOST"], ENV["NEXT_PUBLIC_APPNAME"] ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true

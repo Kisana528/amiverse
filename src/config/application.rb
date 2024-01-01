@@ -21,9 +21,7 @@ module App
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins "front",
-          "http://192.168.0.4:3001",
-          "http://localhost:3001",
-          "https://amiverse.net"
+          ENV["NEXT_PUBLIC_APPNAME"]
         resource "*",
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :head, :options],
