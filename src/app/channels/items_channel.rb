@@ -1,11 +1,11 @@
 class ItemsChannel < ApplicationCable::Channel
+  include SessionsHelper
   def subscribed
-    # stream_from "some_channel"
     stream_from "items_channel"
+    Rails.logger.info(current_account.name_id)
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
   end
 
   def speak(data)
