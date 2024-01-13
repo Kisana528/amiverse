@@ -3,5 +3,3 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "@rails/actioncable"
 import "channels"
-
-console.log("JS読み込み！")
