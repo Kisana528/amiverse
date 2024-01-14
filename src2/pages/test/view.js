@@ -2,17 +2,18 @@ import { useEffect } from "react"
 import { preconnect } from "react-dom"
 import * as THREE from "three"
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
+import { VRButton } from "three/addons/webxr/VRButton.js"
 
 export default function Index() {
   let players = {}
   let newData = false
   let canvas
   let room
-  
-  async function created(){
+
+  async function created() {
     const ActionCable = await import('actioncable')
     const cable = ActionCable.createConsumer(process.env.NEXT_PUBLIC_WSNAME)
-    room = cable.subscriptions.create( "ItemsChannel",{
+    room = cable.subscriptions.create("ItemsChannel", {
       connected() {
         console.log('connected')
       },
@@ -20,7 +21,7 @@ export default function Index() {
         console.log('disconnected')
       },
       received(data) {
-        console.log('received',data)
+        console.log('received', data)
         players = {
           x: data.name.x,
           y: data.name.y,
@@ -28,8 +29,8 @@ export default function Index() {
         }
         newData = true
       },
-      speak: function(data) {
-        return this.perform('speak', {'name': data});
+      speak: function (data) {
+        return this.perform('speak', { 'name': data });
       }
     })
   }
@@ -72,6 +73,7 @@ export default function Index() {
     })
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(window.devicePixelRatio)
+    renderer.xr.enabled = true
 
     // ライト
     const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
@@ -122,11 +124,11 @@ export default function Index() {
       box.position.z = Math.floor(Math.random() * 20 - 10) * 20;
       scene.add(box);
     }
-    
-    const geometry2 = new THREE.BoxGeometry( 1, 1, 1 ); 
-    const material2 = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-    const cube = new THREE.Mesh( geometry2, material2 ); 
-    scene.add( cube );
+
+    const geometry2 = new THREE.BoxGeometry(1, 1, 1);
+    const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry2, material2);
+    scene.add(cube);
     // キーボード操作
     const onKeyDown = (e) => {
       switch (e.keyCode) {
@@ -167,7 +169,7 @@ export default function Index() {
     let player = {}
 
     function animate() {
-      requestAnimationFrame(animate);
+      //requestAnimationFrame(animate);
 
       const time = performance.now()
       const delta = (time - prevTime) / 1000
@@ -212,7 +214,9 @@ export default function Index() {
       prevTime = time
       renderer.render(scene, camera);
     }
-    animate()
+    
+    renderer.setAnimationLoop(animate)
+    document.body.appendChild(VRButton.createButton(renderer));
 
     // 画面リサイズ設定
     window.addEventListener("resize", onWindowResize);
