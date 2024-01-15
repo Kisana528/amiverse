@@ -12,18 +12,18 @@ export default function Index() {
   async function created() {
     const ActionCable = await import('actioncable')
     const cable = ActionCable.createConsumer(process.env.NEXT_PUBLIC_WSNAME)
-    room = cable.subscriptions.create("ItemsChannel", {
+    room = cable.subscriptions.create("WorldChannel", {
       connected() {
-        console.log('connected')
+        console.log('Connected to World.')
       },
       disconnected() {
-        console.log('disconnected')
+        console.log('Disconnected from World.')
       },
       received(data) {
-        console.log('received', data)
+        console.log('Data received.', data)
       },
       speak: function (data) {
-        return this.perform('speak', { 'name': data });
+        return this.perform('move', { 'position': data });
       }
     })
   }

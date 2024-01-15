@@ -2,14 +2,21 @@ class WorldJob < ApplicationJob
   queue_as :default
 
   def perform()
-    loop do
-      redis = Redis.new
-      break if redis.scard("on_world") == 0
-      # 配信
-      # redisからデータ取り出す
-      # data = ?
-      # ActionCable.server.broadcast('items_channel', data)
-
-      sleep 1.second
+    redis = Redis.new
+    if redis.setnx("world:on", "true")
+      loop do
+        break if redis.scard("world:players") == 0
+        player_ids = redis.smembers("world:players")
+        player_data_hash = {}
+        player_ids.each do |id|
+          player_data = redis.hgetall("world:players:" + id)
+          player_data_hash[id] = player_data
+        end
+        Rails.logger.info('Deliver world data.')
+        ActionCable.server.broadcast('world_channel', player_data_hash)
+        sleep 5.second
+      end
+      redis.del("world:on")
     end
   end
+end

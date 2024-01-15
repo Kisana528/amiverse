@@ -3,21 +3,34 @@ class WorldChannel < ApplicationCable::Channel
     stream_from "world_channel"
     # redisで状態管理？
     redis = Redis.new
-    redis.sadd("on_world", current_account.account_id + current_account.name_id)
+    redis.sadd("world:players", current_account.account_id)
     # 配信ジョブ発火
   end
 
   def unsubscribed
     # redisで状態管理？
     redis = Redis.new
-    redis.srem("on_world", current_account.account_id + current_account.name_id)
+    redis.srem("world:players", current_account.account_id)
     # 配信ジョブ削除
   end
 
   def move(data)
     # 位置やキャラ情報をredisに保存
+    Rails.logger.info(data["position"])
     redis = Redis.new
-    # redis.sadd("world_data", {current_account.account_id : data } )
+    redis.hset("world:players:" + current_account.account_id, data["position"])
+    unless redis.get("world:on")
+      WorldJob.perform_later()
+    end
+    # jobでする内容
+    player_ids = redis.smembers("world:players")
+    player_data_hash = {}
+    player_ids.each do |id|
+      player_data = redis.hgetall("world:players:" + id)
+      player_data_hash[id] = player_data
+    end
+    Rails.logger.info("-----------")
+    Rails.logger.info(player_data_hash)
   end
 
   def chat
