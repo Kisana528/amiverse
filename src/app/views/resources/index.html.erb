@@ -4,6 +4,8 @@
     <% if @current_account %>
       <% if @current_account.administrator %>
         <div class='amiverse-index-box'>
+        <div data-controller="hello">
+        </div>
           ADMIN PAGE
           <br />
           <%= link_to '管理画面', admin_root_path %>

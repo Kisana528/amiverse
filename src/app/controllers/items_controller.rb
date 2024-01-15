@@ -51,8 +51,8 @@ class ItemsController < ApplicationController
       #from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
       #to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
       #deliver(create_note(@item), @current_account.name_id, @current_account.private_key, from_url, to_url, @current_account.public_key)
-      create_note(item: @item)
-      ActionCable.server.broadcast 'items_channel', item
+      #create_note(item: @item)
+      ActionCable.server.broadcast('items_channel', serialize_item(@item))
     else
       flash[:success] = '失敗しました。'
       render :new
