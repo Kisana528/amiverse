@@ -10,6 +10,12 @@ export default function Index() {
   let canvas
   let room
   let player_cubes = []
+  let send_data_interval = 1000
+  if (process.env.NODE_ENV === 'development'){
+    send_data_interval = 3000
+  } else{
+    send_data_interval = 100
+  }
   
   async function created() {
     const ActionCable = await import('actioncable')
@@ -24,7 +30,6 @@ export default function Index() {
       received(data) {
         world_data = data
         newData = true
-        console.log(world_data)
       },
       speak: function (data) {
         return this.perform('move', { 'position': data });
@@ -125,7 +130,6 @@ export default function Index() {
       return Math.random() * 0xFFFFFF;
     }
     function addPlayer(id) {
-      console.log("adding cube")
       const player_geometry = new THREE.BoxGeometry(1, 1, 1);
       const player_material = new THREE.MeshBasicMaterial({ color: getRandomColor() });
       const player_cube = new THREE.Mesh(player_geometry, player_material);
@@ -144,7 +148,6 @@ export default function Index() {
         y: player.y,
         z: player.z
       })
-      console.log(`send ${player.x}`)
     }
     // キーボード操作
     const onKeyDown = (e) => {
@@ -194,14 +197,13 @@ export default function Index() {
       const time = performance.now()
       const delta = (time - prevTime) / 1000
       countDelta += delta * 1000
-      if (countDelta >= 100) {
-        //sendPosition()
+      if (countDelta >= send_data_interval) {
+        //本番では1/10s、開発では3s
+        sendPosition()
         countDelta = 0
       }
 
       if (newData) {
-        console.log("world_data")
-        console.log(world_data)
         world_data["player_ids"].forEach((id) => {
           const existingPlayerCube = scene.getObjectByName(`player_${player_cubes.find((cube) => cube === id)}`)
           if (existingPlayerCube) {
