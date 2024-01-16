@@ -6,15 +6,23 @@ class WorldJob < ApplicationJob
     if redis.setnx("world:on", "true")
       loop do
         break if redis.scard("world:players") == 0
-        player_ids = redis.smembers("world:players")
+        player_ids_array = redis.smembers("world:players")
         player_data_hash = {}
-        player_ids.each do |id|
+        player_ids_array.each do |id|
           player_data = redis.hgetall("world:players:" + id)
           player_data_hash[id] = player_data
         end
-        Rails.logger.info('Deliver world data.')
-        ActionCable.server.broadcast('world_channel', player_data_hash)
-        sleep 5.second
+        world_data_hash = {}
+        world_data_hash['player_ids'] = player_ids_array
+        world_data_hash['players'] = player_data_hash
+        Rails.logger.info("------------------")
+        ActionCable.server.broadcast('world_channel', world_data_hash)
+
+        if Rails.env.production?
+          sleep(0.1)
+        else
+          sleep(3)
+        end
       end
       redis.del("world:on")
     end

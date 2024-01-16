@@ -5,9 +5,11 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 import { VRButton } from "three/addons/webxr/VRButton.js"
 
 export default function Index() {
-  let players = {}
+  let newData = false
+  let world_data = {}
   let canvas
   let room
+  let player_cubes = []
   
   async function created() {
     const ActionCable = await import('actioncable')
@@ -20,7 +22,9 @@ export default function Index() {
         console.log('Disconnected from World.')
       },
       received(data) {
-        console.log('Data received.', data)
+        world_data = data
+        newData = true
+        console.log(world_data)
       },
       speak: function (data) {
         return this.perform('move', { 'position': data });
@@ -117,12 +121,18 @@ export default function Index() {
       box.position.z = Math.floor(Math.random() * 20 - 10) * 20;
       scene.add(box);
     }
-    /*
-    const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
-    const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-    const cube = new THREE.Mesh( geometry, material ); 
-    scene.add( cube );
-    */
+    function getRandomColor() {
+      return Math.random() * 0xFFFFFF;
+    }
+    function addPlayer(id) {
+      console.log("adding cube")
+      const player_geometry = new THREE.BoxGeometry(1, 1, 1);
+      const player_material = new THREE.MeshBasicMaterial({ color: getRandomColor() });
+      const player_cube = new THREE.Mesh(player_geometry, player_material);
+      scene.add(player_cube);
+      player_cube.name = `player_${id}`
+      player_cubes.push(id)
+    }
     const sendPosition = () => {
       player = {
         x: Math.round(camera.position.x * 100) / 100,
@@ -187,6 +197,28 @@ export default function Index() {
       if (countDelta >= 100) {
         //sendPosition()
         countDelta = 0
+      }
+
+      if (newData) {
+        console.log("world_data")
+        console.log(world_data)
+        world_data["player_ids"].forEach((id) => {
+          const existingPlayerCube = scene.getObjectByName(`player_${player_cubes.find((cube) => cube === id)}`)
+          if (existingPlayerCube) {
+            const position = world_data["players"][id]
+            existingPlayerCube.position.set(position.x, position.y, position.z)
+          } else {
+            addPlayer(id)
+          }
+        })
+        player_cubes.forEach((cube) => {
+          if (!world_data["player_ids"].includes(cube)) {
+            player = scene.getObjectByName(`player_${cube}`)
+            scene.remove(player)
+          }
+        })
+        
+        newData = false
       }
 
       // 前進後進判定
