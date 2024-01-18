@@ -200,7 +200,7 @@ export default function Index() {
       countDelta += delta * 1000
       if (countDelta >= send_data_interval) {
         //本番では1/10s、開発では3s
-        if(velocity.z > 0.1 || velocity.x > 0.1 ){
+        if(velocity.z > 0.1 || velocity.x > 0.1 || velocity.z < -0.1 || velocity.x < -0.1){
           sendPosition()
         }
         countDelta = 0
