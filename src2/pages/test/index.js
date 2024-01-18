@@ -6,6 +6,7 @@ import { VRButton } from "three/addons/webxr/VRButton.js"
 
 export default function Index() {
   let newData = false
+  let updateData = false
   let world_data = {}
   let canvas
   let room
@@ -199,7 +200,9 @@ export default function Index() {
       countDelta += delta * 1000
       if (countDelta >= send_data_interval) {
         //本番では1/10s、開発では3s
-        sendPosition()
+        if(velocity.z !== 0 || velocity.x !== 0 ){
+          sendPosition()
+        }
         countDelta = 0
       }
 

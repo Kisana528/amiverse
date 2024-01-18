@@ -15,7 +15,6 @@ class WorldJob < ApplicationJob
         world_data_hash = {}
         world_data_hash['player_ids'] = player_ids_array
         world_data_hash['players'] = player_data_hash
-        Rails.logger.info("------------------")
         ActionCable.server.broadcast('world_channel', world_data_hash)
 
         if Rails.env.production?
