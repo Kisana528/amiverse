@@ -200,29 +200,41 @@ export default function Index() {
       countDelta += delta * 1000
       if (countDelta >= send_data_interval) {
         //本番では1/10s、開発では3s
-        if(velocity.z !== 0 || velocity.x !== 0 ){
+        if(velocity.z > 0.1 || velocity.x > 0.1 ){
           sendPosition()
         }
         countDelta = 0
       }
 
       if (newData) {
-        world_data["player_ids"].forEach((id) => {
-          const existingPlayerCube = scene.getObjectByName(`player_${player_cubes.find((cube) => cube === id)}`)
-          if (existingPlayerCube) {
-            const position = world_data["players"][id]
-            existingPlayerCube.position.set(position.x, position.y, position.z)
-          } else {
-            addPlayer(id)
-          }
-        })
-        player_cubes.forEach((cube) => {
-          if (!world_data["player_ids"].includes(cube)) {
-            player = scene.getObjectByName(`player_${cube}`)
-            scene.remove(player)
-          }
-        })
-        
+        if(world_data["player_ids"]){
+          world_data["player_ids"].forEach((id) => {
+            const existingPlayerCube = scene.getObjectByName(`player_${player_cubes.find((cube) => cube === id)}`)
+            if (existingPlayerCube) {
+              //const position = world_data["players"][id]
+              //existingPlayerCube.position.set(position.x, position.y, position.z)
+            } else {
+              addPlayer(id)
+            }
+          })
+          player_cubes.forEach((cube) => {
+            if (!world_data["player_ids"].includes(cube)) {
+              player = scene.getObjectByName(`player_${cube}`)
+              scene.remove(player)
+            }
+          })
+        }
+        if(world_data["players"]){
+          Object.keys(world_data["players"]).forEach((key) => {
+            const existingPlayerCube = scene.getObjectByName(`player_${player_cubes.find((cube) => cube === key)}`)
+            if (existingPlayerCube) {
+              const position = world_data["players"][key]
+              existingPlayerCube.position.set(position.x, position.y, position.z)
+            } else {
+              console.log('era')
+            }
+          })
+        }
         newData = false
       }
 
