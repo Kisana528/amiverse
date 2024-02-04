@@ -6,7 +6,7 @@ services:
     env_file:
       - production.env
     working_dir: /app
-    #restart: always
+    restart: always
     volumes:
       - ./src:/app
     ports:
@@ -31,7 +31,7 @@ services:
     env_file:
       - production.env
     working_dir: /app
-    #restart: always
+    restart: always
     volumes:
       - ./src2:/app
     ports:
@@ -46,7 +46,7 @@ services:
       - db-vol:/var/lib/mysql
     stdin_open: true
     tty: true
-    #restart: always
+    restart: always
     ports:
       - '3306:3306'
 
@@ -58,7 +58,7 @@ services:
       - '8080:80'
     stdin_open: true
     tty: true
-    #restart: always
+    restart: always
     depends_on:
       - db
 
@@ -71,7 +71,7 @@ services:
       - production.env
     stdin_open: true
     tty: true
-    #restart: always
+    restart: always
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -80,7 +80,7 @@ services:
     image: redis:latest
     volumes:
       - redis-vol:/data
-    #restart: always
+    restart: always
     ports:
       - '6379:6379'
 
@@ -89,7 +89,7 @@ services:
     environment:
       REDIS_HOSTS: 'sidekiq:redis:6379,sidekiq2:redis:6379'
       TZ: JST-9
-    #restart: always
+    restart: always
     ports:
       - "8081:8081"
     depends_on:
@@ -102,7 +102,7 @@ services:
     working_dir: /app
     volumes:
       - ./src:/app
-    #restart: always
+    restart: always
     depends_on:
       - redis
     command: >
