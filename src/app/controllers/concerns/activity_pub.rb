@@ -135,7 +135,9 @@ module ActivityPub
         uri.to_s,
         {}
       )
+      Rails.logger.info(res.code)
       return unless res.code == 200
+      Rails.logger.info(res.body)
       data = JSON.parse(res.body)
       server_params = {
         server_id: unique_random_id(ActivityPubServer, 'server_id'),
