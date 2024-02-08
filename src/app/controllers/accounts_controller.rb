@@ -1,24 +1,44 @@
 class AccountsController < ApplicationController
   include Images
+  include ActivityPub
   before_action :set_account, only: %i[ show ]
   before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
   def show
   end
   def follow
-    account = Account.find_by(name_id: params[:name_id])
+    account = find_account_by_nid(params[:name_id])
     this_follow_params = {
-      follow_to_id: account.name_id,
-      follow_from_id: @current_account.name_id
+      follow_to_id: account.account_id,
+      follow_from_id: @current_account.account_id
     }
-    if Follow.exists?(this_follow_params)
-      Follow.where(this_follow_params).delete_all
-      flash[:success] = 'フォローを取り消しました'
-    else
-      follow = Follow.new(this_follow_params)
-      if follow.save!
-        flash[:success] = 'フォローしました'
+    if account.outsider
+      if Follow.exists?(this_follow_params)
+        Follow.where(this_follow_params).delete_all
+        # Undoを送信
+        flash[:success] = 'フォロー取り消し依頼しました'
       else
-        flash[:success] = '失敗しました'
+        # Followを送信
+        ap_follow(follow_to: account, follow_from: @current_account)
+        flash[:success] = 'フォロー依頼しました'
+        # Acceptされれば以下をその時に実行
+        #follow = Follow.new(this_follow_params)
+        #if follow.save!
+        #  flash[:success] = 'フォローしました'
+        #else
+        #  flash[:success] = '失敗しました'
+        #end
+      end
+    else
+      if Follow.exists?(this_follow_params)
+        Follow.where(this_follow_params).delete_all
+        flash[:success] = 'フォローを取り消しました'
+      else
+        follow = Follow.new(this_follow_params)
+        if follow.save!
+          flash[:success] = 'フォローしました'
+        else
+          flash[:danger] = '失敗しました'
+        end
       end
     end
     redirect_to root_path

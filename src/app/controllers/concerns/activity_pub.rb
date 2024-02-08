@@ -1,10 +1,26 @@
 module ActivityPub
-  def follow()
+  def ap_follow(follow_to:, follow_from:)
     #serverの確認
 
     #jsonの作成
-
+    body = {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "type": "Follow",
+      "id": URI.join(ENV['APP_HOST'], follow_from.name_id + 'follow'),
+      "actor": URI.join(ENV['APP_HOST'], '@' + follow_from.name_id),
+      "object": follow_to.fediverse_id
+    }
     #配送
+    Rails.logger.info('------------!!!')
+    Rails.logger.info(File.join(follow_to.fediverse_id, 'inbox'))
+    deliver(
+      body: body,
+      name_id: follow_from.name_id,
+      private_key: follow_from.private_key,
+      from_url: ENV['APP_HOST'],
+      to_url: File.join(follow_to.fediverse_id, 'inbox')
+    )
+    Rails.logger.info('ap follow!!!')
   end
   def accept_follow(body:, account:)
     body = {
@@ -154,6 +170,7 @@ module ActivityPub
         uri.to_s,
         {}
       )
+      data = JSON.parse(res.body)
       server_params = {
         server_id: unique_random_id(ActivityPubServer, 'server_id'),
         host: host
@@ -172,6 +189,26 @@ module ActivityPub
     end
     #サーバーobj返却
     return server
+  end
+  def id_to_uri(id)
+    name_id, host, own_server = name_id_host_separater(id)
+    uri = ''
+    if own_server
+    else
+      uri = URI::HTTPS.build(
+        host: host,
+        path: '/.well-known/webfinger',
+        query: 'resource=' + name_id + '@' + host
+      )
+      req,res = https_get(
+        uri.to_s,
+        {}
+      )
+      data = JSON.parse(res.body)
+      self_links = data['links'].select { |link| link['rel'] == "self" }
+      uri = self_links.first['href']
+    end
+    return uri
   end
   def account(uri)
     #サーバー判定
@@ -196,7 +233,7 @@ module ActivityPub
           #serverと紐づけ
           outsider: true,
           activated: true,
-          bio: data['summary'],
+          bio: data['summary'].nil? ? '' : data['summary'],
           explorable: data['discoverable'],
           locked: data['manuallyApprovesFollowers'],
           public_key: data['publicKey']['publicKeyPem']

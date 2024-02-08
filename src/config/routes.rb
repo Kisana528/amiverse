@@ -130,6 +130,9 @@ Rails.application.routes.draw do
     get 'items' => 'items#index', as: 'items'
 
     # test
+    get 'test' => 'test#index'
+    get 'test/explore' => 'test#explore'
+    get 'test/explore/:id' => 'test#show', constraints: { id: /.*/ }
     get 'test/new'
     post 'test/verify'
     post 'test/digest'

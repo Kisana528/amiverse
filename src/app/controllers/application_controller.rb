@@ -69,16 +69,16 @@ class ApplicationController < ActionController::Base
       image.resize_image(@account.name, @account.name_id, type)
     end
   end
-  def find_account_by_nid(nid)
+  def name_id_host_separater(str)
     name_id = ''
     host = ''
-    if nid.include?('@')
-      parts = nid.split('@')
+    if str.include?('@')
+      parts = str.split('@')
       case parts.length
       when 3
-        host, name_id = parts.pop(2)
+        name_id, host = parts.pop(2)
       when 2
-        if nid.start_with?('@')
+        if str.start_with?('@')
           name_id = parts.last
         else
           name_id, host = parts
@@ -87,9 +87,13 @@ class ApplicationController < ActionController::Base
         name_id = parts.first
       end
     else
-      name_id = nid
+      name_id = str
     end
-    if host.blank? || host == 'amiverse.net'
+    return name_id, host, (host.blank? || host == URI.parse(ENV['APP_HOST']).host)
+  end
+  def find_account_by_nid(nid)
+    name_id, host, own_server = name_id_host_separater(nid)
+    if own_server
       search_id = name_id
     else
       search_id = name_id + '@' + host
@@ -163,7 +167,7 @@ class ApplicationController < ActionController::Base
     uri = URI.parse(url)
     req = Net::HTTP.new(uri.host, uri.port)
     req.use_ssl = true
-    res = req.get(uri.path, headers)
+    res = req.get(url, headers)
     return req, res
   end
 end

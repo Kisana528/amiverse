@@ -26,7 +26,7 @@
           <% if @account == @current_account %>
             <%= link_to('設定', settings_path) %>
           <% else %>
-            <% if Follow.exists?(follow_to_id: @account.name_id, follow_from_id: @current_account.name_id) %>
+            <% if Follow.exists?(follow_to_id: @account.account_id, follow_from_id: @current_account.account_id) %>
               <%= button_to("フォロー解除", follow_path(@account.name_id), method: :post) %>
             <% else %>
               <%= button_to("フォローする", follow_path(@account.name_id), method: :post) %>

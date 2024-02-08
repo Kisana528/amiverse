@@ -1,4 +1,13 @@
 class Admin::TestController < Admin::ApplicationController
+  include ActivityPub
+
+  def index
+  end
+  def explore
+  end
+  def show
+    @account = account(id_to_uri(params[:id]))
+  end
   def new
   end
   def create_key
