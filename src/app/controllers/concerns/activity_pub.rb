@@ -63,9 +63,27 @@ module ActivityPub
     headers = data['headers']
     context = body['@context']
     id = body['id']
-    return 'Error:actorが存在しません。' unless account = account(body['actor'])
     object = body['object'] unless body['object'].nil?
     status = 'Info:処理中。'
+    ########
+    # 記録 #
+    ########
+    received_params = {
+      received_at: body['received_at'].to_s,
+      headers: headers.to_json,
+      body: body.to_json,
+      context: context.to_json,
+      fediverse_id: id.to_s,
+      account_id: account.account_id.to_s,
+      status: status
+    }
+    received_params[:object] = object.to_json if object.present?
+    received_params[:activity_type] = body['type'].to_s if body['type'].present?
+    ActivityPubReceived.create!(received_params)
+    ########
+    # 解析 #
+    ########
+    return 'Error:actorが存在しません。' unless account = account(body['actor'])
     case body['type']
     ## アカウント、投稿系
     when 'Follow'
@@ -103,18 +121,6 @@ module ActivityPub
     else
       #その他
     end
-    received_params = {
-      received_at: body['received_at'].to_s,
-      headers: headers.to_json,
-      body: body.to_json,
-      context: context.to_json,
-      fediverse_id: id.to_s,
-      account_id: account.account_id.to_s,
-      status: status
-    }
-    received_params[:object] = object.to_json if object.present?
-    received_params[:activity_type] = body['type'].to_s if body['type'].present?
-    ActivityPubReceived.create!(received_params)
     return status
   end
   def server(host)
