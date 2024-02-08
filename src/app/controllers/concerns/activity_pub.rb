@@ -74,7 +74,6 @@ module ActivityPub
       body: body.to_json,
       context: context.to_json,
       fediverse_id: id.to_s,
-      account_id: account.account_id.to_s,
       status: status
     }
     received_params[:object] = object.to_json if object.present?
@@ -162,7 +161,7 @@ module ActivityPub
   def account(uri)
     #サーバー判定
     if URI.parse(uri).host == URI.parse(ENV['APP_HOST']).host
-      account = Account.find_by(name_id: uri.split(/[@\/]/).last)
+      account = Account.find_by(name_id: uri.split(/[@]/).last)
     else
       return unless server = server(URI.parse(uri).host)
       #アカウントあるかないか
