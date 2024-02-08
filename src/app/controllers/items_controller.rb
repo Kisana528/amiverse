@@ -46,12 +46,17 @@ class ItemsController < ApplicationController
       redirect_to item_url(@item.item_id)
       item = create_item_broadcast_format(@item)
       
-      #from_url = 'https://amiverse.net'
-      #to_url = 'https://mstdn.jp/inbox'
-      #from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
-      #to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
-      #deliver(create_note(@item), @current_account.name_id, @current_account.private_key, from_url, to_url, @current_account.public_key)
-      #create_note(item: @item)
+      from_url = 'https://amiverse.net'
+      to_url = 'https://mstdn.jp/inbox'
+      from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
+      to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
+      deliver(
+        body: create_note(item: @item),
+        name_id: @current_account.name_id,
+        private_key: @current_account.private_key,
+        from_url: from_url,
+        to_url: to_url
+      )
       ActionCable.server.broadcast('items_channel', serialize_item(@item))
     else
       flash[:success] = '失敗しました。'
