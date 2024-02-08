@@ -47,8 +47,8 @@ export async function getServerSideProps({req, res, context, query}) {
         }
       ],
       type: "Person",
-      id: FullAppUrl(`@${accountData.name_id}`),
-      url: FullAppUrl(`@${accountData.name_id}`),
+      id: FullAppUrl(`/@${accountData.name_id}`),
+      url: FullAppUrl(`/@${accountData.name_id}`),
       tag: [],
       published: accountData.created_at,
       discoverable: true,
@@ -62,10 +62,10 @@ export async function getServerSideProps({req, res, context, query}) {
         url: accountData.icon_url
       },
       preferredUsername: accountData.name_id,
-      inbox: FullAppUrl(`@${accountData.name_id}/inbox`),
-      outbox: FullAppUrl(`@${accountData.name_id}/outbox`),
-      followers: FullAppUrl(`@${accountData.name_id}/followers`),
-      following: FullAppUrl(`@${accountData.name_id}/following`),
+      inbox: FullAppUrl(`/@${accountData.name_id}/inbox`),
+      outbox: FullAppUrl(`/@${accountData.name_id}/outbox`),
+      followers: FullAppUrl(`/@${accountData.name_id}/followers`),
+      following: FullAppUrl(`/@${accountData.name_id}/following`),
       publicKey: {
         id: FullAppUrl(`@${accountData.name_id}#main-key`),
         type: "Key",

@@ -70,7 +70,31 @@ class ApplicationController < ActionController::Base
     end
   end
   def find_account_by_nid(nid)
-    Account.find_by(name_id: nid,
+    name_id = ''
+    host = ''
+    if nid.include?('@')
+      parts = nid.split('@')
+      case parts.length
+      when 3
+        host, name_id = parts.pop(2)
+      when 2
+        if nid.start_with?('@')
+          name_id = parts.last
+        else
+          name_id, host = parts
+        end
+      when 1
+        name_id = parts.first
+      end
+    else
+      name_id = nid
+    end
+    if host.blank? || host == 'amiverse.net'
+      search_id = name_id
+    else
+      search_id = name_id + '@' + host
+    end
+    Account.find_by(name_id: search_id,
       activated: true,
       locked: false,
       silenced: false,

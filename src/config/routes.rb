@@ -41,10 +41,10 @@ Rails.application.routes.draw do
   get 'settings/others' => 'settings#others'
 
   # account
-  get '@:name_id' => 'accounts#show', as: 'account'
-  get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon'
-  get '@:name_id/banner' => 'accounts#show_banner', as: 'show_banner'
-  post '@:name_id/follow' => 'accounts#follow', as: 'follow'
+  get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /.*/ }
+  get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon', constraints: { name_id: /.*/ }
+  get '@:name_id/banner' => 'accounts#show_banner', as: 'show_banner', constraints: { name_id: /.*/ }
+  post '@:name_id/follow' => 'accounts#follow', as: 'follow', constraints: { name_id: /.*/ }
   get '@:name_id/edit' => 'accounts#edit', as: 'edit_account'
   patch '@:name_id/update' => 'accounts#update', as: 'update_account'
   get '@:name_id/password_edit' => 'accounts#password_edit', as: 'password_edit_account'
@@ -104,11 +104,11 @@ Rails.application.routes.draw do
 
     # account
     get 'accounts' => 'accounts#index'
-    get '@:name_id' => 'accounts#show', as: 'account'
-    get '@:name_id/edit' => 'accounts#edit', as: 'edit_account'
-    patch '@:name_id/update' => 'accounts#update', as: 'update_account'
+    get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /.*/ }
+    get '@:name_id/edit' => 'accounts#edit', as: 'edit_account', constraints: { name_id: /.*/ }
+    patch '@:name_id/update' => 'accounts#update', as: 'update_account', constraints: { name_id: /.*/ }
     
-    get '@:name_id/generate_key' => 'accounts#generate_key', as: 'generate_key_account'
+    get '@:name_id/generate_key' => 'accounts#generate_key', as: 'generate_key_account', constraints: { name_id: /.*/ }
 
     # invitation
     get 'invitations' => 'invitations#index'

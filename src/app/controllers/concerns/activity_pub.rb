@@ -1,5 +1,10 @@
 module ActivityPub
   def follow()
+    #serverの確認
+
+    #jsonの作成
+
+    #配送
   end
   def accept_follow(body:, account:)
     body = {
@@ -11,7 +16,7 @@ module ActivityPub
     }
     deliver(
       body: body,
-      name_id: name_id,
+      name_id: account.name_id,
       private_key: account.private_key
     )
   end
@@ -50,11 +55,6 @@ module ActivityPub
         "content": item.content
       }
     }
-    deliver(
-      body: body,
-      name_id: item.account.name_id,
-      private_key: item.account.private_key
-    )
   end
   def delete_note()
   end
@@ -78,7 +78,7 @@ module ActivityPub
     }
     received_params[:object] = object.to_json if object.present?
     received_params[:activity_type] = body['type'].to_s if body['type'].present?
-    ActivityPubReceived.create!(received_params)
+    saved_data = ActivityPubReceived.create!(received_params)
     ########
     # 解析 #
     ########
@@ -114,12 +114,32 @@ module ActivityPub
     ## CRUD系
     when 'Create'
       #actorアカウントがあるか確認
+      case object['type']
+      when 'Note'
+        attributed_to = account(object['attributedTo'])
+        @item = Item.new(
+          content: object['content'].force_encoding('UTF-8'),
+          cw: object['sensitive']
+        )
+        @item.account_id = attributed_to.id
+        @item.item_id = unique_random_id(Item, 'item_id')
+        @item.uuid = SecureRandom.uuid
+        @item.item_type = 'plane'
+        if @item.save
+          status = 'Success:Noteを作成しました。'
+        end
+      else
+        #その他
+      end
       #objectを作成する
     when 'Update'
     when 'Delete'
     else
       #その他
     end
+    # status更新
+    saved_data.status = status
+    saved_data.save
     return status
   end
   def server(host)
@@ -130,15 +150,10 @@ module ActivityPub
         host: host,
         path: '/nodeinfo/2.0'
       )
-      Rails.logger.info(uri.to_s)
       req,res = https_get(
         uri.to_s,
         {}
       )
-      Rails.logger.info(res.code)
-      return unless res.code == 200
-      Rails.logger.info(res.body)
-      data = JSON.parse(res.body)
       server_params = {
         server_id: unique_random_id(ActivityPubServer, 'server_id'),
         host: host
@@ -157,24 +172,21 @@ module ActivityPub
     end
     #サーバーobj返却
     return server
-    rescue
-      return nil
   end
   def account(uri)
     #サーバー判定
     if URI.parse(uri).host == URI.parse(ENV['APP_HOST']).host
       account = Account.find_by(name_id: uri.split(/[@]/).last)
     else
-      return unless server = server(URI.parse(uri).host)
+      server = server(URI.parse(uri).host)
       #アカウントあるかないか
       unless account = Account.find_by(fediverse_id: uri)
         #なければ作成する
-        Rails.logger.info(uri.to_s)
         req,res = https_get(
           uri,
           {'Accept' => 'application/activity+json'}
         )
-        return unless res.code == 200
+        res.code == 200
         data = JSON.parse(res.body)
         account = Account.new(
           name: data['name'],
@@ -193,8 +205,6 @@ module ActivityPub
       end
     end
     return account
-    rescue
-      return nil
   end
   def deliver(
       body:,
