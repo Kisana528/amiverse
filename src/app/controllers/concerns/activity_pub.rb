@@ -17,23 +17,23 @@ module ActivityPub
       body: body,
       name_id: follow_from.name_id,
       private_key: follow_from.private_key,
-      from_url: ENV['APP_HOST'],
       to_url: File.join(follow_to.fediverse_id, 'inbox')
     )
     Rails.logger.info('ap follow!!!')
   end
-  def accept_follow(body:, account:)
+  def accept_follow(received_body:, follow_to_account:, follow_from_account:)
     body = {
       "@context": "https://www.w3.org/ns/activitystreams",
-      "id": "https://amiverse.net/@#{account.name_id}/follow_accept",
+      "id": "https://amiverse.net/@#{follow_to_account.name_id}/follow_accept",
       "type": "Accept",
-      "actor": "https://amiverse.net/@#{account.name_id}",
-      "object": body.to_json
+      "actor": "https://amiverse.net/@#{follow_to_account.name_id}",
+      "object": received_body
     }
     deliver(
       body: body,
-      name_id: account.name_id,
-      private_key: account.private_key
+      name_id: follow_to_account.name_id,
+      private_key: follow_to_account.private_key,
+      to_url: File.join(follow_from_account.fediverse_id, 'inbox')
     )
   end
   def undo_follow()
@@ -62,6 +62,9 @@ module ActivityPub
         "url": "https://amiverse.net/items/#{item.item_id}",
         "published": item.created_at,
         "to": [
+          "https://www.w3.org/ns/activitystreams#Public"
+        ],
+        "cc": [
           "https://mstdn.jp/users/kisana",
           "https://misskey.io/users/9arqrxdfco",
           "https://amiverse.net/#{item.account.name_id}/followers",
@@ -119,7 +122,10 @@ module ActivityPub
         status = 'Error:objectが存在しません。'
       end
       # 鍵垢でなければすぐにAcceptを返却
-      accept_follow(body: body, account: follow_to_account)
+      accept_follow(
+        received_body: body,
+        follow_to_account: follow_to_account,
+        follow_from_account: account)
     when 'Like'
       #actorがobjectをいいねする
     when 'Dislike'
@@ -247,8 +253,8 @@ module ActivityPub
       body:,
       name_id:,
       private_key:,
-      from_url: 'https://amiverse.net',
-      to_url: 'https://mstdn.jp/inbox'
+      from_url: ENV['APP_HOST'],
+      to_url:
     )
     headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
     req,res = https_post(
@@ -291,7 +297,7 @@ module ActivityPub
     current_time = Time.now.utc.httpdate
     digest = Digest::SHA256.base64digest(body.to_json)
     to_be_signed = [
-      "(request-target): post /inbox",
+      "(request-target): post #{URI.parse(to_url).path}",
       "host: #{to_host}",
       "date: #{current_time}",
       "digest: SHA-256=#{digest}",

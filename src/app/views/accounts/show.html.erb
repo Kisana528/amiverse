@@ -39,7 +39,7 @@
         <div><span>紹介:</span><%= @account.bio %></div>
         <div><span>場所:</span><%= @account.location %></div>
         <div><span>誕生日:</span><%= @account.birthday&.strftime("%Y年 %m月 %d日") %></div>
-        <div><span>フォロワー:</span><%= @account.follower.count %></div>
+        <div><span>フォロワー:</span><%= @account.followers.count %></div>
         <div><span>フォロー中:</span><%= @account.following.count %></div>
         <div><span>投稿数:</span><%= @account.items_count %></div>
         <div><span>参加日:</span><%= @account.created_at.strftime("%Y年 %m月 %d日") %></div>

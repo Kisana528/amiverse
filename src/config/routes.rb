@@ -151,6 +151,8 @@ Rails.application.routes.draw do
 
     # account
     post '@:name_id' => 'accounts#show', as: 'account'
+    post '@:name_id/followers' => 'accounts#followers', as: 'followers'
+    post '@:name_id/following' => 'accounts#following', as: 'following'
 
     # signup
     post 'check-invitation-code' => 'signup#check_invitation_code'

@@ -21,6 +21,7 @@ class SignupController < ApplicationController
       render 'new' and return
     end
     @account.account_id = unique_random_id(Account, 'account_id')
+    @account.fediverse_id = URI.join(ENV['APP_HOST'], '@' + params[:account][:name_id])
     key_pair = generate_rsa_key_pair
     @account.private_key = key_pair[:private_key]
     @account.public_key = key_pair[:public_key]
@@ -36,6 +37,7 @@ class SignupController < ApplicationController
   def create_admin
     @account = Account.new(account_params)
     @account.account_id = '00000000000000'
+    @account.fediverse_id = URI.join(ENV['APP_HOST'], '@' + params[:account][:name_id])
     key_pair = generate_rsa_key_pair
     @account.private_key = key_pair[:private_key]
     @account.public_key = key_pair[:public_key]
@@ -51,7 +53,15 @@ class SignupController < ApplicationController
   end
   private
   def account_params
-    params.require(:account).permit(:name, :name_id, :bio, :location, :birthday, :password, :password_confirmation)
+    params.require(:account).permit(
+      :name,
+      :name_id,
+      :bio,
+      :location,
+      :birthday,
+      :password,
+      :password_confirmation
+    )
   end
   def check_invitation_code(invitation_code)
     invitation = Invitation.find_by(invitation_code: invitation_code)

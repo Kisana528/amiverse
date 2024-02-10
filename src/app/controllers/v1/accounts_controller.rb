@@ -1,5 +1,5 @@
 class V1::AccountsController < V1::ApplicationController
-  before_action :set_account, only: %i[ show ]
+  before_action :set_account, only: %i[ show followers following ]
   def show
     render json: {name_id: @account.name_id,
       name: @account.name,
@@ -8,8 +8,8 @@ class V1::AccountsController < V1::ApplicationController
       bio: @account.bio,
       location: @account.location,
       birthday: @account.birthday,
-      followers: @account.followers,
-      following: @account.following,
+      followers: @account.followers.count,
+      following: @account.following.count,
       items_count: @account.items_count,
       created_at: @account.created_at,
       updated_at: @account.updated_at,
@@ -37,6 +37,36 @@ class V1::AccountsController < V1::ApplicationController
       }}
     }
   end
+  def followers
+    render json: {
+      name_id: @account.name_id,
+      count: @account.followers.count,
+      followers: @account.followers.map {|follower| {
+        name: follower.name,
+        name_id: follower.name_id,
+        icon_url: generate_ati_url(follower.account_id, 'icon', follower.icon_id),
+        banner_url: generate_ati_url(follower.account_id, 'banner', follower.banner_id),
+        bio: follower.bio,
+        created_at: follower.created_at,
+        updated_at: follower.updated_at,
+      }}
+    }
+  end
+  def following
+    render json: {
+      name_id: @account.name_id,
+      count: @account.following.count,
+      following: @account.following.map {|following| {
+        name: following.name,
+        name_id: following.name_id,
+        icon_url: generate_ati_url(following.account_id, 'icon', following.icon_id),
+        banner_url: generate_ati_url(following.account_id, 'banner', following.banner_id),
+        bio: following.bio,
+        created_at: following.created_at,
+        updated_at: following.updated_at,
+      }}
+    }
+  end
   def update
     pre_icon_id = @account.icon_id
     pre_banner_id = @account.banner_id
@@ -52,15 +82,7 @@ class V1::AccountsController < V1::ApplicationController
   end
   private
   def set_account
-    @account = Account.find_by(
-      name_id: params[:name_id],
-      activated: true,
-      locked: false,
-      silenced: false,
-      suspended: false,
-      frozen: false,
-      deleted: false
-    )
+    @account = find_account_by_nid(params[:name_id])
   end
   def account_params
     params.require(:account).permit(

@@ -7,7 +7,7 @@ class Account < ApplicationRecord
   has_many :follows
   has_many :follow_from, class_name: 'Follow', primary_key: 'account_id', foreign_key: 'follow_from_id'
   has_many :follow_to, class_name: 'Follow', primary_key: 'account_id', foreign_key: 'follow_to_id'
-  has_many :follower, through: :follow_to, source: :follow_from
+  has_many :followers, through: :follow_to, source: :follow_from
   has_many :following, through: :follow_from, source: :follow_to
   attr_accessor :remember_token, :activation_token
   BASE_64_URL_REGEX  = /\A[a-zA-Z0-9_-]*\z/
