@@ -174,6 +174,8 @@ ActiveRecord::Schema[7.0].define(version: 17) do
   create_table "follows", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "follow_to_id", default: "", null: false
     t.string "follow_from_id", default: "", null: false
+    t.string "uid", default: "", null: false
+    t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

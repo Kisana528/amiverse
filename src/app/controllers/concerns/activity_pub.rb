@@ -1,16 +1,16 @@
 module ActivityPub
-  def ap_follow(follow_to:, follow_from:)
+  def ap_follow(follow_to:, follow_from:, uid:)
     ap_send(
-      id: 'follow',
+      id: "follow/#{uid}",
       type: 'Follow',
       actor: follow_from,
       object: follow_to.fediverse_id,
       destination: follow_to
     )
   end
-  def undo_follow(follow_to:, follow_from:)
+  def undo_follow(follow_to:, follow_from:, uid:)
     undo_object = {
-      "id": File.join(follow_from.fediverse_id, 'follow'),
+      "id": File.join(follow_from.fediverse_id, "follow/#{uid}"),
       "type": 'Follow',
       "actor": follow_from.fediverse_id,
       "object": follow_to.fediverse_id
@@ -34,7 +34,7 @@ module ActivityPub
       id: 'accept_follow',
       type: 'Accept',
       actor: follow_to_account,
-      object: received_body,
+      object: accept_object,
       destination: follow_from_account
     )
   end
