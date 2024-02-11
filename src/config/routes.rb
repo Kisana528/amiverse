@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get 'settings/others' => 'settings#others'
 
   # account
-  get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /.*/ }
+  get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /[A-Za-z0-9\-_\.@]*/ }
   get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon', constraints: { name_id: /.*/ }
   get '@:name_id/banner' => 'accounts#show_banner', as: 'show_banner', constraints: { name_id: /.*/ }
   post '@:name_id/follow' => 'accounts#follow', as: 'follow', constraints: { name_id: /.*/ }

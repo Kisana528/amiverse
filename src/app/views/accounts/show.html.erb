@@ -25,12 +25,14 @@
           <div>@<%= @account.name_id %></div>
           <% if @account == @current_account %>
             <%= link_to('設定', settings_path) %>
-          <% else %>
+          <% elsif @current_account.present? %>
             <% if Follow.exists?(follow_to_id: @account.account_id, follow_from_id: @current_account.account_id) %>
               <%= button_to("フォロー解除", follow_path(@account.name_id), method: :post) %>
             <% else %>
               <%= button_to("フォローする", follow_path(@account.name_id), method: :post) %>
             <% end %>
+          <% else %>
+            <%= button_to('ログインしてフォロー', login_path, method: :get) %>
           <% end %>
         </div>
       </div>

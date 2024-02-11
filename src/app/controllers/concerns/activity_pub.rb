@@ -22,21 +22,22 @@ module ActivityPub
     Rails.logger.info('ap follow!!!')
   end
   def accept_follow(received_body:, follow_to_account:, follow_from_account:)
-    body = {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "id": "https://amiverse.net/@#{follow_to_account.name_id}/follow_accept",
-      "type": "Accept",
-      "actor": "https://amiverse.net/@#{follow_to_account.name_id}",
-      "object": received_body
-    }
-    deliver(
-      body: body,
-      name_id: follow_to_account.name_id,
-      private_key: follow_to_account.private_key,
-      to_url: File.join(follow_from_account.fediverse_id, 'inbox')
+    send(
+      id: 'accept_follow',
+      type: 'Accept',
+      actor: follow_to_account,
+      object: received_body,
+      destination: follow_from_account
     )
   end
-  def undo_follow()
+  def undo_follow(received_body:, follow_to_account:, follow_from_account:)
+    send(
+      id: 'undo_follow',
+      type: 'Accept',
+      actor: follow_to_account,
+      object: received_body,
+      destination: follow_from_account
+    )
   end
   def like()
   end
@@ -77,13 +78,40 @@ module ActivityPub
   end
   def delete_note()
   end
+  def send(id:, type:, actor:, object:, destination:)
+    body = {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "id": File.join(URI.join(ENV['APP_HOST'], '@' + actor.name_id), id),
+      "type": type,
+      "actor": URI.join(ENV['APP_HOST'], '@' + actor.name_id),
+      "object": received_body
+    }
+    deliver(
+      body: body,
+      name_id: actor.name_id,
+      private_key: actor.private_key,
+      to_url: File.join(destination.fediverse_id, 'inbox')
+    )
+  end
   def read(data)
     body = JSON.parse(data['body'])
     headers = data['headers']
     context = body['@context']
     id = body['id']
     object = body['object'] unless body['object'].nil?
-    status = 'Info:処理中。'
+    #--- Info ---
+    # 0:処理開始
+    # 1:内部処理完了、これから結果を配送
+    #--- Success ---
+    # 0:正常に完了
+    #--- Error ---
+    # 0:Actorが存在しない
+    # 1:すでにフォロー済み
+    # 2:フォロー出来なかった
+    # 3:フォロー先アカウントが不明
+    # 4:フォローしていないので解除できない
+    # 5:フォロー解除先アカウントが不明
+    status = 'I0'
     ########
     # 記録 #
     ########
@@ -101,63 +129,98 @@ module ActivityPub
     ########
     # 解析 #
     ########
-    return 'Error:actorが存在しません。' unless account = account(body['actor'])
-    case body['type']
-    ## アカウント、投稿系
-    when 'Follow'
-      if follow_to_account = account(object)
-        this_follow_params = {
-          follow_to_id: follow_to_account.account_id,
-          follow_from_id: account.account_id
-        }
-        if Follow.exists?(this_follow_params)
-          #Follow.where(this_follow_params).delete_all
-          status = 'Error:すでにフォロー済みかもしれません。'
-        elsif Follow.create!(this_follow_params)
-          status = 'Success:フォローしました。'
+    unless account = account(body['actor'])
+      case body['type']
+      when 'Follow'
+        if follow_to_account = account(object)
+          this_follow_params = {
+            follow_to_id: follow_to_account.account_id,
+            follow_from_id: account.account_id
+          }
+          if Follow.exists?(this_follow_params)
+            status = 'E1'
+          elsif Follow.create!(this_follow_params)
+            status = 'I1'
+            # 鍵垢でなければすぐにAcceptを返却
+            accept_follow(
+              received_body: body,
+              follow_to_account: follow_to_account,
+              follow_from_account: account
+            )
+            status = 'S0'
+          else
+            status = 'E2'
+          end
         else
-          status = 'Error:フォローに失敗しました。'
+          status = 'E3'
         end
-      else
-        status = 'Error:objectが存在しません。'
-      end
-      # 鍵垢でなければすぐにAcceptを返却
-      accept_follow(
-        received_body: body,
-        follow_to_account: follow_to_account,
-        follow_from_account: account)
-    when 'Like'
-      #actorがobjectをいいねする
-    when 'Dislike'
-    ## リアクション系
-    when 'Accept'
-    when 'Reject'
-    when 'Undo'
-    ## CRUD系
-    when 'Create'
-      #actorアカウントがあるか確認
-      case object['type']
-      when 'Note'
-        attributed_to = account(object['attributedTo'])
-        @item = Item.new(
-          content: object['content'].force_encoding('UTF-8'),
-          cw: object['sensitive']
-        )
-        @item.account_id = attributed_to.id
-        @item.item_id = unique_random_id(Item, 'item_id')
-        @item.uuid = SecureRandom.uuid
-        @item.item_type = 'plane'
-        if @item.save
-          status = 'Success:Noteを作成しました。'
+      when 'Like'
+        #actorがobjectをいいねする
+      when 'Dislike'
+      ## リアクション系
+      when 'Accept'
+      when 'Reject'
+      when 'Undo'
+        case object['type']
+        when 'Follow'
+          if follow_to_account = account(object)
+            this_follow_params = {
+              follow_to_id: follow_to_account.account_id,
+              follow_from_id: account.account_id
+            }
+            if Follow.exists?(this_follow_params)
+              Follow.where(this_follow_params).delete_all
+              status = 'I1'
+              send(
+                id: 'accept',
+                type: 'Accept',
+                actor: '',
+                object:,
+                destination:
+              )
+              undo_follow(
+                received_body: body,
+                follow_to_account: follow_to_account,
+                follow_from_account: account
+              )
+              status = 'S0'
+            else
+              status = 'E4'
+            end
+          else
+            status = 'E5'
+          end
+        else
+          #その他
         end
+      ## CRUD系
+      when 'Create'
+        #actorアカウントがあるか確認
+        case object['type']
+        when 'Note'
+          attributed_to = account(object['attributedTo'])
+          @item = Item.new(
+            content: object['content'].force_encoding('UTF-8'),
+            cw: object['sensitive']
+          )
+          @item.account_id = attributed_to.id
+          @item.item_id = unique_random_id(Item, 'item_id')
+          @item.uuid = SecureRandom.uuid
+          @item.item_type = 'plane'
+          if @item.save
+            status = 'S0'
+          end
+        else
+          #その他
+        end
+        #objectを作成する
+      when 'Update'
+      when 'Delete'
       else
         #その他
       end
-      #objectを作成する
-    when 'Update'
-    when 'Delete'
     else
-      #その他
+      status = 'Error:0'
     end
     # status更新
     saved_data.status = status
