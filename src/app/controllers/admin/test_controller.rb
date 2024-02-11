@@ -6,7 +6,7 @@ class Admin::TestController < Admin::ApplicationController
   def explore
   end
   def show
-    @account = account(id_to_uri(params[:id]))
+    @account = explore_account(id_to_uri(params[:id]))
   end
   def new
   end

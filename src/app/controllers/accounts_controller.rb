@@ -13,20 +13,13 @@ class AccountsController < ApplicationController
     }
     if account.outsider
       if Follow.exists?(this_follow_params)
-        Follow.where(this_follow_params).delete_all
-        # Undoを送信
+        undo_follow(follow_to: account, follow_from: @current_account)
         flash[:success] = 'フォロー取り消し依頼しました'
       else
-        # Followを送信
+        this_follow_params[:uid] = SecureRandom.uuid
+        Follow.new(this_follow_params)
         ap_follow(follow_to: account, follow_from: @current_account)
         flash[:success] = 'フォロー依頼しました'
-        # Acceptされれば以下をその時に実行
-        #follow = Follow.new(this_follow_params)
-        #if follow.save!
-        #  flash[:success] = 'フォローしました'
-        #else
-        #  flash[:success] = '失敗しました'
-        #end
       end
     else
       if Follow.exists?(this_follow_params)

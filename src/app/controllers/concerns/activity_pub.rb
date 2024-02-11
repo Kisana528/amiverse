@@ -1,28 +1,36 @@
 module ActivityPub
   def ap_follow(follow_to:, follow_from:)
-    #serverの確認
-
-    #jsonの作成
-    body = {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "type": "Follow",
-      "id": URI.join(ENV['APP_HOST'], follow_from.name_id + 'follow'),
-      "actor": URI.join(ENV['APP_HOST'], '@' + follow_from.name_id),
+    ap_send(
+      id: 'follow',
+      type: 'Follow',
+      actor: follow_from,
+      object: follow_to.fediverse_id,
+      destination: follow_to
+    )
+  end
+  def undo_follow(follow_to:, follow_from:)
+    undo_object = {
+      "id": File.join(follow_from.fediverse_id, 'follow'),
+      "type": 'Follow',
+      "actor": follow_from.fediverse_id,
       "object": follow_to.fediverse_id
     }
-    #配送
-    Rails.logger.info('------------!!!')
-    Rails.logger.info(File.join(follow_to.fediverse_id, 'inbox'))
-    deliver(
-      body: body,
-      name_id: follow_from.name_id,
-      private_key: follow_from.private_key,
-      to_url: File.join(follow_to.fediverse_id, 'inbox')
+    ap_send(
+      id: 'undo_follow',
+      type: 'Undo',
+      actor: follow_from,
+      object: undo_object,
+      destination: follow_to
     )
-    Rails.logger.info('ap follow!!!')
   end
   def accept_follow(received_body:, follow_to_account:, follow_from_account:)
-    send(
+    accept_object = {
+      "id": received_body['id'],
+      "type": 'Follow',
+      "actor": follow_from_account.fediverse_id,
+      "object": follow_to_account.fediverse_id
+    }
+    ap_send(
       id: 'accept_follow',
       type: 'Accept',
       actor: follow_to_account,
@@ -30,8 +38,8 @@ module ActivityPub
       destination: follow_from_account
     )
   end
-  def undo_follow(received_body:, follow_to_account:, follow_from_account:)
-    send(
+  def accept_undo_follow(received_body:, follow_to_account:, follow_from_account:)
+    ap_send(
       id: 'undo_follow',
       type: 'Accept',
       actor: follow_to_account,
@@ -78,13 +86,13 @@ module ActivityPub
   end
   def delete_note()
   end
-  def send(id:, type:, actor:, object:, destination:)
+  def ap_send(id:, type:, actor:, object:, destination:)
     body = {
       "@context": "https://www.w3.org/ns/activitystreams",
-      "id": File.join(URI.join(ENV['APP_HOST'], '@' + actor.name_id), id),
       "type": type,
-      "actor": URI.join(ENV['APP_HOST'], '@' + actor.name_id),
-      "object": received_body
+      "id": File.join(actor.fediverse_id, id),
+      "actor": actor.fediverse_id,
+      "object": object
     }
     deliver(
       body: body,
@@ -111,6 +119,7 @@ module ActivityPub
     # 3:フォロー先アカウントが不明
     # 4:フォローしていないので解除できない
     # 5:フォロー解除先アカウントが不明
+    # 6:フォローアクセプト受け取ったが処理できない
     status = 'I0'
     ########
     # 記録 #
@@ -129,13 +138,15 @@ module ActivityPub
     ########
     # 解析 #
     ########
-    unless account = account(body['actor'])
+    if account = account(body['actor'])
       case body['type']
       when 'Follow'
         if follow_to_account = account(object)
           this_follow_params = {
             follow_to_id: follow_to_account.account_id,
-            follow_from_id: account.account_id
+            follow_from_id: account.account_id,
+            uid: id,
+            accepted: true
           }
           if Follow.exists?(this_follow_params)
             status = 'E1'
@@ -159,6 +170,32 @@ module ActivityPub
       when 'Dislike'
       ## リアクション系
       when 'Accept'
+        case object['type']
+        when 'Follow'
+          follow_to = account(object['object'])
+          follow_from = account(object['actor'])
+          this_follow_params = {
+            follow_to_id: account(object['object']).account_id,
+            follow_from_id: account(object['actor']).account_id
+          }
+          follow = Follow.where(this_follow_params)
+          follow.accepted = true
+          if follow.save!
+            status = 'S0'
+          else
+            status = 'E6'
+          end
+        when 'Undo'
+          Rails.logger.info('----------')
+          Rails.logger.info('-----Undo-----')
+          case object['object']['type']
+          when 'Follow'
+            Rails.logger.info('-----Undo---Follow--')
+            #Follow.where(this_follow_params).delete_all
+          else
+          end
+        else
+        end
       when 'Reject'
       when 'Undo'
         case object['type']
@@ -171,13 +208,6 @@ module ActivityPub
             if Follow.exists?(this_follow_params)
               Follow.where(this_follow_params).delete_all
               status = 'I1'
-              send(
-                id: 'accept',
-                type: 'Accept',
-                actor: '',
-                object:,
-                destination:
-              )
               undo_follow(
                 received_body: body,
                 follow_to_account: follow_to_account,
@@ -220,7 +250,7 @@ module ActivityPub
         #その他
       end
     else
-      status = 'Error:0'
+      status = 'E0'
     end
     # status更新
     saved_data.status = status
@@ -228,36 +258,36 @@ module ActivityPub
     return status
   end
   def server(host)
-    #あるかないか
     unless server = ActivityPubServer.find_by(host: host)
-      #なければ作成する
-      uri = URI::HTTPS.build(
-        host: host,
-        path: '/nodeinfo/2.0'
-      )
-      req,res = https_get(
-        uri.to_s,
-        {}
-      )
-      data = JSON.parse(res.body)
-      server_params = {
-        server_id: unique_random_id(ActivityPubServer, 'server_id'),
-        host: host
-      }
-      server_params[:name] = data['metadata']['nodeName'] if data['metadata']['nodeName'].present?
-      server_params[:description] = data['metadata']['nodeDescription'] if data['metadata']['nodeDescription'].present?
-      server_params[:software_name] = data['software']['name'] if data['software']['name'].present?
-      server_params[:software_version] = data['software']['version'] if data['software']['version'].present?
-      if data['metadata']['maintainer'].present?
-        server_params[:maintainer_name] = data['metadata']['maintainer']['name'] if data['metadata']['maintainer']['name'].present?
-        server_params[:maintainer_email] = data['metadata']['maintainer']['email'] if data['metadata']['maintainer']['email'].present?
-      end
-      server_params[:open_registrations] = data['openRegistrations'] if data['openRegistrations'].present?
-      server_params[:theme_color] = data['metadata']['themeColor'] if data['metadata']['themeColor'].present?
-      server = ActivityPubServer.create(server_params)
+      server = explore_server(host)
     end
-    #サーバーobj返却
     return server
+  end
+  def explore_server(host)
+    uri = URI::HTTPS.build(
+      host: host,
+      path: '/nodeinfo/2.0'
+    )
+    req,res = https_get(
+      uri.to_s,
+      {}
+    )
+    data = JSON.parse(res.body)
+    server_params = {
+      server_id: unique_random_id(ActivityPubServer, 'server_id'),
+      host: host
+    }
+    server_params[:name] = data['metadata']['nodeName'] if data['metadata']['nodeName'].present?
+    server_params[:description] = data['metadata']['nodeDescription'] if data['metadata']['nodeDescription'].present?
+    server_params[:software_name] = data['software']['name'] if data['software']['name'].present?
+    server_params[:software_version] = data['software']['version'] if data['software']['version'].present?
+    if data['metadata']['maintainer'].present?
+      server_params[:maintainer_name] = data['metadata']['maintainer']['name'] if data['metadata']['maintainer']['name'].present?
+      server_params[:maintainer_email] = data['metadata']['maintainer']['email'] if data['metadata']['maintainer']['email'].present?
+    end
+    server_params[:open_registrations] = data['openRegistrations'] if data['openRegistrations'].present?
+    server_params[:theme_color] = data['metadata']['themeColor'] if data['metadata']['themeColor'].present?
+    ActivityPubServer.create(server_params)
   end
   def id_to_uri(id)
     name_id, host, own_server = name_id_host_separater(id)
@@ -286,31 +316,32 @@ module ActivityPub
     else
       server = server(URI.parse(uri).host)
       #アカウントあるかないか
-      unless account = Account.find_by(fediverse_id: uri)
-        #なければ作成する
-        req,res = https_get(
-          uri,
-          {'Accept' => 'application/activity+json'}
-        )
-        res.code == 200
-        data = JSON.parse(res.body)
-        account = Account.new(
-          name: data['name'],
-          name_id: get_name_id(data['id'], data['preferredUsername']),
-          account_id: unique_random_id(Account, 'account_id'),
-          fediverse_id: uri,
-          #serverと紐づけ
-          outsider: true,
-          activated: true,
-          bio: data['summary'].nil? ? '' : data['summary'],
-          explorable: data['discoverable'],
-          locked: data['manuallyApprovesFollowers'],
-          public_key: data['publicKey']['publicKeyPem']
-        )
-        account.save!(context: :skip)
-      end
+      account = Account.find_by(fediverse_id: uri)
     end
     return account
+  end
+  def explore_account(uri)
+    #server確認紐づけ
+    req,res = https_get(
+      uri,
+      {'Accept' => 'application/activity+json'}
+    )
+    res.code == 200
+    data = JSON.parse(res.body)
+    account = Account.new(
+      name: data['name'],
+      name_id: get_name_id(data['id'], data['preferredUsername']),
+      account_id: unique_random_id(Account, 'account_id'),
+      fediverse_id: uri,
+      #serverと紐づけ
+      outsider: true,
+      activated: true,
+      bio: data['summary'].nil? ? '' : data['summary'],
+      explorable: data['discoverable'],
+      locked: data['manuallyApprovesFollowers'],
+      public_key: data['publicKey']['publicKeyPem']
+    )
+    account.save!(context: :skip)
   end
   def deliver(
       body:,

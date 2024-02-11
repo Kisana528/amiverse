@@ -1,6 +1,7 @@
 import axios from '@/lib/axios'
 
 export default async function handler(req, res) {
+  let req_data = {'default':'value'}
   let res_data = {'status':'Error:Data was not send to API.'}
   if (req.method === "POST") {
     req_data.received_at = String(`@${req.query.name_id}`)
