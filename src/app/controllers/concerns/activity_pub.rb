@@ -334,7 +334,7 @@ module ActivityPub
     res.code == 200
     data = JSON.parse(res.body)
     account = Account.new(
-      name: data['name'].present? ? data['name'].present? : '',
+      name: data['name'].present? ? data['name'] : '',
       name_id: get_name_id(data['id'], data['preferredUsername']),
       account_id: unique_random_id(Account, 'account_id'),
       fediverse_id: uri,

@@ -44,7 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.boolean "administrator", default: false, null: false
     t.boolean "moderator", default: false, null: false
     t.string "email", default: "", null: false
-    t.string "bio", default: "", null: false
+    t.text "bio", default: "", null: false
     t.text "public_key", default: "", null: false
     t.text "private_key", default: "", null: false
     t.string "location", default: "", null: false
