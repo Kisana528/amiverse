@@ -176,9 +176,10 @@ module ActivityPub
           follow_from = account(object['actor'])
           this_follow_params = {
             follow_to_id: account(object['object']).account_id,
-            follow_from_id: account(object['actor']).account_id
+            follow_from_id: account(object['actor']).account_id,
+            uid: object['id']
           }
-          follow = Follow.where(this_follow_params)
+          follow = Follow.find_by(this_follow_params)
           follow.accepted = true
           if follow.save!
             status = 'S0'
@@ -200,19 +201,13 @@ module ActivityPub
       when 'Undo'
         case object['type']
         when 'Follow'
-          if follow_to_account = account(object)
+          if follow_to_account = account(object['object'])
             this_follow_params = {
               follow_to_id: follow_to_account.account_id,
               follow_from_id: account.account_id
             }
             if Follow.exists?(this_follow_params)
               Follow.where(this_follow_params).delete_all
-              status = 'I1'
-              undo_follow(
-                received_body: body,
-                follow_to_account: follow_to_account,
-                follow_from_account: account
-              )
               status = 'S0'
             else
               status = 'E4'
@@ -264,13 +259,23 @@ module ActivityPub
     return server
   end
   def explore_server(host)
+    uri_0 = URI::HTTPS.build(
+      host: host,
+      path: '/.well-known/nodeinfo'
+    )
+    req_0,res_0 = https_get(
+      uri_0.to_s,
+      {'Accept': 'application/json'}
+    )
+    nodeinfo = JSON.parse(res_0.body)['links'].select { |link| link['rel'] == "http://nodeinfo.diaspora.software/ns/schema/2.0" }
+    href = nodeinfo['href']
     uri = URI::HTTPS.build(
       host: host,
-      path: '/nodeinfo/2.0'
+      path: URI.parse(href).path
     )
     req,res = https_get(
       uri.to_s,
-      {}
+      {'Accept': 'application/json'}
     )
     data = JSON.parse(res.body)
     server_params = {
@@ -297,7 +302,7 @@ module ActivityPub
       uri = URI::HTTPS.build(
         host: host,
         path: '/.well-known/webfinger',
-        query: 'resource=' + name_id + '@' + host
+        query: 'resource=acct:' + name_id + '@' + host
       )
       req,res = https_get(
         uri.to_s,
@@ -329,16 +334,16 @@ module ActivityPub
     res.code == 200
     data = JSON.parse(res.body)
     account = Account.new(
-      name: data['name'],
+      name: data['name'].present? ? data['name'].present? : '',
       name_id: get_name_id(data['id'], data['preferredUsername']),
       account_id: unique_random_id(Account, 'account_id'),
       fediverse_id: uri,
       #serverと紐づけ
       outsider: true,
       activated: true,
-      bio: data['summary'].nil? ? '' : data['summary'],
-      explorable: data['discoverable'],
-      locked: data['manuallyApprovesFollowers'],
+      bio: data['summary'].present? ? data['summary'] : '',
+      explorable: data['discoverable'].nil? ? true : data['discoverable'].present?,
+      locked: data['manuallyApprovesFollowers'].nil? ? true : data['manuallyApprovesFollowers'].present?,
       public_key: data['publicKey']['publicKeyPem']
     )
     account.save!(context: :skip)
