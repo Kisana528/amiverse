@@ -268,7 +268,7 @@ module ActivityPub
       {'Accept': 'application/json'}
     )
     nodeinfo = JSON.parse(res_0.body)['links'].select { |link| link['rel'] == "http://nodeinfo.diaspora.software/ns/schema/2.0" }
-    href = nodeinfo['href']
+    href = nodeinfo[0]['href']
     uri = URI::HTTPS.build(
       host: host,
       path: URI.parse(href).path

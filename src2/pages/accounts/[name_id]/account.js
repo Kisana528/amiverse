@@ -26,6 +26,7 @@ export async function getServerSideProps({req, res, context, query}) {
         "https://www.w3.org/ns/activitystreams",
         "https://w3id.org/security/v1",
         {
+          "Key": "sec:Key",
           "manuallyApprovesFollowers": "as:manuallyApprovesFollowers",
           "sensitive": "as:sensitive",
           "Hashtag": "as:Hashtag",
@@ -66,6 +67,12 @@ export async function getServerSideProps({req, res, context, query}) {
       outbox: FullAppUrl(`/@${accountData.name_id}/outbox`),
       followers: FullAppUrl(`/@${accountData.name_id}/followers`),
       following: FullAppUrl(`/@${accountData.name_id}/following`),
+      featured: FullAppUrl(`/@${accountData.name_id}/collections/featured`),
+      tag: [],
+      sharedInbox: FullAppUrl(`/inbox`),
+      endpoints: {
+          sharedInbox: FullAppUrl(`/inbox`)
+      },
       publicKey: {
         id: FullAppUrl(`@${accountData.name_id}#main-key`),
         type: "Key",
