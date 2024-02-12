@@ -4,8 +4,8 @@ import FullAppUrl from '@/components/full_app_url'
 export default async function handler(req, res) {
   //const accept = req.headers.accept
   //const isActivity = accept.includes('application/activity+json')
-  let res_data = {'status':'Error:Data was not send to API.'}
-  if(req.method === "GET"){
+  let res_data = { 'status': 'Error:Data was not send to API.' }
+  if (req.method === "GET") {
     let data = {}
     /*console.log(req.query)
     // ページング
@@ -26,14 +26,12 @@ export default async function handler(req, res) {
       type: "Collection",
       id: `https://amiverse.net/@${data.name_id}/followers`,
       totalItems: data.count,
-      items: [
-        `https://amiverse.net/@${data.name_id}`
-      ]
+      items: data.followers.map(follower => (follower.fediverse_id))
     }
   } else {
-    res_data = {'status':'Error:Request you sent was not POST. This program is not support Activity Pub cliant.'}
+    res_data = { 'status': 'Error:Request you sent was not POST. This program is not support Activity Pub cliant.' }
   }
-  
+
   res.setHeader('Content-Type', 'application/json')
   res.write(JSON.stringify(res_data))
   res.end()
