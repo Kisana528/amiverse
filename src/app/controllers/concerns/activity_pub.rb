@@ -405,19 +405,35 @@ module ActivityPub
       'headers="(request-target) host date digest content-type"',
       "signature=\"#{sign}\""
     ].join(',') # content-lengthも必要?
+    ########
+    signature = HTTPSignature.create(
+      url: to_url,
+      method: 'POST',
+      headers: {
+        'host': to_host,
+        'date': current_time,
+        'content-type': 'application/activity+json'
+      },
+      key: private_key,
+      key_id: "https://#{from_host}/@#{name_id}#main-key",
+      algorithm: 'rsa-sha256',
+      body: body.to_json
+    )
+    ########
     headers = {
       Host: to_host,
       Date: current_time,
       Digest: "SHA-256=#{digest}",
-      Signature: statement,
-      Authorization: "Signature #{statement}",
+      Signature: signature, ###
+      Authorization: "Signature #{signature}", ###
       #Accept: 'application/json',
       #'Accept-Encoding': 'gzip',
       #'Cache-Control': 'max-age=0',
       'Content-Type': 'application/activity+json',
       'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }
-    return headers, digest, to_be_signed, sign, statement
+    
+    return headers, digest, to_be_signed, sign, signature ###
   end
   def check_sign(body,a)
     digest = Digest::SHA256.base64digest(body.to_json)
