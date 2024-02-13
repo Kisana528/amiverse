@@ -1,18 +1,36 @@
-<%= form_with url: admin_test_verify_path do |f| %>
-  <%= f.label :public_key, style: "display: block" %>
-  <%= f.text_area :public_key %>
-  <br/>
-  <%= f.label :signature, style: "display: block" %>
-  <%= f.text_area :signature %>
-  <br/>
-  <%= f.label :message, style: "display: block" %>
-  <%= f.text_area :message %>
-  <br/>
-  <%= f.submit '検証' %>
-<% end %>
-<%= form_with url: admin_test_digest_path do |f| %>
-  <%= f.label :digest, style: "display: block" %>
-  <%= f.text_area :digest %>
-  <br/>
-  <%= f.submit '実行' %>
-<% end %>
+<% provide(:main_header_text, 'Admin RSA-key&digest test') %>
+  <% content_for :main_content do %>
+    <h2>Generate</h2>
+    <% if @key_pair.present? %>
+      <label>private_key</label>
+      <br/>
+      <textarea><%= @key_pair[:private_key] %></textarea>
+      <br/>
+      <label>public_key</label>
+      <br/>
+      <textarea><%= @key_pair[:public_key] %></textarea>
+      <br/>
+    <% end %>
+    <%= button_to("生成", admin_test_generate_path,method: :post, data: { turbo: false }) %>
+    <h2>Verify</h2>
+    <%= form_with url: admin_test_verify_path, data: { turbo: false } do |f| %>
+      <%= f.label :message, style: "display: block" %>
+      <%= f.text_area :message, value: @verify.present? ? @verify[0] : '' %>
+      <br/>
+      <%= f.label :signature, style: "display: block" %>
+      <%= f.text_area :signature, value: @verify.present? ? @verify[1] : '' %>
+      <br/>
+      <%= f.label :public_key, style: "display: block" %>
+      <%= f.text_area :public_key, value: @verify.present? ? @verify[2] : '' %>
+      <br/>
+      <%= f.submit '検証' %>
+    <% end %>
+    <h2>Digest</h2>
+    <%= form_with url: admin_test_digest_path, data: { turbo: false } do |f| %>
+      <%= f.label :digest, style: "display: block" %>
+      <%= f.text_area :digest, value: @digest.present? ? @digest : '' %>
+      <br/>
+      <%= f.submit '実行' %>
+    <% end %>
+  <% end %>
+<%= render 'layouts/default' %>

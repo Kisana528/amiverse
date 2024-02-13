@@ -109,16 +109,15 @@ module ActivityPub
     object = body['object'] unless body['object'].nil?
     #--- Info ---
     # 0:処理開始
-    # 1:内部処理完了、これから結果を配送
+    # 1:内部処理は完了
     #--- Success ---
     # 0:正常に完了
+    # 1:することなく完了
     #--- Error ---
-    # 0:Actorが存在しない
+    # 0:actorかobjectのアカウントが存在しない
     # 1:すでにフォロー済み
     # 2:フォロー出来なかった
-    # 3:フォロー先アカウントが不明
     # 4:フォローしていないので解除できない
-    # 5:フォロー解除先アカウントが不明
     # 6:フォローアクセプト受け取ったが処理できない
     status = 'I0'
     ########
@@ -138,114 +137,125 @@ module ActivityPub
     ########
     # 解析 #
     ########
-    if account = account(body['actor'])
-      case body['type']
+    case body['type']
+    when 'Follow'
+      if follow_to_account = account(object) && account = account(body['actor'])
+        this_follow_params = {
+          follow_to_id: follow_to_account.account_id,
+          follow_from_id: account.account_id,
+          uid: id,
+          accepted: true
+        }
+        if Follow.exists?(this_follow_params)
+          status = 'E1'
+        elsif Follow.create!(this_follow_params)
+          # 鍵垢でなければすぐにAcceptを返却
+          accept_follow(
+            received_body: body,
+            follow_to_account: follow_to_account,
+            follow_from_account: account
+          )
+          status = 'S0'
+        else
+          status = 'E2'
+        end
+      else
+        status = 'E0'
+      end
+    when 'Like'
+      #actorがobjectをいいねする
+    when 'Dislike'
+    ## リアクション系
+    when 'Accept'
+      case object['type']
       when 'Follow'
-        if follow_to_account = account(object)
+        follow_to = account(object['object'])
+        follow_from = account(object['actor'])
+        this_follow_params = {
+          follow_to_id: account(object['object']).account_id,
+          follow_from_id: account(object['actor']).account_id,
+          uid: object['id']
+        }
+        follow = Follow.find_by(this_follow_params)
+        follow.accepted = true
+        if follow.save!
+          status = 'S0'
+        else
+          status = 'E6'
+        end
+      when 'Undo'
+        Rails.logger.info('----------')
+        Rails.logger.info('-----Undo-----')
+        case object['object']['type']
+        when 'Follow'
+          Rails.logger.info('-----Undo---Follow--')
+          #Follow.where(this_follow_params).delete_all
+        else
+        end
+      else
+      end
+    when 'Reject'
+    when 'Undo'
+      case object['type']
+      when 'Follow'
+        if follow_to_account = account(object['object']) && account = account(body['actor'])
           this_follow_params = {
             follow_to_id: follow_to_account.account_id,
-            follow_from_id: account.account_id,
-            uid: id,
-            accepted: true
+            follow_from_id: account.account_id
           }
           if Follow.exists?(this_follow_params)
-            status = 'E1'
-          elsif Follow.create!(this_follow_params)
-            status = 'I1'
-            # 鍵垢でなければすぐにAcceptを返却
-            accept_follow(
-              received_body: body,
-              follow_to_account: follow_to_account,
-              follow_from_account: account
-            )
+            Follow.where(this_follow_params).delete_all
             status = 'S0'
           else
-            status = 'E2'
+            status = 'E4'
           end
         else
-          status = 'E3'
+          status = 'E0'
         end
-      when 'Like'
-        #actorがobjectをいいねする
-      when 'Dislike'
-      ## リアクション系
-      when 'Accept'
-        case object['type']
-        when 'Follow'
-          follow_to = account(object['object'])
-          follow_from = account(object['actor'])
-          this_follow_params = {
-            follow_to_id: account(object['object']).account_id,
-            follow_from_id: account(object['actor']).account_id,
-            uid: object['id']
-          }
-          follow = Follow.find_by(this_follow_params)
-          follow.accepted = true
-          if follow.save!
-            status = 'S0'
-          else
-            status = 'E6'
-          end
-        when 'Undo'
-          Rails.logger.info('----------')
-          Rails.logger.info('-----Undo-----')
-          case object['object']['type']
-          when 'Follow'
-            Rails.logger.info('-----Undo---Follow--')
-            #Follow.where(this_follow_params).delete_all
-          else
-          end
-        else
-        end
-      when 'Reject'
-      when 'Undo'
-        case object['type']
-        when 'Follow'
-          if follow_to_account = account(object['object'])
-            this_follow_params = {
-              follow_to_id: follow_to_account.account_id,
-              follow_from_id: account.account_id
-            }
-            if Follow.exists?(this_follow_params)
-              Follow.where(this_follow_params).delete_all
-              status = 'S0'
-            else
-              status = 'E4'
-            end
-          else
-            status = 'E5'
-          end
-        else
-          #その他
-        end
-      ## CRUD系
-      when 'Create'
-        #actorアカウントがあるか確認
-        case object['type']
-        when 'Note'
-          attributed_to = account(object['attributedTo'])
-          @item = Item.new(
-            content: object['content'].force_encoding('UTF-8'),
-            cw: object['sensitive']
-          )
-          @item.account_id = attributed_to.id
-          @item.item_id = unique_random_id(Item, 'item_id')
-          @item.uuid = SecureRandom.uuid
-          @item.item_type = 'plane'
-          if @item.save
-            status = 'S0'
-          end
-        else
-          #その他
-        end
-        #objectを作成する
-      when 'Update'
-      when 'Delete'
       else
         #その他
       end
+    ## CRUD系
+    when 'Create'
+      #actorアカウントがあるか確認
+      case object['type']
+      when 'Note'
+        attributed_to = account(object['attributedTo'])
+        @item = Item.new(
+          content: object['content'].force_encoding('UTF-8'),
+          cw: object['sensitive']
+        )
+        @item.account_id = attributed_to.id
+        @item.item_id = unique_random_id(Item, 'item_id')
+        @item.uuid = SecureRandom.uuid
+        @item.item_type = 'plane'
+        if @item.save
+          status = 'S0'
+        end
+      else
+        #その他
+      end
+      #objectを作成する
+    when 'Update'
+    when 'Delete'
+      case object
+      when String
+        #objectがuser形式であれば
+        #find_account_by_nidして
+        #あればdeleted = true
+        #なければ終わり
+        saved_data.delete
+        #煩わしいので↑
+        if account = Account.find_by(fediverse_id: object)
+          account.update(deleted: true) 
+          status = 'S0'
+        else
+          status = 'S1'
+        end
+      else
+      end
     else
-      status = 'E0'
+      #その他
     end
     # status更新
     saved_data.status = status
@@ -321,32 +331,12 @@ module ActivityPub
     else
       server = server(URI.parse(uri).host)
       #アカウントあるかないか
-      account = Account.find_by(fediverse_id: uri)
+      if account = Account.find_by(fediverse_id: uri)
+      else
+        account = explore_account(uri)
+      end
     end
     return account
-  end
-  def explore_account(uri)
-    #server確認紐づけ
-    req,res = https_get(
-      uri,
-      {'Accept' => 'application/activity+json'}
-    )
-    res.code == 200
-    data = JSON.parse(res.body)
-    account = Account.new(
-      name: data['name'].present? ? data['name'] : '',
-      name_id: get_name_id(data['id'], data['preferredUsername']),
-      account_id: unique_random_id(Account, 'account_id'),
-      fediverse_id: uri,
-      #serverと紐づけ
-      outsider: true,
-      activated: true,
-      bio: data['summary'].present? ? data['summary'] : '',
-      explorable: data['discoverable'].nil? ? true : data['discoverable'].present?,
-      locked: data['manuallyApprovesFollowers'].nil? ? true : data['manuallyApprovesFollowers'].present?,
-      public_key: data['publicKey']['publicKeyPem']
-    )
-    account.save!(context: :skip)
   end
   def deliver(
       body:,
@@ -438,5 +428,30 @@ module ActivityPub
   def get_name_id(uri, preferredUsername)
     host = URI.parse(uri).host
     preferredUsername + '@' + host
+  end
+  private
+  def explore_account(uri)
+    #server確認紐づけ
+    req,res = https_get(
+      uri,
+      {'Accept' => 'application/activity+json'}
+    )
+    res.code == 200
+    data = JSON.parse(res.body)
+    account = Account.new(
+      name: data['name'].present? ? data['name'] : '',
+      name_id: get_name_id(data['id'], data['preferredUsername']),
+      account_id: unique_random_id(Account, 'account_id'),
+      fediverse_id: uri,
+      #serverと紐づけ
+      outsider: true,
+      activated: true,
+      bio: data['summary'].present? ? data['summary'] : '',
+      explorable: data['discoverable'].nil? ? true : data['discoverable'].present?,
+      locked: data['manuallyApprovesFollowers'].nil? ? true : data['manuallyApprovesFollowers'].present?,
+      public_key: data['publicKey']['publicKeyPem']
+    )
+    account.save!(context: :skip)
+    return account
   end
 end

@@ -6,26 +6,33 @@ class Admin::TestController < Admin::ApplicationController
   def explore
   end
   def show
-    @account = explore_account(id_to_uri(params[:id]))
+    @account = account(id_to_uri(params[:id]))
   end
   def new
   end
-  def create_key
-    pri, pub = generate_rsa_key_pair
-    Rails.logger.info('======目印======')
-    Rails.logger.info(pri)
-    Rails.logger.info(pub)
+  def generate
+    @key_pair = generate_rsa_key_pair
+    flash.now[:success] = '生成成功'
+    render 'new'
   end
   def verify
-    result = verify_signature(params[:public_key], params[:signature], params[:message].to_json)
-    Rails.logger.info('======目印======')
-    Rails.logger.info(result ? 'ok' : 'ng')
+    @verify = [params[:message], params[:signature], params[:public_key]]
+    if result = verify_signature(params[:message], params[:signature], params[:public_key])
+      if result
+        flash.now[:success] = '認証成功'
+      else
+        flash.now[:danger] = '認証失敗'
+      end
+    else
+      flash.now[:danger] = '例外'
+    end
     render 'new'
   end
   def digest
-    tmp = Digest::SHA256.hexdigest(params[:digest]) + Digest::SHA256.base64digest(params[:digest])
-    Rails.logger.info('======目印======')
-    Rails.logger.info(tmp)
+    hexdigest = Digest::SHA256.hexdigest(params[:digest])
+    base64digest = Digest::SHA256.base64digest(params[:digest])
+    @digest = params[:digest]
+    flash.now[:success] = "hexdigest: #{hexdigest},\nbase64digest: #{base64digest}"
     render 'new'
   end
   private
