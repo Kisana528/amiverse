@@ -114,11 +114,14 @@ module ActivityPub
     # 0:正常に完了
     # 1:することなく完了
     #--- Error ---
-    # 0:actorかobjectのアカウントが存在しない
+    # 0:actorのアカウントが存在しない
     # 1:すでにフォロー済み
     # 2:フォロー出来なかった
+    # 3:フォロー先アカウントが存在しない
     # 4:フォローしていないので解除できない
+    # 5:?
     # 6:フォローアクセプト受け取ったが処理できない
+    # 7:actorかobjectのアカウントが存在しない
     status = 'I0'
     ########
     # 記録 #
@@ -139,10 +142,12 @@ module ActivityPub
     ########
     case body['type']
     when 'Follow'
-      if follow_to_account = account(object) && account = account(body['actor'])
+      follow_to_account = account(object)
+      follow_from_account = account(body['actor'])
+      if follow_to_account && follow_from_account
         this_follow_params = {
           follow_to_id: follow_to_account.account_id,
-          follow_from_id: account.account_id,
+          follow_from_id: follow_from_account.account_id,
           uid: id,
           accepted: true
         }
@@ -153,14 +158,14 @@ module ActivityPub
           accept_follow(
             received_body: body,
             follow_to_account: follow_to_account,
-            follow_from_account: account
+            follow_from_account: follow_from_account
           )
           status = 'S0'
         else
           status = 'E2'
         end
       else
-        status = 'E0'
+        status = 'E7'
       end
     when 'Like'
       #actorがobjectをいいねする
@@ -198,10 +203,12 @@ module ActivityPub
     when 'Undo'
       case object['type']
       when 'Follow'
-        if follow_to_account = account(object['object']) && account = account(body['actor'])
+        follow_to_account = account(object['object'])
+        follow_from_account = account(body['actor'])
+        if follow_to_account && follow_from_account
           this_follow_params = {
             follow_to_id: follow_to_account.account_id,
-            follow_from_id: account.account_id
+            follow_from_id: follow_from_account.account_id
           }
           if Follow.exists?(this_follow_params)
             Follow.where(this_follow_params).delete_all
