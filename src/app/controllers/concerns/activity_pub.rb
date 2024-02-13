@@ -393,39 +393,23 @@ module ActivityPub
     current_time = Time.now.utc.httpdate
     digest = Digest::SHA256.base64digest(body.to_json)
     to_be_signed = [
-      "(request-target): post #{URI.parse(to_url).path}",
-      "host: #{to_host}",
+      "(request-target): POST #{URI.parse(to_url).path}",
       "date: #{current_time}",
-      "digest: SHA-256=#{digest}",
-      "content-type: application/activity+json"].join("\n")
+      "host: #{to_host}",
+      "digest: SHA-256=#{digest}"].join("\n")
     sign = generate_signature(to_be_signed, private_key)
     statement = [
       "keyId=\"https://#{from_host}/@#{name_id}#main-key\"",
       'algorithm="rsa-sha256"',
-      'headers="(request-target) host date digest content-type"',
+      'headers="(request-target) date host digest"',
       "signature=\"#{sign}\""
     ].join(',') # content-lengthも必要?
-    ########
-    signature = HTTPSignature.create(
-      url: to_url,
-      method: 'POST',
-      headers: {
-        'host': to_host,
-        'date': current_time,
-        'content-type': 'application/activity+json'
-      },
-      key: private_key,
-      key_id: "https://#{from_host}/@#{name_id}#main-key",
-      algorithm: 'rsa-sha256',
-      body: body.to_json
-    )
-    ########
     headers = {
       Host: to_host,
       Date: current_time,
       Digest: "SHA-256=#{digest}",
-      Signature: signature, ###
-      Authorization: "Signature #{signature}", ###
+      Signature: statement,
+      Authorization: "Signature #{statement}",
       #Accept: 'application/json',
       #'Accept-Encoding': 'gzip',
       #'Cache-Control': 'max-age=0',
@@ -433,7 +417,7 @@ module ActivityPub
       'User-Agent': "Amiverse v0.0.1 (+https://#{from_host}/)"
     }
     
-    return headers, digest, to_be_signed, sign, signature ###
+    return headers, digest, to_be_signed, sign, statement
   end
   def check_sign(body,a)
     digest = Digest::SHA256.base64digest(body.to_json)
