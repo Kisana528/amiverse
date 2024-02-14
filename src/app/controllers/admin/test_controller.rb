@@ -16,6 +16,22 @@ class Admin::TestController < Admin::ApplicationController
     render 'new'
   end
   def verify
+    context = HttpSignatures::Context.new(
+      keys: {"https://misskey.io/users/9arqrxdfco#main-key" => {
+        public_key: params[:public_key]
+      }},
+      algorithm: "rsa-sha256",
+      headers: ["(request-target)", "Date", "Host", "Digest"],
+    )
+    uri = URI.parse(params[:url])
+    req = Net::HTTP::Post.new(uri.path)
+    req['Date'] = params[:date]
+    req['Host'] = params[:host]
+    req['Digest'] = params[:digest]
+    req['Signature'] = params[:message]
+    Rails.logger.info('=====ok?===')
+    Rails.logger.info(context.verifier.valid?(req))
+    ######################
     @verify = [params[:message], params[:signature], params[:public_key]]
     if result = verify_signature(params[:message], params[:signature], params[:public_key])
       if result

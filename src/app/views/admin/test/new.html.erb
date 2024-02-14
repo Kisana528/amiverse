@@ -14,6 +14,18 @@
     <%= button_to("生成", admin_test_generate_path,method: :post, data: { turbo: false }) %>
     <h2>Verify</h2>
     <%= form_with url: admin_test_verify_path, data: { turbo: false } do |f| %>
+      <%= f.label :url, style: "display: block" %>
+      <%= f.text_area :url, value: @verify.present? ? @verify[0] : '' %>
+      <br/>
+      <%= f.label :date, style: "display: block" %>
+      <%= f.text_area :date, value: @verify.present? ? @verify[0] : '' %>
+      <br/>
+      <%= f.label :host, style: "display: block" %>
+      <%= f.text_area :host, value: @verify.present? ? @verify[0] : '' %>
+      <br/>
+      <%= f.label :digest, style: "display: block" %>
+      <%= f.text_area :digest, value: @verify.present? ? @verify[0] : '' %>
+      <br/>
       <%= f.label :message, style: "display: block" %>
       <%= f.text_area :message, value: @verify.present? ? @verify[0] : '' %>
       <br/>

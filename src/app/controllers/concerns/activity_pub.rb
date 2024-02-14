@@ -94,7 +94,7 @@ module ActivityPub
       "actor": actor.fediverse_id,
       "object": object
     }
-    deliver(
+    gem1_deliver(
       body: body,
       name_id: actor.name_id,
       private_key: actor.private_key,
@@ -367,6 +367,49 @@ module ActivityPub
       content: body.to_json,
       response: res.body)
   end
+  def gem1_deliver(
+      body:,
+      name_id:,
+      private_key:,
+      #public_key:,
+      from_url: ENV['APP_HOST'],
+      to_url:
+    )
+    current_time = Time.now.utc.httpdate
+    to_host = URI.parse(to_url).host
+    Rails.logger.info(OpenSSL::PKey::RSA.new(private_key))
+    context = HttpSignatures::Context.new(
+      keys: {"examplekey" => {
+        private_key: private_key,
+        #public_key: public_key
+      }},
+      algorithm: "rsa-sha256",
+      headers: ["(request-target)", "Date", "Host", "Digest"],
+    )
+    #headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
+    #https_post(url, headers, data)
+    uri = URI.parse(to_url)
+    req = Net::HTTP::Post.new(uri.path)
+    digest = Digest::SHA256.base64digest(body.to_json)
+    req['Date'] = current_time
+    req['Host'] = to_host
+    req['Digest'] = digest
+    #req.use_ssl = true
+    context.signer.sign(req)
+    http = Net::HTTP.new(to_host, uri.port)
+    http.use_ssl = true
+    res = http.request(req)
+    #Rails.logger.info('=========')
+    #Rails.logger.info(context.verifier.valid?(req))
+    ActivityPubDelivered.create(
+      to_url: to_url,
+      digest: digest,
+      to_be_signed: current_time,
+      signature: req['Signature'],
+      statement: res.header,
+      content: body.to_json,
+      response: res.body)
+  end
   def front_deliver(body, name_id, private_key, from_url, to_url, public_key)
     headers, digest, to_be_signed, sign, statement = sign_headers(body, name_id, private_key, from_url, to_url)
     req,res = http_post(
@@ -393,7 +436,7 @@ module ActivityPub
     current_time = Time.now.utc.httpdate
     digest = Digest::SHA256.base64digest(body.to_json)
     to_be_signed = [
-      "(request-target): POST #{URI.parse(to_url).path}",
+      "(request-target): post #{URI.parse(to_url).path}",
       "date: #{current_time}",
       "host: #{to_host}",
       "digest: SHA-256=#{digest}"].join("\n")

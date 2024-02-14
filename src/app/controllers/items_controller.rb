@@ -50,11 +50,10 @@ class ItemsController < ApplicationController
       to_url = 'https://mstdn.jp/inbox'
       from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
       to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
-      deliver(
+      gem1_deliver(
         body: create_note(item: @item),
         name_id: @current_account.name_id,
         private_key: @current_account.private_key,
-        from_url: from_url,
         to_url: to_url
       )
       ActionCable.server.broadcast('items_channel', serialize_item(@item))
