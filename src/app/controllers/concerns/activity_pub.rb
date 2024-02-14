@@ -94,7 +94,7 @@ module ActivityPub
       "actor": actor.fediverse_id,
       "object": object
     }
-    gem1_deliver(
+    deliver(
       body: body,
       name_id: actor.name_id,
       private_key: actor.private_key,
@@ -394,7 +394,9 @@ module ActivityPub
     req['Date'] = current_time
     req['Host'] = to_host
     req['Digest'] = digest
+    req['Content-Type'] = 'application/activity+json'
     #req.use_ssl = true
+    req.body = body.to_json
     context.signer.sign(req)
     http = Net::HTTP.new(to_host, uri.port)
     http.use_ssl = true
