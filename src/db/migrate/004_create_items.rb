@@ -15,6 +15,7 @@ class CreateItems < ActiveRecord::Migration[7.0]
       t.string :cw_message, null: false, default: ''
       t.json :version, null: false, default: []
       t.boolean :deleted, null: false, default: false
+      t.datetime :deleted_at
       t.timestamps
     end
     add_index :items, [:item_id, :uuid], unique: true

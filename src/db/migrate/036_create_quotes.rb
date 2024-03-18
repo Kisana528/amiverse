@@ -1,0 +1,12 @@
+class CreateQuotes < ActiveRecord::Migration[7.0]
+  def change
+    create_table :quotes do |t|
+      t.bigint :quoted, null: false, foreign_key: true
+      t.bigint :quoter, null: false, foreign_key: true
+      t.string :uuid, null: false, default: ''
+      t.timestamps
+    end
+    add_foreign_key :quotes, :items, column: :quoted
+    add_foreign_key :quotes, :items, column: :quoter
+  end
+end

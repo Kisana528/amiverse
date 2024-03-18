@@ -6,8 +6,9 @@ class CreateInvitations < ActiveRecord::Migration[7.0]
       t.string :invitation_code, null: false
       t.integer :uses, null: false, default: 0
       t.integer :max_uses, null: false, default: 1
-      t.timestamp :expires_at
+      t.datetime :expires_at
       t.boolean :deleted, null: false, default: false
+      t.datetime :deleted_at
       t.timestamps
     end
     add_index :invitations, [:invitation_code], unique: true

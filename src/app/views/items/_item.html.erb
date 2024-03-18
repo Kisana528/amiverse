@@ -47,15 +47,15 @@
     <% end %>
   </div>
   <div class="item-panel">
-    <div style="display: inline-block;">返信先<%= item.reply_to_items.count %></div>
+    <div style="display: inline-block;">返信先<%= item.replying.count %></div>
     <details class="item-details">
-      <summary>返信<%= item.reply_from_items.count %></summary>
+      <summary>返信<%= item.repliers.count %></summary>
       <div class="item-details-container">
         <%= render 'items/form', initial_reply_item_id: item.item_id %>
       </div>
     </details>
     <details>
-      <summary>引用<%= item.quote_from_items.count %></summary>
+      <summary>引用<%= item.quoters.count %></summary>
       <div class="item-details-container">
         <%= render 'items/form', initial_quote_item_id: item.item_id %>
       </div>
@@ -83,11 +83,11 @@
   </div>
   <% if defined? show_reply_from %>
     <div class="item-reply">
-      <% if !item.reply_from_items.empty? %>
+      <% if !item.repliers.empty? %>
         <div class="item-reply-from">
           📩返信
         </div>
-        <% item.reply_from_items.each do |reply| %>
+        <% item.repliers.each do |reply| %>
           <%= render 'items/item', item: reply %>
         <% end %>
       <% end %>

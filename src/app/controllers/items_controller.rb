@@ -37,26 +37,26 @@ class ItemsController < ApplicationController
         end
       end
       if reply_to = Item.find_by(item_id: params[:item][:reply_item_id])
-        Reply.create(reply_from: @item, reply_to: reply_to)
+        Reply.create(replier: @item, replied: reply_to)
       end
       if quote_to = Item.find_by(item_id: params[:item][:quote_item_id])
-        Quote.create(quote_from: @item, quote_to: quote_to)
+        Quote.create(quoter: @item, quoted: quote_to)
       end
       flash[:success] = '投稿しました。'
       redirect_to item_url(@item.item_id)
-      item = create_item_broadcast_format(@item)
+      #item = create_item_broadcast_format(@item)
       
-      from_url = 'https://amiverse.net'
-      to_url = 'https://mstdn.jp/inbox'
-      from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
-      to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
-      deliver(
-        body: create_note(item: @item),
-        name_id: @current_account.name_id,
-        private_key: @current_account.private_key,
-        to_url: to_url
-      )
-      ActionCable.server.broadcast('items_channel', serialize_item(@item))
+      #from_url = 'https://amiverse.net'
+      #to_url = 'https://mstdn.jp/inbox'
+      #from_url = params[:item][:from_url] unless params[:item][:from_url].empty?
+      #to_url = params[:item][:to_url] unless params[:item][:to_url].empty?
+      #deliver(
+      #  body: create_note(item: @item),
+      #  name_id: @current_account.name_id,
+      #  private_key: @current_account.private_key,
+      #  to_url: to_url
+      #)
+      #ActionCable.server.broadcast('items_channel', serialize_item(@item))
     else
       flash[:success] = '失敗しました。'
       render :new

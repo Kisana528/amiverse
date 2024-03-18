@@ -9,7 +9,7 @@ class CreateSessions < ActiveRecord::Migration[7.0]
       t.string :uuid, null: false, default: ''
       t.string :session_digest, null: false
       t.boolean :deleted, null: false, default: false
-
+      t.datetime :deleted_at
       t.timestamps
     end
     add_index :sessions, [:uuid], unique: true

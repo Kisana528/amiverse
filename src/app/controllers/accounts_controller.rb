@@ -8,8 +8,8 @@ class AccountsController < ApplicationController
   def follow
     account = find_account_by_nid(params[:name_id])
     this_follow_params = {
-      follow_to_id: account.account_id,
-      follow_from_id: @current_account.account_id
+      followed: account,
+      follower: @current_account
     }
     if account.outsider
       if Follow.exists?(this_follow_params)

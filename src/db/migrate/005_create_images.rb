@@ -12,6 +12,7 @@ class CreateImages < ActiveRecord::Migration[7.0]
       t.json :local_group_visibility, null: false, default: []
       t.json :local_account_visibility, null: false, default: []
       t.boolean :deleted, null: false, default: false
+      t.datetime :deleted_at
       t.timestamps
     end
     add_index :images, [:image_id, :uuid], unique: true

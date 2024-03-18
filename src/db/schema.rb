@@ -10,13 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 17) do
+ActiveRecord::Schema[7.0].define(version: 93) do
   create_table "account_reaction_items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "reaction_id", null: false
     t.bigint "item_id", null: false
-    t.string "description", default: "", null: false
-    t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_account_reaction_items_on_account_id"
@@ -32,7 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.string "icon_id", default: "", null: false
     t.string "banner_id", default: "", null: false
     t.string "online_status", default: "", null: false
-    t.timestamp "last_online"
+    t.datetime "last_online"
     t.boolean "open_online_status", default: true, null: false
     t.boolean "authenticated", default: false, null: false
     t.boolean "public_visibility", default: true, null: false
@@ -48,11 +46,11 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.text "public_key", default: "", null: false
     t.text "private_key", default: "", null: false
     t.string "location", default: "", null: false
-    t.timestamp "birthday"
+    t.datetime "birthday"
     t.text "lang", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
-    t.integer "followers", default: 0, null: false
-    t.integer "following", default: 0, null: false
-    t.integer "items_count", default: 0, null: false
+    t.bigint "followers", default: 0, null: false
+    t.bigint "following", default: 0, null: false
+    t.bigint "items_count", default: 0, null: false
     t.text "pinned_items", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "nsfw", default: false, null: false
     t.boolean "explorable", default: false, null: false
@@ -67,6 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.string "password_digest"
     t.bigint "storage_size", default: 0, null: false
     t.bigint "storage_max_size", default: 1000000000, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id", "name_id", "fediverse_id"], name: "index_accounts_on_account_id_and_name_id_and_fediverse_id", unique: true
@@ -172,12 +171,14 @@ ActiveRecord::Schema[7.0].define(version: 17) do
   end
 
   create_table "follows", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "follow_to_id", default: "", null: false
-    t.string "follow_from_id", default: "", null: false
-    t.string "uid", default: "", null: false
+    t.bigint "followed", null: false
+    t.bigint "follower", null: false
+    t.string "uuid", default: "", null: false
     t.boolean "accepted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["followed"], name: "fk_rails_7b60022071"
+    t.index ["follower"], name: "fk_rails_2712f8dae3"
   end
 
   create_table "images", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -192,6 +193,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.text "local_group_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "local_account_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_images_on_account_id"
@@ -206,8 +208,9 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.string "invitation_code", null: false
     t.integer "uses", default: 0, null: false
     t.integer "max_uses", default: 1, null: false
-    t.timestamp "expires_at"
+    t.datetime "expires_at"
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_invitations_on_account_id"
@@ -219,6 +222,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.bigint "image_id", null: false
     t.string "description", default: "", null: false
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["image_id"], name: "index_item_images_on_image_id"
@@ -230,6 +234,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.bigint "video_id", null: false
     t.string "description", default: "", null: false
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_item_videos_on_item_id"
@@ -251,6 +256,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.string "cw_message", default: "", null: false
     t.text "version", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_items_on_account_id"
@@ -260,10 +266,13 @@ ActiveRecord::Schema[7.0].define(version: 17) do
   end
 
   create_table "quotes", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "quote_to_id", default: "", null: false
-    t.string "quote_from_id", default: "", null: false
+    t.bigint "quoted", null: false
+    t.bigint "quoter", null: false
+    t.string "uuid", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["quoted"], name: "fk_rails_87ced17c39"
+    t.index ["quoter"], name: "fk_rails_616dc58d04"
   end
 
   create_table "reactions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -274,16 +283,20 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.string "description", default: "", null: false
     t.string "category", default: "", null: false
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_reactions_on_account_id"
   end
 
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "reply_to_id", default: "", null: false
-    t.string "reply_from_id", default: "", null: false
+    t.bigint "replied", null: false
+    t.bigint "replier", null: false
+    t.string "uuid", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["replied"], name: "fk_rails_7f82de0917"
+    t.index ["replier"], name: "fk_rails_2001645403"
   end
 
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -295,6 +308,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.string "uuid", default: "", null: false
     t.string "session_digest", null: false
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_sessions_on_account_id"
@@ -313,6 +327,7 @@ ActiveRecord::Schema[7.0].define(version: 17) do
     t.text "local_group_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "local_account_visibility", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_videos_on_account_id"
@@ -326,6 +341,8 @@ ActiveRecord::Schema[7.0].define(version: 17) do
   add_foreign_key "account_reaction_items", "reactions"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "follows", "accounts", column: "followed"
+  add_foreign_key "follows", "accounts", column: "follower"
   add_foreign_key "images", "accounts"
   add_foreign_key "invitations", "accounts"
   add_foreign_key "item_images", "images"
@@ -333,7 +350,11 @@ ActiveRecord::Schema[7.0].define(version: 17) do
   add_foreign_key "item_videos", "items"
   add_foreign_key "item_videos", "videos"
   add_foreign_key "items", "accounts"
+  add_foreign_key "quotes", "items", column: "quoted"
+  add_foreign_key "quotes", "items", column: "quoter"
   add_foreign_key "reactions", "accounts"
+  add_foreign_key "replies", "items", column: "replied"
+  add_foreign_key "replies", "items", column: "replier"
   add_foreign_key "sessions", "accounts"
   add_foreign_key "videos", "accounts"
 end

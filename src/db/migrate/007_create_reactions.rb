@@ -8,6 +8,7 @@ class CreateReactions < ActiveRecord::Migration[7.0]
       t.string :description, null: false, default: ''
       t.string :category, null: false, default: ''
       t.boolean :deleted, null: false, default: false
+      t.datetime :deleted_at
       t.timestamps
     end
   end

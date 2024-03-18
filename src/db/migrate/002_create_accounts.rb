@@ -8,7 +8,7 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.string :icon_id, null: false, default: ''
       t.string :banner_id, null: false, default: ''
       t.string :online_status, null: false, default: ''
-      t.timestamp :last_online
+      t.datetime :last_online
       t.boolean :open_online_status, null: false, default: true
       t.boolean :authenticated, null: false, default: false
       t.boolean :public_visibility, null: false, default: true
@@ -24,11 +24,11 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.text :public_key, null: false, default: ''
       t.text :private_key, null: false, default: ''
       t.string :location, null: false, default: ''
-      t.timestamp :birthday
+      t.datetime :birthday
       t.json :lang, null: false, default: []
-      t.integer :followers, null: false, default: 0
-      t.integer :following, null: false, default: 0
-      t.integer :items_count, null: false, default: 0
+      t.bigint :followers, null: false, default: 0
+      t.bigint :following, null: false, default: 0
+      t.bigint :items_count, null: false, default: 0
       t.json :pinned_items, null: false, default: []
       t.boolean :nsfw, null: false, default: false
       t.boolean :explorable, null: false, default: false
@@ -43,6 +43,7 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.string :password_digest
       t.bigint :storage_size, null: false, default: 0
       t.bigint :storage_max_size, null: false, default: 1000000000
+      t.datetime :deleted_at
       t.timestamps
     end
     add_index :accounts, [:account_id, :name_id, :fediverse_id], unique: true
