@@ -1,9 +1,11 @@
-<% provide(:title, 'コンテンツ - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - コンテンツ') %>
+<% provide(:header_text, '設定 - コンテンツ') %>
 <% provide(:selected_settings_menu, 'contents') %>
+
 <% content_for :settings_content do %>
-  <div>コンテンツ</div>
   <div>アイテム</div>
   <div>リアクション</div>
-  <div>メディア</div>
+  <div>絵文字</div>
 <% end %>
 <%= render 'settings/listed' %>

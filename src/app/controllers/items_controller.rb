@@ -20,30 +20,40 @@ class ItemsController < ApplicationController
   end
   def create
     @item = Item.new(item_params)
-    @item.account_id = @current_account.id
-    @item.item_id = unique_random_id(Item, 'item_id')
-    @item.uuid = SecureRandom.uuid
-    @item.item_type = 'plane'
+    @item.account = @current_account
+    @item.aid = unique_random_id(Item, 'aid')
+    @item.kind = 'plane'
     if @item.save
       if params[:item][:selected_images].present?
         params[:item][:selected_images].each do |image_id|
           if image = Image.find_by(image_id: image_id)
             this_item_image_params = {
-              image_id: image.id,
-              item_id: @item.id
+              image: image,
+              item: @item
             }
             ItemImage.create(this_item_image_params)
           end
         end
       end
-      if reply_to = Item.find_by(item_id: params[:item][:reply_item_id])
+      if params[:item][:selected_videos].present?
+        params[:item][:selected_videos].each do |video_id|
+          if video = Video.find_by(video_id: video_id)
+            this_item_video_params = {
+              video: video,
+              item: @item
+            }
+            ItemVideo.create(this_item_video_params)
+          end
+        end
+      end
+      if reply_to = Item.find_by(aid: params[:item][:reply_aid])
         Reply.create(replier: @item, replied: reply_to)
       end
-      if quote_to = Item.find_by(item_id: params[:item][:quote_item_id])
+      if quote_to = Item.find_by(aid: params[:item][:quote_aid])
         Quote.create(quoter: @item, quoted: quote_to)
       end
       flash[:success] = '投稿しました。'
-      redirect_to item_url(@item.item_id)
+      redirect_to item_url(@item.aid)
       #item = create_item_broadcast_format(@item)
       
       #from_url = 'https://amiverse.net'
@@ -65,7 +75,7 @@ class ItemsController < ApplicationController
   def update
     if @item.update(item_params)
       flash[:success] = '投稿を編集しました。'
-      redirect_to item_url(@item.item_id)
+      redirect_to item_url(@item.aid)
     else
       render :edit
     end
@@ -80,7 +90,7 @@ class ItemsController < ApplicationController
   end
   private
     def set_item
-      @item = Item.find_by(item_id: params[:item_id])
+      @item = Item.where('BINARY aid = ?', params[:aid]).first
     end
     def item_params
       params.require(:item).permit(:content,

@@ -1,85 +1,105 @@
-<% provide(:title, 'アカウント一覧') %>
-<h1>アカウント一覧</h1>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:header_text, 'アカウント') %>
+<% provide(:title, 'アカウント') %>
+
 <div style="overflow-y:scroll;">
   <table>
     <tr>
       <th>ID</th>
       <th>操作</th>
-      <th>account_id</th>
+      <th>aid</th>
       <th>name</th>
       <th>name_id</th>
-      <th>online_status</th>
+      <th>fediverse_id</th>
+      <th>icon_id</th>
+      <th>banner_id</th>
+      <th>followers_counter</th>
+      <th>following_counter</th>
+      <th>items_counter</th>
+      <th>reactions_counter</th>
+      <th>pinned_items</th>
+      <th>explorable</th>
+      <th>meta</th>
+      <th>cache</th>
+      <th>achievements</th>
+      <th>online</th>
       <th>last_online</th>
-      <th>open_online_status</th>
-      <th>authenticated</th>
-      <th>public_visibility</th>
-      <th>local_group_visibility</th>
-      <th>local_account_visibility</th>
-      <th>role</th>
+      <th>invisible_online</th>
+      <th>foreigner</th>
       <th>activated</th>
       <th>administrator</th>
       <th>moderator</th>
-      <th>email</th>
-      <th>bio</th>
+      <th>bot</th>
+      <th>commercial</th>
+      <th>kind</th>
+      <th>discoverable</th>
+      <th>manually_approves_followers</th>
+      <th>summary</th>
+      <th>public_key</th>
+      <th>private_key</th>
       <th>location</th>
       <th>birthday</th>
-      <th>lang</th>
-      <th>followers</th>
-      <th>following</th>
-      <th>items_count</th>
-      <th>pinned_items</th>
-      <th>nsfw</th>
-      <th>explorable</th>
-      <th>profile</th>
-      <th>achievements</th>
+      <th>languages</th>
+      <th>email</th>
       <th>locked</th>
       <th>silenced</th>
       <th>suspended</th>
       <th>frozen</th>
-      <th>deleted</th>
       <th>settings</th>
-      <th>created_at</th>
-      <th>updated_at</th>
+      <th>storage_size</th>
+      <th>storage_max_size</th>
+      <th>password_digest</th>
+      <th>deleted</th>
+      <th>deleted_at</th>
     </tr>
     <% @accounts.each do |a| %>
       <tr>
         <td><%= a.id %></td>
-        <td><%= link_to '詳細', admin_account_path(a.name_id) %></td>
-        <td><%= a.account_id %></td>
+        <td><%= link_to '詳細', edit_admin_account_path(a.aid) %></td>
+        <td><%= a.aid %></td>
         <td><%= a.name %></td>
         <td><%= a.name_id %></td>
-        <td><%= a.online_status %></td>
+        <td><%= a.fediverse_id %></td>
+        <td><%= a.icon_id %></td>
+        <td><%= a.banner_id %></td>
+        <td><%= a.followers_counter %></td>
+        <td><%= a.following_counter %></td>
+        <td><%= a.items_counter %></td>
+        <td><%= a.reactions_counter %></td>
+        <td><%= a.pinned_items %></td>
+        <td><%= a.explorable %></td>
+        <td><%= a.meta %></td>
+        <td><%= a.cache %></td>
+        <td><%= a.achievements %></td>
+        <td><%= a.online %></td>
         <td><%= a.last_online %></td>
-        <td><%= a.open_online_status %></td>
-        <td><%= a.authenticated %></td>
-        <td><%= a.public_visibility %></td>
-        <td><%= a.local_group_visibility %></td>
-        <td><%= a.local_account_visibility %></td>
-        <td><%= a.role %></td>
+        <td><%= a.invisible_online %></td>
+        <td><%= a.foreigner %></td>
         <td><%= a.activated %></td>
         <td><%= a.administrator %></td>
         <td><%= a.moderator %></td>
-        <td><%= a.email %></td>
-        <td><%= a.bio %></td>
+        <td><%= a.bot %></td>
+        <td><%= a.commercial %></td>
+        <td><%= a.kind %></td>
+        <td><%= a.discoverable %></td>
+        <td><%= a.manually_approves_followers %></td>
+        <td><%= a.summary %></td>
+        <td><%= a.public_key %></td>
+        <td><%= a.private_key %></td>
         <td><%= a.location %></td>
         <td><%= a.birthday %></td>
-        <td><%= a.lang %></td>
-        <td><%= a.followers %></td>
-        <td><%= a.following %></td>
-        <td><%= a.items_count %></td>
-        <td><%= a.pinned_items %></td>
-        <td><%= a.nsfw %></td>
-        <td><%= a.explorable %></td>
-        <td><%= a.profile %></td>
-        <td><%= a.achievements %></td>
+        <td><%= a.languages %></td>
+        <td><%= a.email %></td>
         <td><%= a.locked %></td>
         <td><%= a.silenced %></td>
         <td><%= a.suspended %></td>
         <td><%= a.frozen %></td>
-        <td><%= a.deleted %></td>
         <td><%= a.settings %></td>
-        <td><%= a.created_at %></td>
-        <td><%= a.updated_at %></td>
+        <td><%= a.storage_size %></td>
+        <td><%= a.storage_max_size %></td>
+        <td><%= a.password_digest %></td>
+        <td><%= a.deleted %></td>
+        <td><%= a.deleted_at %></td>
       </tr>
     <% end %>
   </table>

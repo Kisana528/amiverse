@@ -1,14 +1,10 @@
 <% provide(:title, 'サインアップ') %>
 <% provide(:main_header_text, 'サインアップ') %>
 <% content_for :main_content do %>
-  <div class="signup-p1-container">
-    <%= form_with url: signup_profile_path, data: { turbo: false } do |f| %>
-      <div class="text-field-group">
-        <%= f.text_field :invitation_code, class: 'text-field-field', placeholder: '招待コード' %>
-        <%= f.label :invitation_code, '招待コード', class: 'text-field-label' %>
-      </div>
-      <%= f.submit "次へ" %>
-    <% end %>
-  </div>
+  <%= form_with url: signup_entry_path, data: { turbo: false } do |f| %>
+    <%= f.text_field :code, class: '' %>
+    <%= f.label :code, '招待コード', class: '' %>
+    <%= f.submit '次へ' %>
+  <% end %>
 <% end %>
 <%= render 'layouts/default' %>

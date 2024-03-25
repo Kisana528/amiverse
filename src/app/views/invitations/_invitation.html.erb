@@ -1,0 +1,16 @@
+<td><%= i.id %></td>
+<td>
+  <%= link_to '編集', edit_invitation_path(code: i.code) %>
+  <%= button_to '削除', invitation_path(code: i.code), method: :delete %>
+</td>
+<td><%= i.account_id %></td>
+<td><%= i.uuid %></td>
+<td><%= i.name %></td>
+<td><%= i.code %></td>
+<td><%= i.uses %></td>
+<td><%= i.max_uses %></td>
+<td><%= i.expires_at %></td>
+<td><%= i.deleted %></td>
+<td><%= i.deleted_at %></td>
+<td><%= i.created_at %></td>
+<td><%= i.updated_at %></td>

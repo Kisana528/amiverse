@@ -1,0 +1,8 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'グループ') %>
+<% provide(:header_text, 'グループ') %>
+
+<% @groups.each do |group| %>
+  <%= render 'group', group: group %>
+<% end %>
+<%= link_to('new', new_group_path) %>

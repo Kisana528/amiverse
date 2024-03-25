@@ -1,4 +1,7 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:header_text, 'セッション') %>
 <% provide(:title, 'セッション') %>
+
 <h1>セッション</h1>
 <div style="overflow-y:scroll;">
   <table>
@@ -7,25 +10,27 @@
       <th>詳細</th>
       <th>account_id</th>
       <th>name</th>
-      <th>description</th>
       <th>remote_ip</th>
       <th>user_agent</th>
       <th>uuid</th>
+      <th>session_digest</th>
       <th>deleted</th>
+      <th>deleted_at</th>
       <th>created_at</th>
       <th>updated_at</th>
     </tr>
     <% @sessions.each do |s| %>
       <tr>
         <td><%= s.id %></td>
-        <td><%= link_to '詳細', admin_show_session_path(s.id) %></td>
+        <td><%= link_to '詳細', edit_admin_session_path(s.uuid) %></td>
         <td><%= s.account_id %></td>
         <td><%= s.name %></td>
-        <td><%= s.description %></td>
         <td><%= s.remote_ip %></td>
         <td><%= s.user_agent %></td>
         <td><%= s.uuid %></td>
+        <td><%= s.session_digest %></td>
         <td><%= s.deleted %></td>
+        <td><%= s.deleted_at %></td>
         <td><%= s.created_at %></td>
         <td><%= s.updated_at %></td>
       </tr>

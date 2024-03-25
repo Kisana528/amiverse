@@ -1,22 +1,21 @@
+<% provide(:layout_type, 'header_text') %>
 <% provide(:title, 'ログイン') %>
-<% provide(:main_header_text, 'ログイン') %>
-<% content_for :main_content do %>
-  <div class="sessions-new-container">
-    <%= form_with(scope: :session, url: create_session_path, data: { turbo: false }) do |f| %>
-      <div class="text-field-sizing">
-        <div class="text-field-group">
-          <%= f.text_field :name_id, class: 'text-field-field', placeholder: ' ' %>
-          <%= f.label :name_id, 'ID', class: 'text-field-label' %>
-        </div>
-        <div class="text-field-group">
-          <%= f.password_field :password, class: 'text-field-field', placeholder: ' ' %>
-          <%= f.label :password, 'パスワード', class: 'text-field-label' %>
-        </div>
+<% provide(:header_text, 'ログイン') %>
+
+<div class="sessions-new-container">
+  <%= form_with(scope: :session, url: create_session_path, data: { turbo: false }) do |f| %>
+    <div class="text-field-sizing">
+      <div class="text-field-group">
+        <%= f.text_field :name_id, class: 'text-field-field', placeholder: ' ' %>
+        <%= f.label :name_id, 'ID', class: 'text-field-label' %>
       </div>
-      <%= f.submit "ログイン" %>
-    <% end %>
-    アカウントをお持ちでないですか？
-    <%= link_to "サインアップ", signup_path %>
-  </div>
-<% end %>
-<%= render 'layouts/default' %>
+      <div class="text-field-group">
+        <%= f.password_field :password, class: 'text-field-field', placeholder: ' ' %>
+        <%= f.label :password, 'パスワード', class: 'text-field-label' %>
+      </div>
+    </div>
+    <%= f.submit "ログイン" %>
+  <% end %>
+  アカウントをお持ちでないですか？
+  <%= link_to "サインアップ", signup_path %>
+</div>

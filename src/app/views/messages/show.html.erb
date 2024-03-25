@@ -1,0 +1,8 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'メッセージ - ' + @group.name) %>
+<% provide(:header_text, 'メッセージ - ' + @group.name) %>
+
+<% @messages.each do |message| %>
+  <%= render 'message', message: message %>
+<% end %>
+<%= render('form') %>

@@ -1,19 +1,56 @@
-<%= form_with model: @account, url: admin_update_account_path do |f| %>
-  <%= render 'shared/account_error_messages' %>
-  <%= f.label :icon, 'アイコン' %>
-  <%= f.file_field :icon %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:header_text, 'アカウント - 編集') %>
+<% provide(:title, 'アカウント - 編集') %>
+
+<%= form_with model: @account, url: admin_account_path(@account.aid) do |f| %>
+  <%= f.label :name, 'name', class: '' %>
+  <%= f.text_field :name, class: '' %>
   <br/>
-  <%= f.label :banner, 'バナー' %>
-  <%= f.file_field :banner %>
+  <%= f.label :name_id, 'name_id', class: '' %>
+  <%= f.text_field :name_id, class: '' %>
   <br/>
-  <%= f.label :authenticated, 'authenticated' %>
-  <%= f.select :authenticated, [['F',false],['T',true]] %>
+  <%= f.label :fediverse_id, 'fediverse_id', class: '' %>
+  <%= f.text_field :fediverse_id, class: '' %>
   <br/>
-  <%= f.label :public_visibility, 'public_visibility' %>
-  <%= f.select :public_visibility, [['F',false],['T',true]] %>
+  <%= f.label :icon_id, 'icon_id', class: '' %>
+  <%= f.text_field :icon_id, class: '' %>
   <br/>
-  <%= f.label :activated, 'activated' %>
-  <%= f.select :activated, [['F',false],['T',true]] %>
+  <%= f.label :banner_id, 'banner_id', class: '' %>
+  <%= f.text_field :banner_id, class: '' %>
+  <br/>
+
+
+
+
+  <%= f.label :pinned_items, 'pinned_items', class: '' %>
+  <%= f.text_area :pinned_items, class: '' %>
+  <br/>
+  <%= f.label :explorable, 'explorable' %>
+  <%= f.select :explorable, [['F',false],['T',true]] %>
+  <br/>
+  <%= f.label :meta, 'meta', class: '' %>
+  <%= f.text_area :meta, class: '' %>
+  <br/>
+  <%= f.label :cache, 'cache', class: '' %>
+  <%= f.text_area :cache, class: '' %>
+  <br/>
+  <%= f.label :achievements, 'achievements', class: '' %>
+  <%= f.text_area :achievements, class: '' %>
+  <br/>
+  <%= f.label :online, 'online' %>
+  <%= f.select :online, [['F',false],['T',true]] %>
+  <br/>
+  <%= f.label :last_online, 'last_online' %>
+  <%= f.datetime_field :last_online %>
+  <br/>
+  <%= f.label :invisible_online, 'invisible_online' %>
+  <%= f.select :invisible_online, [['F',false],['T',true]] %>
+  <br/>
+  <%= f.label :foreigner, 'foreigner' %>
+  <%= f.select :foreigner, [['F',false],['T',true]] %>
+  <br/>
+  <%= f.label :activated, 'activated', class: '' %>
+  <%= f.text_area :activated, class: '' %>
   <br/>
   <%= f.label :administrator, 'administrator' %>
   <%= f.select :administrator, [['F',false],['T',true]] %>
@@ -21,11 +58,16 @@
   <%= f.label :moderator, 'moderator' %>
   <%= f.select :moderator, [['F',false],['T',true]] %>
   <br/>
-  <%= f.label :nsfw, 'nsfw' %>
-  <%= f.select :nsfw, [['F',false],['T',true]] %>
+  <%= f.label :bot, 'bot' %>
+  <%= f.select :bot, [['F',false],['T',true]] %>
   <br/>
-  <%= f.label :explorable, 'explorable' %>
-  <%= f.select :explorable, [['F',false],['T',true]] %>
+  <%= f.label :commercial, 'commercial' %>
+  <%= f.select :commercial, [['F',false],['T',true]] %>
+  <br/>
+
+
+  <%= f.label :discoverable, 'discoverable' %>
+  <%= f.select :discoverable, [['F',false],['T',true]] %>
   <br/>
   <%= f.label :locked, 'locked' %>
   <%= f.select :locked, [['F',false],['T',true]] %>
@@ -42,38 +84,14 @@
   <%= f.label :deleted, 'deleted' %>
   <%= f.select :deleted, [['F',false],['T',true]] %>
   <br/>
-  <div class="text-field-group">
-    <%= f.text_field :name, class: 'text-field-field', placeholder: '名前' %>
-    <%= f.label :name, '名前', class: 'text-field-label' %>
-  </div>
-  <br/>
-  <div class="text-field-group">
-    <%= f.text_field :name_id, class: 'text-field-field', placeholder: 'ID' %>
-    <%= f.label :name_id, 'ID', class: 'text-field-label' %>
-  </div>
-  <br/>
-  <div class="text-field-group">
-    <%= f.text_field :bio, class: 'text-field-field', placeholder: '紹介' %>
-    <%= f.label :bio, '紹介', class: 'text-field-label' %>
-  </div>
-  <br/>
-  <div class="text-field-group">
-    <%= f.text_field :location, class: 'text-field-field', placeholder: '場所' %>
-    <%= f.label :location, '場所', class: 'text-field-label' %>
-  </div>
-  <br/>
-  <%= f.label :birthday, '誕生日' %>
+  <%= f.label :birthday, 'birthday' %>
   <%= f.datetime_field :birthday %>
   <br/>
-  <div class="text-field-group">
-    <%= f.password_field :password, class: 'text-field-field', placeholder: 'パスワード' %>
-    <%= f.label :password, 'パスワード', class: 'text-field-label' %>
-  </div>
+  <%= f.label :password, 'パスワード', class: '' %>
+  <%= f.password_field :password, class: '' %>
   <br/>
-  <div class="text-field-group">
-    <%= f.password_field :password_confirmation, class: 'text-field-field', placeholder: 'パスワード確認' %>
-    <%= f.label :password_confirmation, 'パスワード確認', class: 'text-field-label' %>
-  </div>
+  <%= f.label :password_confirmation, 'パスワード確認', class: '' %>
+  <%= f.password_field :password_confirmation, class: '' %>
   <br/>
   <%= f.submit '更新' %>
 <% end %>

@@ -1,0 +1,23 @@
+<div>
+  <h2><%= group.name %></h2>
+  <span>id:<%= link_to(group.aid, group_path(group.aid)) %></span>
+  <div>
+    作成者:<%= group.account.name %><br />
+    説明:<%= group.description %><br />
+  </div>
+  <details>
+    <summary>メンバー(<%= group.accounts.count %>人)</summary>
+    <div class="">
+      一覧
+      <% group.accounts.each do |account| %>
+        <%= button_to account.name, group_remove_path(group.aid, account.aid), method: :post %>
+      <% end %>
+    </div>
+    <div class="">
+      追加する
+      <% Account.all.each do |account| %>
+        <%= button_to account.name, group_add_path(group.aid, account.aid), method: :post %>
+      <% end %>
+    </div>
+  </details>
+</div>

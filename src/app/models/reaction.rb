@@ -1,5 +1,5 @@
 class Reaction < ApplicationRecord
   belongs_to :account
-  has_many :account_reaction_items
-  has_many :items, through: :account_reaction_items
+  belongs_to :emoji
+  belongs_to :item
 end

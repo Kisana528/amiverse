@@ -1,0 +1,51 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'Home') %>
+<% provide(:header_text, 'Home') %>
+
+<div class='amiverse-index-container'>
+  <% if @current_account %>
+    <% if @current_account.administrator %>
+      <div class='amiverse-index-box'>
+      <div data-controller="hello">
+      </div>
+        ADMIN PAGE
+        <br />
+        <%= link_to '管理画面', admin_root_path %>
+        <br />
+        ストレージ容量(利用中/利用可能)
+        <%= @current_account.storage_size %>/<%= @current_account.storage_max_size %>
+      </div>
+    <% end %>
+    <div class='amiverse-index-box'>
+      <%= render "items/form", item: Item.new %>
+    </div>
+    <div id="items">
+      <% @items.each do |item| %>
+        <%= render 'items/item', item: item, reactions: @reactions %>
+      <% end %>
+      <%= link_to "次のページ", root_path(page: to_page(params[:page], 'next')) %>
+      <%= link_to "前のページ", root_path(page: to_page(params[:page], 'prev')) %>
+    </div>
+  <% else %>
+    <div class='amiverse-index-box'>
+      Amiverseにはフロントエンドアプリがあります。at
+      <br />
+      <a href='https://amiverse.net/'>amiverse.net</a>
+      <br />
+      このバックエンドアプリでは表示が簡素なものになっています。
+    </div>
+    <div class='amiverse-index-box'>
+      このサイトからご利用の場合。
+      <br />
+      <%= link_to 'ログイン', login_path %>
+      <br />
+      <%= link_to 'サインアップ', signup_path %>
+    </div>
+    <div class='amiverse-index-box'>
+      その他の情報
+      <ul>
+        <li><%= link_to 'リソース', resources_path %></li>
+      </ul>
+    </div>
+  <% end %>
+</div>

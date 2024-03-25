@@ -1,20 +1,16 @@
-<%= form_with model: @invitation, url: invitations_create_path do |f| %>
+<%= form_with model: @invitation, url: yield(:form_url), data: { turbo: false } do |f| %>
   <%= render 'shared/error_messages', instead: @invitation %>
   <br/>
-  <div class="text-field-group">
-    <%= f.text_field :name, class: 'text-field-field', placeholder: '名前' %>
-    <%= f.label :name, '名前', class: 'text-field-label' %>
-  </div>
+  <%= f.label :name, '名前', class: '' %>
+  <%= f.text_field :name, class: '' %>
   <br/>
-  <div class="text-field-group">
-    <%= f.text_field :invitation_code, class: 'text-field-field', placeholder: 'invitation_code' %>
-    <%= f.label :invitation_code, 'invitation_code', class: 'text-field-label' %>
-  </div>
+  <%= f.label :code, 'コード', class: '' %>
+  <%= f.text_field :code, class: '' %>
   <br/>
-  <%= f.label :max_uses, 'max_uses' %>
+  <%= f.label :max_uses, '使用回数上限' %>
   <%= f.number_field :max_uses %>
   <br/>
-  <%= f.label :expires_at, 'expires_at' %>
+  <%= f.label :expires_at, '期限' %>
   <%= f.datetime_field :expires_at %>
   <br/>
   <%= f.submit '作成' %>

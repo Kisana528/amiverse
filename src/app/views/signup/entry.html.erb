@@ -1,0 +1,30 @@
+<% provide(:title, 'サインアップ') %>
+<% provide(:main_header_text, 'サインアップ') %>
+<% content_for :main_content do %>
+    <%= form_with model: @account, url: signup_create_path, data: { turbo: false } do |f| %>
+      <%= render 'shared/error_messages', instead: @account %>
+      <%= f.label :name, '名前', class: '' %>
+      <%= f.text_field :name, class: '' %>
+      <br />
+      <%= f.label :name_id, '表示ID', class: '' %>
+      <%= f.text_field :name_id, class: '' %>
+      <br />
+      <%= f.label :summary, 'アカウント紹介文', class: '' %>
+      <%= f.text_area :summary, class: '' %>
+      <br />
+      <%= f.label :location, '場所', class: '' %>
+      <%= f.text_field :location, class: '' %>
+      <br />
+      <%= f.label :birthday, '誕生日' %>
+      <%= f.datetime_field :birthday %>
+      <br />
+      <%= f.label :password, 'パスワード', class: '' %>
+      <%= f.password_field :password, class: '' %>
+      <br />
+      <%= f.label :password_confirmation, 'パスワード確認', class: '' %>
+      <%= f.password_field :password_confirmation, class: '' %>
+      <br />
+      <%= f.submit '作成' %>
+    <% end %>
+<% end %>
+<%= render 'layouts/default' %>

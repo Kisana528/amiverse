@@ -1,9 +1,11 @@
-<% provide(:title, 'アクティビティ - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - アクティビティ') %>
+<% provide(:header_text, '設定 - アクティビティ') %>
 <% provide(:selected_settings_menu, 'activity') %>
+
 <% content_for :settings_content do %>
-  <div>アクティビティ</div>
   <div>フォロー</div>
   <div>フォロワー</div>
-  <div>申請</div>
+  <div>フォロー申請</div>
 <% end %>
 <%= render 'settings/listed' %>

@@ -1,8 +1,5 @@
 class ResourcesController < ApplicationController
   before_action :logged_in_account, only: [:page1]
-  def index
-    @items = paged_items(params[:page])
-  end
   def about
   end
   def info

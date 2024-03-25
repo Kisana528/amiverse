@@ -1,0 +1,19 @@
+<% provide(:title, '通知作成') %>
+<% content_for :main_content do %>
+  <h1>通知作成</h1>
+  <div>
+    <%= form_with model: @notification, url: create_notification_path do |form| %>
+      <%= render "shared/error_messages", instead: @notification %>
+      <%= form.label :name_id, style: "display: block" %>
+      <%= form.text_field :name_id %>
+      <%= form.label :kind, style: "display: block" %>
+      <%= form.text_field :kind %>
+      <%= form.label :object, style: "display: block" %>
+      <%= form.text_field :object %>
+      <%= form.label :message, style: "display: block" %>
+      <%= form.text_area :message %>
+      <%= form.submit %>
+    <% end %>
+  </div>
+<% end %>
+<%= render 'layouts/no_header' %>

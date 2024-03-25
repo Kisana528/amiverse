@@ -1,0 +1,35 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:header_text, 'セッション - 編集') %>
+<% provide(:title, 'セッション - 編集') %>
+
+  <%= form_with model: @session, url: admin_session_path(@session.uuid) do |f| %>
+  <%= f.label :account_id, 'account_id', class: '' %>
+  <%= f.text_field :account_id, class: '' %>
+  <br/>
+  <%= f.label :name, 'name', class: '' %>
+  <%= f.text_field :name, class: '' %>
+  <br/>
+  <%= f.label :remote_ip, 'remote_ip', class: '' %>
+  <%= f.text_field :remote_ip, class: '' %>
+  <br/>
+  <%= f.label :user_agent, 'user_agent', class: '' %>
+  <%= f.text_field :user_agent, class: '' %>
+  <br/>
+  <%= f.label :uuid, 'uuid', class: '' %>
+  <%= f.text_field :uuid, class: '' %>
+  <br/>
+  <%= f.label :deleted, 'deleted', class: '' %>
+  <%= f.text_field :deleted, class: '' %>
+  <br/>
+  <%= f.label :deleted_at, 'deleted_at' %>
+  <%= f.datetime_field :deleted_at %>
+  <br/>
+  <%= f.label :created_at, 'created_at' %>
+  <%= f.datetime_field :birtcreated_athday %>
+  <br/>
+  <%= f.label :updated_at, 'updated_at' %>
+  <%= f.datetime_field :updated_at %>
+  <br/>
+  <%= f.submit '更新' %>
+<% end %>
+</div>

@@ -10,21 +10,122 @@ Rails.application.routes.draw do
   # action cable
   mount ActionCable.server => '/cable'
 
-  # resource
-  root 'resources#index'
-  get 'about' => 'resources#about'
-  get 'info' => 'resources#info'
-  get 'help' => 'resources#help'
-  get 'privacy_policy' => 'resources#privacy_policy'
-  get 'disclaimer' => 'resources#disclaimer'
-  get 'page1' => 'resources#page1'
-  get 'sitemap' => 'resources#sitemap'
-  get 'tos' => 'resources#tos'
-  get 'feedback' => 'resources#feedback'
-  get 'help' => 'resources#help'
-  get 'resources' => 'resources#resources'
-  get 'release_notes' => 'resources#release_notes'
-  get 'blog' => 'resources#blog'
+  root 'timelines#index'
+  
+  # discovery
+  get 'discovery' => 'discovery#index'
+
+  # dashboard
+  get 'dashboard' => 'dashboard#index'
+
+  # timeline
+  get 'tl' => 'timelines#tl'
+  get 'tl/follow' => 'timelines#follow'
+  get 'tl/current' => 'timelines#current'
+  get 'tl/group/:group_aid' => 'timelines#group'
+
+  # account
+  get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /[A-Za-z0-9\-_\.@]*/ }
+  get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon', constraints: { name_id: /.*/ }
+  get '@:name_id/banner' => 'accounts#show_banner', as: 'show_banner', constraints: { name_id: /.*/ }
+  post '@:name_id/follow' => 'accounts#follow', as: 'follow', constraints: { name_id: /.*/ }
+  patch '@:name_id/upate' => 'accounts#update', as: 'update_account'
+
+  # item
+  get 'items' => 'items#index'
+  get 'items/new' => 'items#new', as: 'new_item'
+  post 'items/create' => 'items#create', as: 'create_item'
+  get 'items/:aid' => 'items#show', as: 'item'
+  get 'items/:aid/edit' => 'items#edit', as: 'edit_item'
+  patch 'items/:aid/update' => 'items#update', as: 'update_item'
+  delete 'items/:aid/destroy' => 'items#destroy', as: 'destroy_item'
+
+  # reaction
+  post 'react/:item_id/:emoji_id' => 'reactions#react', as: 'react'
+
+  # storage
+  get 'storage' => 'storage#index'
+
+  # image
+  get 'storage/images' => 'storage#images', as: 'images'
+  get 'storage/images/new' => 'storage#new_image', as: 'new_image'
+  post 'storage/images/create' => 'storage#create_image', as: 'create_image'
+  get 'storage/images/:image_id' => 'storage#show_image', as: 'image'
+  get 'storage/images/:image_id/edit' => 'storage#edit_image', as: 'edit_image'
+  patch 'storage/images/:image_id/update' => 'storage#update_image', as: 'update_image'
+  delete 'storage/images/:image_id/destroy' => 'storage#destroy_image', as: 'destroy_image'
+
+  # video
+  get 'storage/videos' => 'storage#videos', as: 'videos'
+  get 'storage/videos' => 'storage#new_video', as: 'new_video'
+  post 'storage/videos' => 'storage#create_video', as: 'create_video'
+  get 'storage/videos/:video_id' => 'storage#show_video', as: 'video'
+  get 'storage/videos/:video_id/edit' => 'storage#edit_video', as: 'edit_video'
+  patch 'storage/videos/:video_id/update' => 'storage#update_video', as: 'update_video'
+  delete 'storage/videos/:video_id/destroy' => 'storage#destroy_video', as: 'destroy_video'
+
+  # notifications
+  get 'notifications' => 'notifications#index'
+  get 'notifications/new' => 'notifications#new', as: 'new_notification'
+  post 'notifications/create' => 'notifications#create', as: 'create_notification'
+
+  # message
+  get 'messages' => 'messages#index'
+  get 'messages/:group_aid' => 'messages#show', as: 'message'
+  post 'message/:group_aid/create' => 'messages#create', as: 'create_message'
+
+  # group
+  get 'groups' => 'groups#index'
+  get 'groups/new' => 'groups#new', as: 'new_group'
+  post 'groups/create' => 'groups#create', as: 'create_group'
+  get 'groups/:aid' => 'groups#show', as: 'group'
+  post 'groups/:group_aid/add/:account_aid' => 'groups#group_add', as: 'group_add'
+  post 'groups/:group_aid/remove/:account_aid' => 'groups#group_remove', as: 'group_remove'
+
+  # emoji
+  get 'emojis' => 'emojis#index'
+  get 'emojis/new' => 'emojis#new', as: 'new_emoji'
+  post 'emojis/create' => 'emojis#create', as: 'create_emoji'
+  get 'emojis/:aid' => 'emojis#show', as: 'emoji'
+  get 'emojis/:aid/edit' => 'emojis#edit', as: 'edit_emoji'
+  patch 'emojis/:aid/update' => 'emojis#update', as: 'update_emoji'
+  delete 'emojis/:aid/destroy' => 'emojis#destroy', as: 'destroy_emoji'
+
+  # tag
+  get 'tags' => 'tags#index'
+  get 'tags/new' => 'tags#new', as: 'new_tag'
+  post 'tags/create' => 'tags#create', as: 'create_tag'
+  get 'tags/:aid' => 'tags#show', as: 'tag'
+  get 'tags/:aid/edit' => 'tags#edit', as: 'edit_tag'
+  patch 'tags/:aid/update' => 'tags#update', as: 'update_tag'
+  delete 'tags/:aid/destroy' => 'tags#destroy', as: 'destroy_tag'
+
+  # list
+
+  # wallet
+
+  # a_shop
+
+  # product
+
+  # map
+
+  # world
+
+  # application
+
+  # subscription
+
+  # signup
+  get 'signup' => 'signup#index'
+  get 'signup/check' => 'signup#check'
+  post 'signup/entry' => 'signup#entry'
+  post 'signup/create' => 'signup#create'
+
+  # session
+  get 'login' => 'sessions#new'
+  post 'login' => 'sessions#create', as: 'create_session'
+  delete 'logout' => 'sessions#logout'
 
   # setting
   get 'settings' => 'settings#index'
@@ -40,91 +141,35 @@ Rails.application.routes.draw do
   get 'settings/bills_and_payments' => 'settings#bills_and_payments'
   get 'settings/others' => 'settings#others'
 
-  # account
-  get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /[A-Za-z0-9\-_\.@]*/ }
-  get '@:name_id/icon' => 'accounts#show_icon', as: 'show_icon', constraints: { name_id: /.*/ }
-  get '@:name_id/banner' => 'accounts#show_banner', as: 'show_banner', constraints: { name_id: /.*/ }
-  post '@:name_id/follow' => 'accounts#follow', as: 'follow', constraints: { name_id: /.*/ }
-  get '@:name_id/edit' => 'accounts#edit', as: 'edit_account'
-  patch '@:name_id/update' => 'accounts#update', as: 'update_account'
-  get '@:name_id/password_edit' => 'accounts#password_edit', as: 'password_edit_account'
-  patch '@:name_id/password_update' => 'accounts#password_update', as: 'password_update_account'
-  delete '@:name_id' => 'accounts#destroy'
-
-  # signup
-  get 'signup' => 'signup#index'
-  get 'signup/invitation' => 'signup#check'
-  post 'signup/profile' => 'signup#new'
-  post 'signup/create' => 'signup#create'
-  post 'signup/create_admin' => 'signup#create_admin'
-
-  # session
-  get 'sessions' => 'sessions#index'
-  get 'login' => 'sessions#new'
-  post 'login' => 'sessions#create', as: 'create_session'
-  delete 'logout' => 'sessions#logout'
-  delete 'sessions/delete' => 'sessions#delete'
-
-  # invitation
-  get 'invitations' => 'invitations#index'
-  get 'invitations/new' => 'invitations#new', as: 'new_invitation'
-  post 'invitations/create' => 'invitations#create'
-  get 'invitations/:invitation_code' => 'invitations#show', as: 'invitation'
-  get 'invitations/:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
-  patch 'invitations/:invitation_code/update' => 'invitations#update', as: 'update_invitation'
-  delete 'invitations/:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
-
-  # item
-  resources :items, param: 'item_id'
-
-  # storage
-  get 'storage' => 'storage#index'
-  # img
-  get 'storage/images' => 'storage#images'
-  get 'storage/images/new' => 'storage#new_image'
-  post 'storage/images/create' => 'storage#create_image'
-  get 'storage/images/:image_id' => 'storage#show_image', as: 'show_image'
-  # vdo
-  get 'storage/videos' => 'storage#videos'
-  get 'storage/videos/new' => 'storage#new_video'
-  post 'storage/videos/create' => 'storage#create_video'
-  get 'storage/videos/:video_id' => 'storage#show_video', as: 'show_video'
-
-  # reaction
-  get 'reactions' => 'reactions#index'
-  post 'reactions' => 'reactions#create'
-  get 'reactions/new' => 'reactions#new'
-  post 'react/:item_id/:reaction_id' => 'reactions#react', as: 'react'
+  # resource
+  get 'resources' => 'resources#index'
+  get 'about' => 'resources#about'
+  get 'info' => 'resources#info'
+  get 'help' => 'resources#help'
+  get 'privacy_policy' => 'resources#privacy_policy'
+  get 'disclaimer' => 'resources#disclaimer'
+  get 'page1' => 'resources#page1'
+  get 'sitemap' => 'resources#sitemap'
+  get 'tos' => 'resources#tos'
+  get 'feedback' => 'resources#feedback'
+  get 'help' => 'resources#help'
+  get 'release_notes' => 'resources#release_notes'
+  get 'blog' => 'resources#blog'
 
   # administorator
   namespace :admin do
 
     # analytics
-    root 'application#index'
+    root 'dashboard#index'
 
     # account
-    get 'accounts' => 'accounts#index'
-    get '@:name_id' => 'accounts#show', as: 'account', constraints: { name_id: /.*/ }
-    get '@:name_id/edit' => 'accounts#edit', as: 'edit_account', constraints: { name_id: /.*/ }
-    patch '@:name_id/update' => 'accounts#update', as: 'update_account', constraints: { name_id: /.*/ }
-    
-    get '@:name_id/generate_key' => 'accounts#generate_key', as: 'generate_key_account', constraints: { name_id: /.*/ }
-
-    # invitation
-    get 'invitations' => 'invitations#index'
-    get 'invitations/new' => 'invitations#new', as: 'new_invitation'
-    post 'invitations/create' => 'invitations#create', as: 'create_invitation'
-    get 'invitations/:invitation_code' => 'invitations#show', as: 'invitation'
-    get 'invitations/:invitation_code/edit' => 'invitations#edit', as: 'edit_invitation'
-    patch 'invitations/:invitation_code/update' => 'invitations#update', as: 'update_invitation'
-    delete 'invitations/:invitation_code/destroy' => 'invitations#destroy', as: 'destroy_invitation'
+    resources :accounts, param: :aid, constraints: { name_id: /.*/ }, except: %i[ show ]
 
     # session
-    get 'sessions' => 'sessions#index', as: 'sessions'
-    get 'sessions/:id' => 'sessions#show', as: 'show_session'
-    get 'sessions/:id/edit' => 'sessions#edit', as: 'edit_session'
-    patch 'sessions/:id/update' => 'sessions#update', as: 'update_session'
-    delete 'sessions/:id/destroy' => 'sessions#destroy', as: 'destroy_session'
+    resources :sessions, param: :uuid, except: %i[ show ]
+
+    # invitation
+    resources :invitations, param: :uuid, except: %i[ show ]
 
     # item
     get 'items' => 'items#index', as: 'items'
@@ -137,7 +182,6 @@ Rails.application.routes.draw do
     post 'test/generate'
     post 'test/verify'
     post 'test/digest'
-
   end
 
   # version 1

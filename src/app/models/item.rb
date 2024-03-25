@@ -11,10 +11,16 @@ class Item < ApplicationRecord
   has_many :quoters, through: :quoted, source: :quoter
   has_many :quoting, through: :quoter, source: :quoted
   # --- #
-  has_many :account_reaction_items
-  has_many :reactions, through: :account_reaction_items
+  has_many :reactions
+  has_many :emojis, through: :reactions
   has_many :item_images
   has_many :images, through: :item_images
   has_many :item_videos
   has_many :videos, through: :item_videos
+  # validates
+  validates :aid,
+    presence: true,
+    length: { is: 17, allow_blank: true },
+    uniqueness: { case_sensitive: true } # 大文字小文字の違いを確認する
+  # --- #
 end

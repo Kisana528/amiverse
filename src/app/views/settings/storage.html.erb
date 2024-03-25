@@ -1,11 +1,14 @@
-<% provide(:title, 'ストレージ - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - ストレージ') %>
+<% provide(:header_text, '設定 - ストレージ') %>
 <% provide(:selected_settings_menu, 'storage') %>
+
 <% content_for :settings_content do %>
   <div>ストレージ</div>
   <details>
     <summary>画像</summary>
     <div>
-      <%= form_with model: @image, url: storage_images_create_path, data: { turbo: false } do |f| %>
+      <%= form_with model: @image, url: image_create_path, data: { turbo: false } do |f| %>
         <% if @image.errors.any? %>
           <div>
             <div>
@@ -50,7 +53,7 @@
   <details>
     <summary>動画</summary>
     <div>
-      <%= form_with model: @video, url: storage_videos_create_path, data: { turbo: false } do |f| %>
+      <%= form_with model: @video, url: videos_create_path, data: { turbo: false } do |f| %>
       <%= render 'shared/error_messages', instead: @video %>
       <%= f.label :video, 'video' %>
       <%= f.file_field :video %>

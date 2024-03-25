@@ -28,7 +28,7 @@
       <div class="item-menu">・・・</div>
     </div>
   </div>
-  <%= link_to item_path(item.item_id), class: 'item-content-link' do %>
+  <%= link_to item_path(item.aid), class: 'item-content-link' do %>
     <div class="item-content">
       <%= item.content %>
     </div>
@@ -37,12 +37,25 @@
       <% item.images.each do |image| %>
         <%= image_tag generate_ati_url(image.account.account_id, 'images', image.image_id), class: 'item-image' %>
       <% end %>
+      <% item.videos.each do |video| %>
+        <video controls class='video-view' id='video-<%= video.video_id %>'></video>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+        <script>
+          var video = document.getElementById('video-<%= video.video_id %>');
+          var videoSrc = 'http://localhost:9000/development/variants/accounts/00000000000000/videos/<%= video.video_id %>/output.m3u8';
+          if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+          }
+        </script>
+      <% end %>
     </div>
   <div class="item-reactions">
-    <% item.reactions.group(:reaction_id).count.each do |key, value| %>
+    <% item.emojis.each do |emoji| %>
       <div class="item-reaction">
-        <%= button_to item.reactions.find_by(reaction_id: key).content, react_path(item.item_id, key) %>
-        <span><%= value %></span>
+        <%= button_to emoji.content, react_path(item.aid, emoji.emoji_id) %>
+        <span><%= item.reactions.where(emoji_id: emoji.id).count %></span>
       </div>
     <% end %>
   </div>
@@ -51,27 +64,27 @@
     <details class="item-details">
       <summary>返信<%= item.repliers.count %></summary>
       <div class="item-details-container">
-        <%= render 'items/form', initial_reply_item_id: item.item_id %>
+        <%= render 'items/form', initial_reply_aid: item.aid %>
       </div>
     </details>
     <details>
       <summary>引用<%= item.quoters.count %></summary>
       <div class="item-details-container">
-        <%= render 'items/form', initial_quote_item_id: item.item_id %>
+        <%= render 'items/form', initial_quote_aid: item.aid %>
       </div>
     </details>
     <details>
       <summary>リアクション<%= item.reactions.count %></summary>
       <div class="item-details-container">
-        <% Reaction.all.each do |reaction| %>
-          <%= button_to reaction.content, react_path(item.item_id, reaction.reaction_id), method: :post %>
+        <% Emoji.all.each do |emoji| %>
+          <%= button_to emoji.content, react_path(item.aid, emoji.emoji_id), method: :post %>
         <% end %>
       </div>
     </details>
     <details>
       <summary>共有</summary>
       <div class="item-details-container">
-        https://amiverse.net/items/<%= item.item_id %>
+        https://amiverse.net/items/<%= item.aid %>
       </div>
     </details>
     <details>

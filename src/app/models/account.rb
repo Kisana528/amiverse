@@ -4,8 +4,10 @@ class Account < ApplicationRecord
   has_many :items
   has_many :images
   has_many :videos
-  has_many :reaction
-  has_many :account_reaction_items
+  has_many :emojis
+  has_many :reactions
+  has_many :messages
+  has_many :notifications
   # follow
   has_many :followed, class_name: 'Follow', foreign_key: 'followed'
   has_many :follower, class_name: 'Follow', foreign_key: 'follower'
@@ -15,7 +17,7 @@ class Account < ApplicationRecord
   attr_accessor :remember_token, :activation_token
   BASE_64_URL_REGEX  = /\A[a-zA-Z0-9_-]*\z/
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-  validates :account_id,
+  validates :aid,
     presence: true,
     length: { in: 5..25, allow_blank: true },
     uniqueness: { case_sensitive: false }

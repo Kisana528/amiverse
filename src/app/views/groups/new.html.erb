@@ -1,0 +1,14 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'グループ作成') %>
+<% provide(:header_text, 'グループ作成') %>
+
+<div>
+  <%= form_with model: @group, url: create_group_path do |form| %>
+    <%= render "shared/error_messages", instead: @group %>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description %>
+    <%= form.submit %>
+  <% end %>
+</div>

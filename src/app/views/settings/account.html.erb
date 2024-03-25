@@ -1,5 +1,8 @@
-<% provide(:title, 'アカウント - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - アカウント') %>
+<% provide(:header_text, '設定 - アカウント') %>
 <% provide(:selected_settings_menu, 'account') %>
+
 <% content_for :settings_content do %>
   <%= form_with model: @current_account, url: update_account_path(@current_account.name_id), data: { turbo: false } do |f| %>
     <div class="text-field-group">
@@ -17,14 +20,14 @@
     </div>
     <div>
       <%= f.label :lang, '運用区分' %>
-      <%= f.select :lang, [['通常', 1], ['自動', 2], ['営利', 3]], { selected: 1 } %>
+      <%= f.select :lang, [['個人', 1], ['BOT', 2], ['営利', 3]], { selected: 1 } %>
     </div>
     <div>データダウンロード</div>
     <div>データ移行</div>
     <div>アカウント凍結</div>
     <div>アカウント削除</div>
     <div>
-      固有ID:<%= @current_account.account_id %>
+      固有ID:<%= @current_account.aid %>
     </div>
     <%= f.submit '保存' %>
   <% end %>

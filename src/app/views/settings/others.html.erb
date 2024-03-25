@@ -1,7 +1,12 @@
-<% provide(:title, 'その他 - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - その他') %>
+<% provide(:header_text, '設定 - その他') %>
 <% provide(:selected_settings_menu, 'others') %>
+
 <% content_for :settings_content do %>
-  <div>その他</div>
-  <%= button_to("Log out", logout_path, method: :delete) %>
+  <div>お問い合わせ</div>
+  <div>バグの報告</div>
+  <div>機能のリクエスト</div>
+  <%= button_to("ログアウト", logout_path, method: :delete) %>
 <% end %>
 <%= render 'settings/listed' %>

@@ -16,7 +16,27 @@
     <div class="main-container dark-mode" id="main-container">
       <%= render 'layouts/nav' %>
       <main>
-        <%= yield %>
+        <% layout_type = yield(:layout_type) %>
+        <% if layout_type == 'default' %>
+          <div class='shared-default-layout-out-container'>
+            <div class='shared-default-layout-in-container'>
+              <%= yield %>
+            </div>
+          </div>
+        <% elsif layout_type == 'header_text' %>
+          <div class='main-header'>
+            <div class='main-header-text'>
+              <%= yield(:header_text) %>
+            </div>
+          </div>
+          <div class='shared-default-layout-out-container'>
+            <div class='shared-default-layout-in-container'>
+              <%= yield %>
+            </div>
+          </div>
+        <% else %>
+          <%= yield %>
+        <% end %>
         <% flash.each do |message_type, message| %>
           <div class="<%= message_type %>"><%= message %></div>
         <% end %>

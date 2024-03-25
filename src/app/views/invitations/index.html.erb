@@ -1,2 +1,39 @@
-<h1>Invitations#index</h1>
-<p>Find me in app/views/invitations/index.html.erb</p>
+<div style="overflow-y:scroll;">
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>操作</th>
+      <th>account_id</th>
+      <th>uuid</th>
+      <th>name</th>
+      <th>code</th>
+      <th>uses</th>
+      <th>max_uses</th>
+      <th>expires_at</th>
+      <th>deleted</th>
+      <th>deleted_at</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+    </tr>
+    <% @invitations.each do |i| %>
+      <tr>
+        <td><%= i.id %></td>
+        <td>
+          <%= link_to '編集', edit_invitation_path(code: i.code) %>
+          <%= button_to '削除', invitation_path(code: i.code), method: :delete %>
+        </td>
+        <td><%= i.account_id %></td>
+        <td><%= i.uuid %></td>
+        <td><%= i.name %></td>
+        <td><%= i.code %></td>
+        <td><%= i.uses %></td>
+        <td><%= i.max_uses %></td>
+        <td><%= i.expires_at %></td>
+        <td><%= i.deleted %></td>
+        <td><%= i.deleted_at %></td>
+        <td><%= i.created_at %></td>
+        <td><%= i.updated_at %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

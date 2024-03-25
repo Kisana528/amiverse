@@ -1,1 +1,5 @@
-<%= render 'items/item', item: @item, show_reply_from: true %>
+<% if @item.present? %>
+  <%= render 'items/item', item: @item, show_reply_from: true %>
+<% else %>
+  <p>指定されたアイテムは存在しません</p>
+<% end %>

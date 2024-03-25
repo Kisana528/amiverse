@@ -1,10 +1,12 @@
-<% provide(:title, 'セキュリティと権限 - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - セキュリティと権限') %>
+<% provide(:header_text, '設定 - セキュリティと権限') %>
 <% provide(:selected_settings_menu, 'security_and_authority') %>
+
 <% content_for :settings_content do %>
-  <div>セキュリティと権限</div>
   <div>ログイン履歴</div>
   <div>セッション一覧</div>
-  <%= render 'sessions/session', sessions: @sessions %>
+  <%# render 'sessions/session', sessions: @sessions %>
   <div>二段階認証</div>
   <div>連携サービス</div>
 <% end %>

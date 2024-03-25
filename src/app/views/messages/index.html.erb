@@ -1,0 +1,14 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'メッセージ') %>
+<% provide(:header_text, 'メッセージ') %>
+
+<ul>
+  <% @groups.each do |group| %>
+    <li>
+      名:<%= group.name %>
+      <br />
+      ID:<%= link_to(group.aid, message_path(group.aid)) %>
+    </li>
+  <% end %>
+</ul>
+<%= link_to('グループ作成', new_group_path) %>

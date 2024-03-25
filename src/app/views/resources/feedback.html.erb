@@ -1,8 +1,7 @@
-<% provide(:title, 'FEEDBACK') %>
-<% provide(:main_header_text, 'FEEDBACK') %>
-<% content_for :main_content do %>
-  <div>提案</div>
-  <div>改善点</div>
-  <div>メディア</div>
-<% end %>
-<%= render 'layouts/default' %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'フィードバック') %>
+<% provide(:header_text, 'フィードバック') %>
+
+<div>提案</div>
+<div>改善</div>
+<div>バグ報告</div>

@@ -1,0 +1,5 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'グループ - ' + @group.name) %>
+<% provide(:header_text, 'グループ - ' + @group.name) %>
+
+<%= render 'group', group: @group %>

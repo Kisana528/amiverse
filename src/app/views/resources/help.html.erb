@@ -1,8 +1,9 @@
-<% provide(:title, 'HELP') %>
-<% provide(:main_header_text, 'HELP') %>
-<% content_for :main_content do %>
-  <div>基本</div>
-  <div>応用</div>
-  <div>インスタンス作成</div>
-<% end %>
-<%= render 'layouts/default' %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'ヘルプ') %>
+<% provide(:header_text, 'ヘルプ') %>
+
+<h1>使い方</h1>
+<p>投稿してみましょう</p>
+<h1>応用</h1>
+<h1>よくある質問</h1>
+<h1>インスタンス作成</h1>

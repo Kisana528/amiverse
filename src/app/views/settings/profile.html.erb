@@ -1,5 +1,8 @@
-<% provide(:title, 'プロフィール - 設定') %>
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '設定 - プロフィール') %>
+<% provide(:header_text, '設定 - プロフィール') %>
 <% provide(:selected_settings_menu, 'profile') %>
+
 <% content_for :settings_content do %>
   <%= form_with model: @current_account, url: update_account_path(@current_account.name_id), data: { turbo: false } do |f| %>
     <div>プロフィール</div>
@@ -61,7 +64,7 @@
     </div>
     <div>
       <%= f.label :lang, '言語' %>
-      <%= f.select :lang, [['日本語', 1], ['English', 2]], { include_blank: true, selected: 1 } %>
+      <%= f.select :lang, [['日本語', 1], ['English', 2]], { include_blank: false, selected: 0 } %>
     </div>
     <div>
       <%= f.label :lang, '追加情報' %>

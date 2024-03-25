@@ -1,0 +1,16 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, 'TL - 現在') %>
+<% provide(:header_text, 'TL - 現在') %>
+
+<div class='amiverse-index-container'>
+  <div class='amiverse-index-box'>
+    <%= render "items/form", item: Item.new %>
+  </div>
+  <div id="items">
+    <% @items.each do |item| %>
+      <%= render 'items/item', item: item, reactions: @reactions %>
+    <% end %>
+    <%= link_to "次のページ", tl_current_path(page: to_page(params[:page], 'next')) %>
+    <%= link_to "前のページ", tl_current_path(page: to_page(params[:page], 'prev')) %>
+  </div>
+</div>

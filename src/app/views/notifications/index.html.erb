@@ -1,0 +1,10 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:title, '通知') %>
+<% provide(:header_text, '通知') %>
+
+<ul>
+<% @notifications.each do |notification| %>
+  <li><%= notification.message %></li>
+<% end %>
+</ul>
+<%= link_to('new', new_notification_path) %>
