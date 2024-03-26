@@ -62,10 +62,10 @@ class ApplicationController < ActionController::Base
     decoded_signature = Base64.strict_decode64(signature)
     return public_key.verify(OpenSSL::Digest::SHA256.new, decoded_signature, data)
   end
-  def generate_varinat_image(image_id, pre_image_id, type)
-    if image_id.present? && pre_image_id != image_id
-      image = Image.find_by(image_id: image_id)
-      image.resize_image(@account.name, @account.name_id, type)
+  def generate_varinat_image(image_aid, pre_image_aid, type)
+    if image_aid.present? && pre_image_aid != image_aid
+      image = Image.find_by(aid: image_aid)
+      image.resize_image(type)
     end
   end
   def name_id_host_separater(str)

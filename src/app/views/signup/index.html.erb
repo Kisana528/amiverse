@@ -1,9 +1,8 @@
+<% provide(:layout_type, 'header_text') %>
+<% provide(:header_text, 'サインアップ') %>
 <% provide(:title, 'サインアップ') %>
-<% provide(:main_header_text, 'サインアップ') %>
-<% content_for :main_content do %>
-  <div class="signup-index-container">
-    <h1>参加しよう</h1>
-    <%= link_to 'はじめる', signup_check_path %>
-  </div>
-<% end %>
-<%= render 'layouts/default' %>
+
+<div class="">
+  <h1>参加しよう</h1>
+  <%= link_to 'はじめる', signup_check_path %>
+</div>

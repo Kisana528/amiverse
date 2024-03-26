@@ -15,7 +15,7 @@ class V1::ItemsController < V1::ApplicationController
   def create
     @item = Item.new(
       content: params[:content],
-      cw: params[:cw]
+      sensitive: params[:sensitive]
     )
     @item.account_id = @current_account.id
     @item.item_id = unique_random_id(Item, 'item_id')

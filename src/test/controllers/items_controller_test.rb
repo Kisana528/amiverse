@@ -17,7 +17,7 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create item" do
     assert_difference("Item.count") do
-      post items_url, params: { item: { content: @item.content, cw: @item.cw, deleted: @item.deleted, item_id: @item.item_id, item_type: @item.item_type, meta: @item.meta, nsfw: @item.nsfw, uuid: @item.uuid, version: @item.version } }
+      post items_url, params: { item: { content: @item.content, sensitive: @item.sensitive, deleted: @item.deleted, item_id: @item.item_id, item_type: @item.item_type, meta: @item.meta, sensitive: @item.sensitive, uuid: @item.uuid, version: @item.version } }
     end
 
     assert_redirected_to item_url(Item.last)
@@ -34,7 +34,7 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update item" do
-    patch item_url(@item), params: { item: { content: @item.content, cw: @item.cw, deleted: @item.deleted, item_id: @item.item_id, item_type: @item.item_type, meta: @item.meta, nsfw: @item.nsfw, uuid: @item.uuid, version: @item.version } }
+    patch item_url(@item), params: { item: { content: @item.content, sensitive: @item.sensitive, deleted: @item.deleted, item_id: @item.item_id, item_type: @item.item_type, meta: @item.meta, sensitive: @item.sensitive, uuid: @item.uuid, version: @item.version } }
     assert_redirected_to item_url(@item)
   end
 

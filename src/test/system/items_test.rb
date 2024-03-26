@@ -15,12 +15,12 @@ class ItemsTest < ApplicationSystemTestCase
     click_on "New item"
 
     fill_in "Content", with: @item.content
-    check "Cw" if @item.cw
+    check "sensitive" if @item.sensitive
     check "Deleted" if @item.deleted
     fill_in "Item", with: @item.item_id
     fill_in "Item type", with: @item.item_type
     fill_in "Meta", with: @item.meta
-    check "Nsfw" if @item.nsfw
+    check "sensitive" if @item.sensitive
     fill_in "Uuid", with: @item.uuid
     fill_in "Version", with: @item.version
     click_on "Create Item"
@@ -34,12 +34,12 @@ class ItemsTest < ApplicationSystemTestCase
     click_on "Edit this item", match: :first
 
     fill_in "Content", with: @item.content
-    check "Cw" if @item.cw
+    check "sensitive" if @item.sensitive
     check "Deleted" if @item.deleted
     fill_in "Item", with: @item.item_id
     fill_in "Item type", with: @item.item_type
     fill_in "Meta", with: @item.meta
-    check "Nsfw" if @item.nsfw
+    check "sensitive" if @item.sensitive
     fill_in "Uuid", with: @item.uuid
     fill_in "Version", with: @item.version
     click_on "Update Item"

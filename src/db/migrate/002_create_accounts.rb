@@ -4,7 +4,7 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.string :aid, null: false
       t.string :name, null: false, default: ''
       t.string :name_id, null: false
-      t.string :fediverse_id, null: false, default: ''
+      t.string :activitypub_id, null: false, default: ''
       t.string :icon_id, null: false, default: ''
       t.string :banner_id, null: false, default: ''
       t.bigint :followers_counter, null: false, default: 0
@@ -12,7 +12,6 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.bigint :items_counter, null: false, default: 0
       t.bigint :reactions_counter, null: false, default: 0
       t.json :pinned_items, null: false, default: []
-      t.boolean :explorable, null: false, default: false
       t.json :meta, null: false, default: []
       t.json :cache, null: false, default: []
       t.json :achievements, null: false, default: []
@@ -47,6 +46,6 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.datetime :deleted_at
       t.timestamps
     end
-    add_index :accounts, [:aid, :name_id, :fediverse_id], unique: true
+    add_index :accounts, [:aid, :name_id, :activitypub_id], unique: true
   end
 end

@@ -63,8 +63,8 @@ class V1::ApplicationController < ApplicationController
       :meta,
       :cache,
       :content,
-      :cw,
-      :cw_message,
+      :sensitive,
+      :warning_message,
       :foreign,
       :created_at,
       :updated_at,
@@ -91,8 +91,8 @@ class V1::ApplicationController < ApplicationController
       :aid,
       :name,
       :description,
-      :nsfw,
-      :nsfw_message,
+      :sensitive,
+      :warning_message,
       :meta
     ])
   end

@@ -1,7 +1,5 @@
-module AccountImages
-  def image_optimize(name, name_id, type)
-    @name = name
-    @name_id = name_id
+module ImageTreatment
+  def image_optimize(type)
     resize = "2048x2048>"
     extent = ""
     if type == 'icon'
@@ -38,14 +36,11 @@ module AccountImages
       gravity: "south",
       background: "black",
       fill: "white",
-      font: font,
+      #font: font,
       #splice: "0x24",
       pointsize: "14",
       #draw: "gravity southeast text 10,2 'Posted by #{@name} @#{@name_id} | Amiverse' ",
       deconstruct: true # アニメーションシーケンスの最適化2 #動くwebpで2回目処理時に文字が消えるバグ対策
     }
-  end
-  def font
-    './app/assets/fonts/mplus-1p-regular.ttf'
   end
 end

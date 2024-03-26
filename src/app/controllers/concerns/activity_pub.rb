@@ -4,16 +4,16 @@ module ActivityPub
       id: "follow/#{uid}",
       type: 'Follow',
       actor: follow_from,
-      object: follow_to.fediverse_id,
+      object: follow_to.activitypub_id,
       destination: follow_to
     )
   end
   def undo_follow(follow_to:, follow_from:, uid:)
     undo_object = {
-      "id": File.join(follow_from.fediverse_id, "follow/#{uid}"),
+      "id": File.join(follow_from.activitypub_id, "follow/#{uid}"),
       "type": 'Follow',
-      "actor": follow_from.fediverse_id,
-      "object": follow_to.fediverse_id
+      "actor": follow_from.activitypub_id,
+      "object": follow_to.activitypub_id
     }
     ap_send(
       id: 'undo_follow',
@@ -27,8 +27,8 @@ module ActivityPub
     accept_object = {
       "id": received_body['id'],
       "type": 'Follow',
-      "actor": follow_from_account.fediverse_id,
-      "object": follow_to_account.fediverse_id
+      "actor": follow_from_account.activitypub_id,
+      "object": follow_to_account.activitypub_id
     }
     ap_send(
       id: 'accept_follow',
@@ -90,15 +90,15 @@ module ActivityPub
     body = {
       "@context": "https://www.w3.org/ns/activitystreams",
       "type": type,
-      "id": File.join(actor.fediverse_id, id),
-      "actor": actor.fediverse_id,
+      "id": File.join(actor.activitypub_id, id),
+      "actor": actor.activitypub_id,
       "object": object
     }
     deliver(
       body: body,
       name_id: actor.name_id,
       private_key: actor.private_key,
-      to_url: File.join(destination.fediverse_id, 'inbox')
+      to_url: File.join(destination.activitypub_id, 'inbox')
     )
   end
   def read(data)
@@ -131,7 +131,7 @@ module ActivityPub
       headers: headers.to_json,
       body: body.to_json,
       context: context.to_json,
-      fediverse_id: id.to_s,
+      activitypub_id: id.to_s,
       status: status
     }
     received_params[:object] = object.to_json if object.present?
@@ -230,7 +230,7 @@ module ActivityPub
         attributed_to = account(object['attributedTo'])
         @item = Item.new(
           content: object['content'].force_encoding('UTF-8'),
-          cw: object['sensitive']
+          sensitive: object['sensitive']
         )
         @item.account_id = attributed_to.id
         @item.item_id = unique_random_id(Item, 'item_id')
@@ -253,7 +253,7 @@ module ActivityPub
         #なければ終わり
         saved_data.delete
         #煩わしいので↑
-        if account = Account.find_by(fediverse_id: object)
+        if account = Account.find_by(activitypub_id: object)
           account.update(deleted: true) 
           status = 'S0'
         else
@@ -338,7 +338,7 @@ module ActivityPub
     else
       server = server(URI.parse(uri).host)
       #アカウントあるかないか
-      if account = Account.find_by(fediverse_id: uri)
+      if account = Account.find_by(activitypub_id: uri)
       else
         account = explore_account(uri)
       end
@@ -494,7 +494,7 @@ module ActivityPub
       name: data['name'].present? ? data['name'] : '',
       name_id: get_name_id(data['id'], data['preferredUsername']),
       account_id: unique_random_id(Account, 'account_id'),
-      fediverse_id: uri,
+      activitypub_id: uri,
       #serverと紐づけ
       outsider: true,
       activated: true,

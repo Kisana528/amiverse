@@ -36,7 +36,7 @@ class Admin::AccountsController < Admin::ApplicationController
     params.require(:account).permit(
       :name, :name_id, :bio, :location, :birthday,
       :authenticated, :public_visibility, :role, :activated,
-      :administrator, :moderator, :nsfw, :explorable,
+      :administrator, :moderator, :sensitive, :explorable,
       :locked, :silenced, :suspended, :frozen, :deleted
     )
   end

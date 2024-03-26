@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       type: "Collection",
       id: `https://amiverse.net/@${data.name_id}/following`,
       totalItems: data.count,
-      items: data.following.map(following => (following.fediverse_id))
+      items: data.following.map(following => (following.activitypub_id))
     }
   } else {
     res_data = { 'status': 'Error:Request you sent was not POST. This program is not support Activity Pub cliant.' }

@@ -6,8 +6,8 @@ one:
   item_type: MyString
   meta: 
   content: MyString
-  nsfw: false
-  cw: false
+  sensitive: false
+  sensitive: false
   version: 
   deleted: false
 
@@ -17,7 +17,7 @@ two:
   item_type: MyString
   meta: 
   content: MyString
-  nsfw: false
-  cw: false
+  sensitive: false
+  sensitive: false
   version: 
   deleted: false

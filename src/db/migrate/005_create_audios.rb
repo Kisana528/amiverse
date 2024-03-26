@@ -1,6 +1,6 @@
-class CreateVideos < ActiveRecord::Migration[7.0]
+class CreateAudios < ActiveRecord::Migration[7.0]
   def change
-    create_table :videos do |t|
+    create_table :audios do |t|
       t.references :account, null: false, foreign_key: true
       t.string :aid, null: false
       t.string :name, null: false, default: ''
@@ -15,6 +15,6 @@ class CreateVideos < ActiveRecord::Migration[7.0]
       t.datetime :deleted_at
       t.timestamps
     end
-    add_index :videos, [:aid], unique: true
+    add_index :audios, [:aid], unique: true
   end
 end

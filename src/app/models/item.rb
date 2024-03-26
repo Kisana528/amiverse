@@ -10,14 +10,10 @@ class Item < ApplicationRecord
   has_many :quoter, class_name: 'Quote', foreign_key: 'quoter'
   has_many :quoters, through: :quoted, source: :quoter
   has_many :quoting, through: :quoter, source: :quoted
-  # --- #
+  # reaction
   has_many :reactions
   has_many :emojis, through: :reactions
-  has_many :item_images
-  has_many :images, through: :item_images
-  has_many :item_videos
-  has_many :videos, through: :item_videos
-  # validates
+  # validate
   validates :aid,
     presence: true,
     length: { is: 17, allow_blank: true },

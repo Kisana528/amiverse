@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 93) do
+ActiveRecord::Schema[7.0].define(version: 992) do
   create_table "Polls", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "survey_id", null: false
@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.string "aid", null: false
     t.string "name", default: "", null: false
     t.string "name_id", null: false
-    t.string "fediverse_id", default: "", null: false
+    t.string "activitypub_id", default: "", null: false
     t.string "icon_id", default: "", null: false
     t.string "banner_id", default: "", null: false
     t.bigint "followers_counter", default: 0, null: false
@@ -34,7 +34,6 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.bigint "items_counter", default: 0, null: false
     t.bigint "reactions_counter", default: 0, null: false
     t.text "pinned_items", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
-    t.boolean "explorable", default: false, null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "achievements", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
@@ -69,7 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["aid", "name_id", "fediverse_id"], name: "index_accounts_on_aid_and_name_id_and_fediverse_id", unique: true
+    t.index ["aid", "name_id", "activitypub_id"], name: "index_accounts_on_aid_and_name_id_and_activitypub_id", unique: true
     t.check_constraint "json_valid(`achievements`)", name: "achievements"
     t.check_constraint "json_valid(`cache`)", name: "cache"
     t.check_constraint "json_valid(`languages`)", name: "languages"
@@ -126,7 +125,7 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.text "headers", size: :long, collation: "utf8mb4_bin"
     t.text "body", size: :long, collation: "utf8mb4_bin"
     t.text "context", size: :long, collation: "utf8mb4_bin"
-    t.string "fediverse_id"
+    t.string "activitypub_id"
     t.string "account_id"
     t.string "activity_type"
     t.text "object", size: :long, collation: "utf8mb4_bin"
@@ -183,6 +182,41 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_applications_on_account_id"
     t.index ["aid"], name: "index_applications_on_aid", unique: true
+  end
+
+  create_table "audios", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "aid", null: false
+    t.string "name", default: "", null: false
+    t.text "description", default: "", null: false
+    t.boolean "sensitive", default: false, null: false
+    t.string "warning_message", default: "", null: false
+    t.string "kind", default: "", null: false
+    t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "references", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_audios_on_account_id"
+    t.index ["aid"], name: "index_audios_on_aid", unique: true
+    t.check_constraint "json_valid(`cache`)", name: "cache"
+    t.check_constraint "json_valid(`meta`)", name: "meta"
+    t.check_constraint "json_valid(`references`)", name: "references"
+  end
+
+  create_table "bills", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "uuid", null: false
+    t.string "kind", default: "", null: false
+    t.string "object", default: "", null: false
+    t.string "name", default: "", null: false
+    t.text "description", default: "", null: false
+    t.string "amount", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_bills_on_account_id"
   end
 
   create_table "blocks", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -277,17 +311,22 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.bigint "account_id", null: false
     t.string "aid", null: false
     t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.boolean "nsfw", default: false, null: false
-    t.string "nsfw_message", default: "", null: false
+    t.text "description", default: "", null: false
+    t.boolean "sensitive", default: false, null: false
+    t.string "warning_message", default: "", null: false
+    t.string "kind", default: "", null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "references", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_images_on_account_id"
     t.index ["aid"], name: "index_images_on_aid", unique: true
+    t.check_constraint "json_valid(`cache`)", name: "cache"
     t.check_constraint "json_valid(`meta`)", name: "meta"
+    t.check_constraint "json_valid(`references`)", name: "references"
   end
 
   create_table "invitations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -304,15 +343,6 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_invitations_on_account_id"
     t.index ["code"], name: "index_invitations_on_code", unique: true
-  end
-
-  create_table "item_images", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "item_id", null: false
-    t.bigint "image_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["image_id"], name: "index_item_images_on_image_id"
-    t.index ["item_id"], name: "index_item_images_on_item_id"
   end
 
   create_table "item_tags", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -334,24 +364,18 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.index ["topic_id"], name: "index_item_topics_on_topic_id"
   end
 
-  create_table "item_videos", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "item_id", null: false
-    t.bigint "video_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_item_videos_on_item_id"
-    t.index ["video_id"], name: "index_item_videos_on_video_id"
-  end
-
   create_table "items", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "aid", null: false
+    t.text "content", default: "", null: false
+    t.text "images", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "audios", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "videos", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.boolean "sensitive", default: false, null: false
+    t.string "warning_message", default: "", null: false
     t.string "kind", default: "", null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
-    t.text "content", default: "", null: false
-    t.boolean "cw", default: false, null: false
-    t.string "cw_message", default: "", null: false
     t.boolean "foreign", default: false, null: false
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
@@ -359,8 +383,11 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_items_on_account_id"
     t.index ["aid"], name: "index_items_on_aid", unique: true
+    t.check_constraint "json_valid(`audios`)", name: "audios"
     t.check_constraint "json_valid(`cache`)", name: "cache"
+    t.check_constraint "json_valid(`images`)", name: "images"
     t.check_constraint "json_valid(`meta`)", name: "meta"
+    t.check_constraint "json_valid(`videos`)", name: "videos"
   end
 
   create_table "lists", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -383,6 +410,32 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_locations_on_account_id"
+  end
+
+  create_table "members", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "membership_id", null: false
+    t.string "uuid", null: false
+    t.datetime "expires_at"
+    t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_members_on_account_id"
+    t.index ["membership_id"], name: "index_members_on_membership_id"
+  end
+
+  create_table "memberships", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "uuid", null: false
+    t.integer "counter", default: 0, null: false
+    t.string "name", default: "", null: false
+    t.text "description", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_memberships_on_account_id"
   end
 
   create_table "messages", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -497,11 +550,11 @@ ActiveRecord::Schema[7.0].define(version: 93) do
 
   create_table "read_messages", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.bigint "messages_id", null: false
+    t.bigint "message_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_read_messages_on_account_id"
-    t.index ["messages_id"], name: "index_read_messages_on_messages_id"
+    t.index ["message_id"], name: "index_read_messages_on_message_id"
   end
 
   create_table "registrations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -521,10 +574,24 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.index ["replier"], name: "fk_rails_2001645403"
   end
 
+  create_table "server_Logs", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.text "content", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "server_data", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.text "content", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "name", default: "", null: false
-    t.string "remote_ip", default: "", null: false
+    t.string "ip_address", default: "", null: false
     t.string "user_agent", default: "", null: false
     t.string "uuid", null: false
     t.string "session_digest", null: false
@@ -534,6 +601,32 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_sessions_on_account_id"
     t.index ["uuid"], name: "index_sessions_on_uuid", unique: true
+  end
+
+  create_table "subscribers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "subscription_id", null: false
+    t.string "uuid", null: false
+    t.datetime "expires_at"
+    t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_subscribers_on_account_id"
+    t.index ["subscription_id"], name: "index_subscribers_on_subscription_id"
+  end
+
+  create_table "subscriptions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "uuid", null: false
+    t.integer "counter", default: 0, null: false
+    t.string "name", default: "", null: false
+    t.text "description", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_subscriptions_on_account_id"
   end
 
   create_table "surveys", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -568,34 +661,35 @@ ActiveRecord::Schema[7.0].define(version: 93) do
     t.index ["aid"], name: "index_topics_on_aid", unique: true
   end
 
-  create_table "transactions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "used_invitations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.string "uuid", null: false
-    t.string "kind", default: "", null: false
-    t.string "object", default: "", null: false
-    t.string "name", default: "", null: false
-    t.text "description", default: "", null: false
-    t.string "amount", default: "", null: false
+    t.bigint "invitation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_transactions_on_account_id"
+    t.index ["account_id"], name: "index_used_invitations_on_account_id"
+    t.index ["invitation_id"], name: "index_used_invitations_on_invitation_id"
   end
 
   create_table "videos", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "aid", null: false
     t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.boolean "nsfw", default: false, null: false
-    t.string "nsfw_message", default: "", null: false
+    t.text "description", default: "", null: false
+    t.boolean "sensitive", default: false, null: false
+    t.string "warning_message", default: "", null: false
+    t.string "kind", default: "", null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.text "references", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_videos_on_account_id"
     t.index ["aid"], name: "index_videos_on_aid", unique: true
+    t.check_constraint "json_valid(`cache`)", name: "cache"
     t.check_constraint "json_valid(`meta`)", name: "meta"
+    t.check_constraint "json_valid(`references`)", name: "references"
   end
 
   create_table "wallets", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -633,6 +727,8 @@ ActiveRecord::Schema[7.0].define(version: 93) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "applications", "accounts"
+  add_foreign_key "audios", "accounts"
+  add_foreign_key "bills", "accounts"
   add_foreign_key "blocks", "accounts", column: "blocked"
   add_foreign_key "blocks", "accounts", column: "blocker"
   add_foreign_key "emoji_categories", "categories"
@@ -647,17 +743,16 @@ ActiveRecord::Schema[7.0].define(version: 93) do
   add_foreign_key "groups", "accounts"
   add_foreign_key "images", "accounts"
   add_foreign_key "invitations", "accounts"
-  add_foreign_key "item_images", "images"
-  add_foreign_key "item_images", "items"
   add_foreign_key "item_tags", "items"
   add_foreign_key "item_tags", "tags"
   add_foreign_key "item_topics", "items"
   add_foreign_key "item_topics", "topics"
-  add_foreign_key "item_videos", "items"
-  add_foreign_key "item_videos", "videos"
   add_foreign_key "items", "accounts"
   add_foreign_key "lists", "accounts"
   add_foreign_key "locations", "accounts"
+  add_foreign_key "members", "accounts"
+  add_foreign_key "members", "memberships"
+  add_foreign_key "memberships", "accounts"
   add_foreign_key "messages", "accounts"
   add_foreign_key "messages", "groups"
   add_foreign_key "mutes", "accounts", column: "muted"
@@ -675,12 +770,16 @@ ActiveRecord::Schema[7.0].define(version: 93) do
   add_foreign_key "read_items", "accounts"
   add_foreign_key "read_items", "items"
   add_foreign_key "read_messages", "accounts"
-  add_foreign_key "read_messages", "messages", column: "messages_id"
+  add_foreign_key "read_messages", "messages"
   add_foreign_key "registrations", "accounts"
   add_foreign_key "replies", "items", column: "replied"
   add_foreign_key "replies", "items", column: "replier"
   add_foreign_key "sessions", "accounts"
-  add_foreign_key "transactions", "accounts"
+  add_foreign_key "subscribers", "accounts"
+  add_foreign_key "subscribers", "subscriptions"
+  add_foreign_key "subscriptions", "accounts"
+  add_foreign_key "used_invitations", "accounts"
+  add_foreign_key "used_invitations", "invitations"
   add_foreign_key "videos", "accounts"
   add_foreign_key "wallets", "accounts"
   add_foreign_key "worlds", "accounts"

@@ -27,7 +27,7 @@ class Account < ApplicationRecord
       length: { in: 5..50, allow_blank: true },
       format: { with: BASE_64_URL_REGEX, allow_blank: true },
       uniqueness: { case_sensitive: false }
-    validate :image_id_presence
+    validate :image_aid_presence
     validates :icon_id,
       format: { with: BASE_64_URL_REGEX, allow_blank: true }
     validates :banner_id,
@@ -56,14 +56,14 @@ class Account < ApplicationRecord
     Session.find_by(account_id: self.id, uuid: uuid, deleted: false).update(deleted: true)
   end
   private
-  def image_id_presence
+  def image_aid_presence
     if icon_id.present?
-      unless Image.exists?(image_id: icon_id)
+      unless Image.exists?(aid: icon_id)
         errors.add(:base, '存在しないicon')
       end
     end
     if banner_id.present?
-      unless Image.exists?(image_id: banner_id)
+      unless Image.exists?(aid: banner_id)
         errors.add(:base, '存在しないbanner')
       end
     end

@@ -94,6 +94,6 @@ class ItemsController < ApplicationController
     end
     def item_params
       params.require(:item).permit(:content,
-                                  :cw)
+                                  :sensitive)
     end
 end

@@ -20,7 +20,7 @@ class V1::AccountsController < V1::ApplicationController
         item_type: item.item_type,
         meta: item.meta,
         content: item.content,
-        cw: item.cw,
+        sensitive: item.sensitive,
         version: item.version,
         created_at: item.created_at,
         updated_at: item.updated_at,
@@ -45,7 +45,7 @@ class V1::AccountsController < V1::ApplicationController
       followers: @account.followers.map {|follower| {
         name: follower.name,
         name_id: follower.name_id,
-        fediverse_id: follower.fediverse_id,
+        activitypub_id: follower.activitypub_id,
         icon_url: generate_ati_url(follower.account_id, 'icon', follower.icon_id),
         banner_url: generate_ati_url(follower.account_id, 'banner', follower.banner_id),
         bio: follower.bio,
@@ -61,7 +61,7 @@ class V1::AccountsController < V1::ApplicationController
       following: @account.following.map {|following| {
         name: following.name,
         name_id: following.name_id,
-        fediverse_id: following.fediverse_id,
+        activitypub_id: following.activitypub_id,
         icon_url: generate_ati_url(following.account_id, 'icon', following.icon_id),
         banner_url: generate_ati_url(following.account_id, 'banner', following.banner_id),
         bio: following.bio,

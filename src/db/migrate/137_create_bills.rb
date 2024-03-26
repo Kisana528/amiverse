@@ -1,6 +1,6 @@
-class CreateTransactions < ActiveRecord::Migration[7.0]
+class CreateBills < ActiveRecord::Migration[7.0]
   def change
-    create_table :transactions do |t|
+    create_table :bills do |t|
       t.references :account, null: false, foreign_key: true
       t.string :uuid, null: false
       t.string :kind, null: false, default: ''
