@@ -1,4 +1,4 @@
-class StorageController < ApplicationController
+class VideosController < ApplicationController
   include DataStream
   before_action :logged_in_account
   before_action :set_video, only: %i[ show_video ]
