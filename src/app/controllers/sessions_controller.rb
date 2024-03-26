@@ -16,7 +16,6 @@ class SessionsController < ApplicationController
       deleted: false)
     if account && account.authenticate(params[:session][:password])
       log_in account
-      remember(account, request.remote_ip, request.user_agent, request.uuid)
       flash[:success] = t('.success')
       redirect_to root_url
     else

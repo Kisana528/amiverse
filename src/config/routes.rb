@@ -47,24 +47,13 @@ Rails.application.routes.draw do
   get 'storage' => 'storage#index'
 
   # image
-  get 'storage/images' => 'storage#images', as: 'images'
-  get 'storage/images/new' => 'storage#new_image', as: 'new_image'
-  post 'storage/images/create' => 'storage#create_image', as: 'create_image'
-  get 'storage/images/:image_id' => 'storage#show_image', as: 'image'
-  get 'storage/images/:image_id/edit' => 'storage#edit_image', as: 'edit_image'
-  patch 'storage/images/:image_id/update' => 'storage#update_image', as: 'update_image'
-  delete 'storage/images/:image_id/destroy' => 'storage#destroy_image', as: 'destroy_image'
+  resources :images, param: :aid, only: %i[ create update delete ]
 
   # video
-  get 'storage/videos' => 'storage#videos', as: 'videos'
-  get 'storage/videos' => 'storage#new_video', as: 'new_video'
-  post 'storage/videos' => 'storage#create_video', as: 'create_video'
-  get 'storage/videos/:video_id' => 'storage#show_video', as: 'video'
-  get 'storage/videos/:video_id/edit' => 'storage#edit_video', as: 'edit_video'
-  patch 'storage/videos/:video_id/update' => 'storage#update_video', as: 'update_video'
-  delete 'storage/videos/:video_id/destroy' => 'storage#destroy_video', as: 'destroy_video'
+  resources :videos, param: :aid, only: %i[ create update delete ]
 
   # notifications
+  #resources :videos, param: :aid, only: %i[ create update delete ]
   get 'notifications' => 'notifications#index'
   get 'notifications/new' => 'notifications#new', as: 'new_notification'
   post 'notifications/create' => 'notifications#create', as: 'create_notification'
@@ -159,7 +148,7 @@ Rails.application.routes.draw do
   # administorator
   namespace :admin do
 
-    # analytics
+    # dashboard
     root 'dashboard#index'
 
     # account
@@ -184,15 +173,23 @@ Rails.application.routes.draw do
     post 'test/digest'
   end
 
-  # version 1
+  # api v1
   namespace :v1 do
 
-    # online-status
-    root 'application#index'
-    # csrf token generate
-    post 'new' => 'application#new', as: 'new'
-    # logged-in
-    post 'logged-in' => 'application#logged_in', as: 'logged-in'
+    # app_status
+    root 'resources#index'
+
+    # session
+    post 'sessions/new' => 'sessions#new'
+    post 'logged_in' => 'sessions#logged_in'
+    post 'login' => 'sessions#create'#
+    delete 'logout' => 'sessions#logout'#
+
+    # timeline
+    post 'tl' => 'timelines#index'
+    post 'tl/follow' => 'timelines#follow'#
+    post 'tl/current' => 'timelines#current'#
+    post 'tl/group/:group_aid' => 'timelines#group'#
 
     # account
     post '@:name_id' => 'accounts#show', as: 'account'
@@ -202,10 +199,6 @@ Rails.application.routes.draw do
     # signup
     post 'check-invitation-code' => 'signup#check_invitation_code'
     post 'signup' => 'signup#create'
-
-    # session
-    post 'login' => 'sessions#create', as: 'login'
-    delete 'logout' => 'sessions#destroy', as: 'logout'
 
     # item
     post 'items' => 'items#index', as: 'items'

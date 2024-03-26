@@ -9,6 +9,7 @@ import {MaterialSymbols10k, MaterialSymbolsHomeRounded, JisakuMenuBar} from '@/l
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
   const loginFormTrigger = useContext(appContext).loginFormTrigger
+  const setFlash = useContext(appContext).setFlash
   const [loadItems, setloadItems] = useState(true)
   const [items, setItems] = useState([])
   const [page, setPage] = useState(1)
@@ -17,10 +18,16 @@ export default function Home() {
   useEffect(() => {
     if (!ignore && loggedIn) {
       const fetchItems = async () => {
-        const response = await axios.post('/items', {'page':page})
-        const data = response.data
-        setItems(data)
-        setloadItems(false)
+        await axios.post('/tl', { 'page': page })
+          .then(res => {
+            setItems(res.data)
+            setloadItems(false)
+          })
+          .catch(err => {
+            setFlash('アイテム取得エラー')
+            //err.response.status
+            setloadItems(false)
+          })
       }
       fetchItems()
       async function created(){
@@ -78,7 +85,7 @@ export default function Home() {
           :
           items.length > 0 ?
             items.map(item => (
-              <ItemAccount key={item.item_id} item={item} />
+              <ItemAccount key={item.aid} item={item} />
             ))
           :
           <p>Nothing Here</p>

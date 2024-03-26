@@ -1,4 +1,4 @@
-module Images
+module DataStream
   include ActiveStorage::Streaming
   include ActionController::DataStreaming
   include ActionController::Live

@@ -35,7 +35,7 @@
   <% end %>
     <div class="item-media">
       <% item.images.each do |image| %>
-        <%= image_tag generate_ati_url(image.account.account_id, 'images', image.image_id), class: 'item-image' %>
+        <%= image_tag generate_ati_url(image.account.aid, 'images', image.aid), class: 'item-image' %>
       <% end %>
       <% item.videos.each do |video| %>
         <video controls class='video-view' id='video-<%= video.video_id %>'></video>

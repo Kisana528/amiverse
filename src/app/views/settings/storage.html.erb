@@ -1,6 +1,6 @@
 <% provide(:layout_type, 'header_text') %>
-<% provide(:title, '設定 - ストレージ') %>
 <% provide(:header_text, '設定 - ストレージ') %>
+<% provide(:title, '設定 - ストレージ') %>
 <% provide(:selected_settings_menu, 'storage') %>
 
 <% content_for :settings_content do %>
@@ -8,19 +8,8 @@
   <details>
     <summary>画像</summary>
     <div>
-      <%= form_with model: @image, url: image_create_path, data: { turbo: false } do |f| %>
-        <% if @image.errors.any? %>
-          <div>
-            <div>
-              送信内容に<%= @image.errors.count %>つのエラーがあります。
-            </div>
-            <ul>
-            <% @image.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-            </ul>
-          </div>
-        <% end %>
+      <%= form_with model: @image, url: images_path, data: { turbo: false } do |f| %>
+        <%= render 'shared/error_messages', instead: @image %>
         <%= f.label :image, 'image' %>
         <%= f.file_field :image %>
         <br/>
@@ -40,7 +29,7 @@
     <% @images.each do |image| %>
       <div>
         名前:<%= image.name %>
-        ID:<%= image.image_id %>
+        ID:<%= image.aid %>
         説明:<%= image.description %>
         <% if image.image.attached? %>
           <%= image_tag generate_key_url(image.image.key), class: 'storage-images-image' %>
@@ -53,7 +42,7 @@
   <details>
     <summary>動画</summary>
     <div>
-      <%= form_with model: @video, url: videos_create_path, data: { turbo: false } do |f| %>
+      <%= form_with model: @video, url: videos_path, data: { turbo: false } do |f| %>
       <%= render 'shared/error_messages', instead: @video %>
       <%= f.label :video, 'video' %>
       <%= f.file_field :video %>
@@ -72,9 +61,8 @@
     <% end %>
     </div>
     <% @videos.each do |video| %>
-      <%= video.video_id %>
-      <%= video.uuid %>
       <%= video.name %>
+      <%= video.aid %>
       <%= video.description %>
       <video controls class='video-view' id='video-<%= video.video_id %>'></video>
       <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>

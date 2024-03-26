@@ -1,9 +1,11 @@
 class AccountsController < ApplicationController
-  include Images
+  include DataStream
   include ActivityPub
-  before_action :set_account, only: %i[ show ]
-  before_action :logged_in_account, only: %i[edit update destroy password_edit password_update]
+  before_action :set_account, except: %i[ show ]
+  before_action :logged_in_account, except: %i[ show ]
+
   def show
+    @account = find_account_by_nid(params[:name_id])
   end
   def follow
     account = find_account_by_nid(params[:name_id])
@@ -44,9 +46,6 @@ class AccountsController < ApplicationController
     end
     redirect_to root_path
   end
-  def edit
-    @account = @current_account
-  end
   def update
     @account = @current_account
     pre_icon_id = @account.icon_id
@@ -54,30 +53,28 @@ class AccountsController < ApplicationController
     if @account.update(account_update_params)
       generate_varinat_image(params[:account][:icon_id], pre_icon_id, 'icon')
       generate_varinat_image(params[:account][:banner_id], pre_banner_id, 'banner')
-      flash[:success] = "更新成功!"
+      flash[:success] = "更新しました"
       redirect_to account_path(@account.name_id)
     else
-      flash.now[:danger] = "更新できませんでした。"
-      render 'edit'
+      flash[:danger] = "更新できませんでした"
+      redirect_to settings_account_path
     end
-  end
-  def password_edit
-    @account = @current_account
   end
   def password_update
     @user = current_user
     if @user.update(user_params)
-      flash[:success] = "更新成功!"
+      flash[:success] = "更新しました"
       redirect_to user_path(@user.user_id)
     else
-      render 'edit'
+      flash[:danger] = "更新できませんでした"
+      redirect_to settings_account_path
     end
   end
   def destroy
   end
   private
   def set_account
-    @account = find_account_by_nid(params[:name_id])
+    @account = Account.find_by(name_id: params[:name_id])
   end
   def account_params
     params.require(:account).permit(
@@ -85,7 +82,7 @@ class AccountsController < ApplicationController
       :name_id,
       :icon_id,
       :banner_id,
-      :bio,
+      :summary,
       :location,
       :birthday,
       :password,
@@ -98,9 +95,15 @@ class AccountsController < ApplicationController
       :name_id,
       :icon_id,
       :banner_id,
-      :bio,
+      :summary,
       :location,
       :birthday
+    )
+  end
+  def account_password_update_params
+    params.require(:account).permit(
+      :password,
+      :password_confirmation
     )
   end
 end

@@ -30,9 +30,9 @@ export default function App({ Component, pageProps }) {
     if (!ignore) {
       async function fetchAccountInfo() {
         try {
-          await axios.post('/new')
+          await axios.post('/sessions/new')
           setLoadingStatus('アカウント情報確認中')
-          const response = await axios.post('/logged-in')
+          const response = await axios.post('/logged_in')
           const data = response.data
           setLoadingStatus(data.logged_in ? 'ログイン中' : '未ログイン')
           setLoading(false)
@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }) {
           setLoggedIn(data.logged_in)
           setAccount(data)
         } catch (error) {
-          setLoadingStatus(error.response ? 'アカウントエラー' : 'サーバーエラー')
+          setLoadingStatus(error.response ? 'ログインエラー' : 'サーバーエラー')
           //setLoading(false)
         }
       }

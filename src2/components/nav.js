@@ -1,6 +1,10 @@
+import { useContext } from 'react'
+import { appContext } from '@/pages/_app'
 import Link from 'next/link'
 
 export default function Nav() {
+  const loggedIn = useContext(appContext).loggedIn
+  const account = useContext(appContext).account
   return (
     <nav>
       <div className="nav-logo">
@@ -17,13 +21,13 @@ export default function Nav() {
         <div className="nav-li">
           <Link href="/">
             <div className="nav-list-container">
-              <div className="nav-list-icon">😀</div>
+              <div className="nav-list-icon">🪐</div>
               <div className="nav-list-info">HOME</div>
             </div>
           </Link>
         </div>
         <div className="nav-li">
-          <Link href="/@kisana">
+          <Link href="/discovery">
             <div className="nav-list-container">
               <div className="nav-list-icon">🦄</div>
               <div className="nav-list-info">Discovery</div>
@@ -31,49 +35,41 @@ export default function Nav() {
           </Link>
         </div>
         <div className="nav-li">
-          <Link href="/items">
+          <Link href="/dashboard">
             <div className="nav-list-container">
-              <div className="nav-list-icon">📚</div>
-              <div className="nav-list-info">TL</div>
+              <div className="nav-list-icon">😀</div>
+              <div className="nav-list-info">Dashboard</div>
             </div>
           </Link>
         </div>
         <div className="nav-li">
-          <Link href="/signup">
-            <div className="nav-list-container">
-              <div className="nav-list-icon">🎞️</div>
-              <div className="nav-list-info">TV</div>
-            </div>
-          </Link>
-        </div>
-        <div className="nav-li">
-          <Link href="/login">
+          <Link href="/notifications">
             <div className="nav-list-container">
               <div className="nav-list-icon">🎉</div>
-              <div className="nav-list-info">Notice</div>
+              <div className="nav-list-info">Notifications</div>
             </div>
           </Link>
         </div>
         <div className="nav-li">
-          <Link href="/">
+          <Link href="/messages">
             <div className="nav-list-container">
               <div className="nav-list-icon">📧</div>
-              <div className="nav-list-info">DM</div>
-            </div>
-          </Link>
-        </div>
-        <div className="nav-li">
-          <Link href="/">
-            <div className="nav-list-container">
-              <div className="nav-list-icon">💖</div>
-              <div className="nav-list-info">Me</div>
+              <div className="nav-list-info">Messages</div>
             </div>
           </Link>
         </div>
       </div>
       <div className="nav-menu">
         <div className="nav-li">
-          <Link href="/">
+          <Link href={loggedIn ? '/@' + account.name_id : '/'}>
+            <div className="nav-list-container">
+              <div className="nav-list-icon">💖</div>
+              <div className="nav-list-info">Me</div>
+            </div>
+          </Link>
+        </div>
+        <div className="nav-li">
+          <Link href="/settings">
             <div className="nav-list-container">
               <div className="nav-list-icon">⚙️</div>
               <div className="nav-list-info">Settings</div>

@@ -24,8 +24,8 @@
     <details>
       <summary>画像を添付</summary>
       <% Image.where(account_id: @current_account.id).each do |image| %>
-        <%= form.check_box :selected_images, { multiple: true }, image.image_id, nil %>
-        <%= form.label image.image_id %>
+        <%= form.check_box :selected_images, { multiple: true }, image.aid, nil %>
+        <%= form.label image.aid %>
       <% end %>
     </details>
     <details>

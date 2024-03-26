@@ -8,15 +8,15 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
-  def generate_key_url(key, format = '.webp')
+  def generate_key_url(key, format = '.webp') # imageがあるとき用
     dir = File.dirname(key)
     name = File.basename(key, '.*') + format
     true_key = File.join(dir, name)
     return generate_normal_url(true_key)
   end
-  def generate_ati_url(account_id, type, image_id, format = ".webp")
-    dir = "accounts/#{account_id}/#{type}"
-    name = image_id + format
+  def generate_ati_url(account_aid, type, image_aid, format = ".webp") # accountとimageのaidがあるとき
+    dir = "accounts/#{account_aid}/#{type}"
+    name = image_aid + format
     true_key = File.join(dir, name)
     return generate_normal_url(true_key)
   end
@@ -27,6 +27,13 @@ module ApplicationHelper
     current_page = current_page.to_i
     page = where_to_go == 'next' ? [current_page + 1, 2].max : where_to_go == 'prev' ? [current_page - 1, 1].max : 2
     return page
+  end
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
   end
   private
   def generate_normal_url(true_key)

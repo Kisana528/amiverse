@@ -4,7 +4,12 @@ class ApplicationController < ActionController::Base
   require 'net/http'
   require 'net/https'
   before_action :set_current_account
+
   private
+  def set_current_account
+    @current_account = current_account
+  end
+  # アカウント関連
   def admin_account
     unless logged_in? && @current_account.administrator
       render :file => "#{Rails.root}/public/404.html",  layout: false, status: :not_found
@@ -12,23 +17,23 @@ class ApplicationController < ActionController::Base
   end
   def logged_in_account
     unless logged_in?
-      redirect_to login_url
+      flash[:danger] = "ログインしてください"
+      redirect_to login_path
     end
   end
   def logged_out_account
     unless !logged_in?
-      flash[:danger] = "ログイン済みです。"
-      redirect_to root_url
+      flash[:danger] = "ログイン済みです"
+      redirect_to root_path
     end
   end
-  # 謎？
-  def correct_account
-    @account = current_account
-    unless current_account?(@account)
-      flash[:danger] = "正しいユーザーでログインしてください。"
-      redirect_to(root_url)
+  def correct_account(account)
+    unless current_account?(account)
+      flash[:danger] = "正しいユーザーでログインしてください"
+      redirect_to root_path
     end
   end
+  # その他
   def random_id
     ('a'..'z').to_a.concat(('A'..'Z').to_a.concat(('0'..'9').to_a)).shuffle[1..17].join
   end
@@ -107,9 +112,6 @@ class ApplicationController < ActionController::Base
       when 'image/gif'  then 'gif'
       when 'image/webp' then 'webp'
     end
-  end
-  def set_current_account
-    @current_account = current_account
   end
   def paged_items(param)
     param = param.to_i

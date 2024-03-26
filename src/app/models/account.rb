@@ -47,26 +47,7 @@ class Account < ApplicationRecord
     validates_confirmation_of :password, allow_blank: true
   end
   has_secure_password validations: false
-  #validates :icon,
-  #  size: { less_than: 1.megabytes },
-  #  content_type: %w[ image/jpeg image/png image/gif image/webp ]
-  #validates :banner,
-  #  size: { less_than: 1.megabytes },
-  #  content_type: %w[ image/jpeg image/png image/gif image/webp ]
-  def self.digest(string)
-    cost = ActiveModel::SecurePassword.min_cost ?
-      BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
-    BCrypt::Password.create(string, cost: cost)
-  end
-  def self.new_token
-    SecureRandom.urlsafe_base64
-  end
-  def remember(remember_token, remote_ip, user_agent, uuid)
-    Session.create(account_id: self.id,
-      user_agent: user_agent, remote_ip: remote_ip,
-      uuid: uuid,
-      session_digest: Account.digest(remember_token))
-  end
+
   def authenticated?(uuid, token)
     return false unless session = Session.find_by(account_id: self.id, uuid: uuid, deleted: false)
     BCrypt::Password.new(session.session_digest).is_password?(token)

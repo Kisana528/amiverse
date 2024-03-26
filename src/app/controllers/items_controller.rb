@@ -25,8 +25,8 @@ class ItemsController < ApplicationController
     @item.kind = 'plane'
     if @item.save
       if params[:item][:selected_images].present?
-        params[:item][:selected_images].each do |image_id|
-          if image = Image.find_by(image_id: image_id)
+        params[:item][:selected_images].each do |aid|
+          if image = Image.find_by(aid: aid)
             this_item_image_params = {
               image: image,
               item: @item
@@ -36,8 +36,8 @@ class ItemsController < ApplicationController
         end
       end
       if params[:item][:selected_videos].present?
-        params[:item][:selected_videos].each do |video_id|
-          if video = Video.find_by(video_id: video_id)
+        params[:item][:selected_videos].each do |aid|
+          if video = Video.find_by(aid: aid)
             this_item_video_params = {
               video: video,
               item: @item

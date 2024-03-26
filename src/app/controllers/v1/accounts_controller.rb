@@ -1,7 +1,8 @@
 class V1::AccountsController < V1::ApplicationController
   before_action :set_account, only: %i[ show followers following ]
   def show
-    render json: {name_id: @account.name_id,
+    render json: {
+      name_id: @account.name_id,
       name: @account.name,
       icon_url: generate_ati_url(@account.account_id, 'icon', @account.icon_id),
       banner_url: generate_ati_url(@account.account_id, 'banner', @account.banner_id),
