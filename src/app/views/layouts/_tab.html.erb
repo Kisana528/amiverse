@@ -5,7 +5,7 @@
   <div class="tab">
     <% if @current_account %>
       現在のトレンド！
-      <% if @current_account.administrator %>
+      <% if @current_account.administrator? %>
         <%= link_to '管理画面', admin_root_path %>
       <% end %>
       <br />

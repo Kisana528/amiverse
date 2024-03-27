@@ -4,7 +4,7 @@
 
 <div class='amiverse-index-container'>
   <% if @current_account %>
-    <% if @current_account.administrator %>
+    <% if @current_account.administrator? %>
       <div class='amiverse-index-box'>
       <div data-controller="hello">
       </div>

@@ -11,6 +11,8 @@ class CreateAudios < ActiveRecord::Migration[7.0]
       t.json :meta, null: false, default: []
       t.json :cache, null: false, default: []
       t.json :references, null: false, default: []
+      t.boolean :permission_scope, null: false, default: false
+      t.boolean :private, null: false, default: false
       t.boolean :deleted, null: false, default: false
       t.datetime :deleted_at
       t.timestamps

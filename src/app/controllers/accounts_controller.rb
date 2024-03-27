@@ -53,6 +53,7 @@ class AccountsController < ApplicationController
     if @account.update(account_update_params)
       generate_varinat_image(params[:account][:icon_id], pre_icon_id, 'icon')
       generate_varinat_image(params[:account][:banner_id], pre_banner_id, 'banner')
+      @account.treat_image('icon', 'icon') if params[:account][:icon].present?
       flash[:success] = "更新しました"
       redirect_to account_path(@account.name_id)
     else

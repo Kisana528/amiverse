@@ -41,12 +41,12 @@ module SessionsHelper
         account = Account.find_by(
           aid: cookies.signed[:amiverse_aid],
           deleted: false
-        )
+        ) if cookies.signed[:amiverse_aid].present?
         session = Session.find_by(
           account_id: account.id,
           uuid: cookies.signed[:amiverse_uid],
           deleted: false
-        )
+        ) if cookies.signed[:amiverse_uid].present?
         if BCrypt::Password.new(session.session_digest).is_password?(cookies.signed[:amiverse_rtk])
           @current_account = account
         end
@@ -59,11 +59,16 @@ module SessionsHelper
     account == current_account
   end
   def log_out
-    Session.find_by(
-      account_id: cookies.signed[:amiverse_aid],
-      session_unique_id: cookies.signed[:amiverse_uid],
+    account = Account.find_by(
+      aid: cookies.signed[:amiverse_aid],
       deleted: false
-    ).destroy
+    ) if cookies.signed[:amiverse_aid].present?
+    session = Session.find_by(
+      account_id: account.id,
+      uuid: cookies.signed[:amiverse_uid],
+      deleted: false
+    ) if cookies.signed[:amiverse_uid].present?
+    session.delete
     cookies.delete(:amiverse_aid)
     cookies.delete(:amiverse_uid)
     cookies.delete(:amiverse_rtk)

@@ -20,6 +20,15 @@ export default function App({ Component, pageProps }) {
   const loginFormTrigger = () => setLoginForm(!loginForm)
   const [dark, setDark] = useState(false)
   const modeTrigger = () => setDark(!dark)
+  const loggedInPage = () => {
+    if(loggedIn){
+      return
+    } else {
+      setFlash(`${router.pathname}へアクセスするにはログインしてください`)
+      router.push('/')
+      return
+    }
+  }
   let ignore = false
   const router = useRouter()
 
@@ -51,13 +60,7 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     if(!loading && !loginLoading){
       if(loggedInPaths.includes(router.pathname)){
-        if(loggedIn){
-          return
-        } else {
-          setFlash(`${router.pathname}へアクセスするにはログインしてください`)
-          router.push('/')
-          return
-        }
+        loggedInPage()
       }
       if(loggedIn && loggedInPaths.includes(router.pathname)) return
       if(!loggedOutPaths.includes(router.pathname)) return
@@ -77,6 +80,7 @@ export default function App({ Component, pageProps }) {
         account, setAccount,
         flash, setFlash,
         dark, setDark, modeTrigger,
+        loggedInPage
       }}>
         <Head />
         <Layout>

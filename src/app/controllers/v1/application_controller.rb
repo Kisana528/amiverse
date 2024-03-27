@@ -2,7 +2,7 @@ class V1::ApplicationController < ApplicationController
   protect_from_forgery
   private
   def api_admin_account
-    unless logged_in? && @current_account.administrator
+    unless logged_in? && @current_account.administrator?
       render status: 403
     end
   end
@@ -74,9 +74,18 @@ class V1::ApplicationController < ApplicationController
     item_data_json['account'] = account_data_json
     # image
     images_array_json = []
-    item.images.each do |image|
-      image_data_json = image_data(image)
-      image_data_json['url'] = generate_ati_url(image.account.aid, 'images', image.aid)
+    images = JSON.parse(item.images)
+    images.each do |image|
+      #image_data_json = image_data(image)
+      if image_data = Image.find_by(
+        aid: image,
+        private: false,
+        deleted: false
+      )
+      else
+        # 削除された画像
+      end
+      image_data_json['url'] = generate_ati_url(image_data.account.aid, 'images', image)
       images_array_json << image_data_json
     end
     item_data_json['images'] = images_array_json

@@ -65,7 +65,7 @@
         📰リソース
       </div>
     <% end %>
-    <% if @current_account.administrator %>
+    <% if @current_account.administrator? %>
       <%= link_to admin_root_path, class: 'settings-list-a' do %>
         <div class="settings-resource <%= yield(:selected_settings_resource) == 'resource' ? 'settings-lists-selected' : 'settings-list-hover' %>">
           🧠管理者

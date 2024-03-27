@@ -22,7 +22,7 @@ export default function Nav() {
           <Link href="/">
             <div className="nav-list-container">
               <div className="nav-list-icon">🪐</div>
-              <div className="nav-list-info">HOME</div>
+              <div className="nav-list-info">Home</div>
             </div>
           </Link>
         </div>
@@ -122,7 +122,7 @@ export default function Nav() {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        @media (max-width: 400px) {
+        @media (max-width: 700px) {
           /* FORM-1 */
           nav {
             position: fixed;
@@ -145,7 +145,7 @@ export default function Nav() {
             display: none;
           }
         }
-        @media (min-width: 700px) {
+        @media (min-width: 1300px) {
           /* FORM-3 */
           nav {
             width: 110px;

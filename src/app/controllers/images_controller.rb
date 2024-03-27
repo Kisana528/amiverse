@@ -5,34 +5,30 @@ class ImagesController < ApplicationController
 
   def show
     send_noblob_stream(
-      @image.image, @image.resize_image(@image.account.name, @image.account.name_id, 'image'))
+      @image.image, @image.treat_image('image', 'image'))
   end
   def create
     @image = Image.new(image_params)
-    @image.aid = unique_random_id(Image, 'aid')
     if params[:image][:image].blank?
       flash[:danger] = "画像がありません"
       return redirect_to settings_storage_path
     end
-    capacity = @current_account.storage_max_size - @current_account.storage_size
-    if params[:image][:image].size > capacity
-      flash[:danger] = "ストレージ容量が足りません"
-      return redirect_to settings_storage_path
-    end 
-    image_type = content_type_to_extension(params[:image][:image].content_type)
-    @image.image.attach(
-      key: "accounts/#{@current_account.aid}/images/#{@image.aid}.#{image_type}",
-      io: (params[:image][:image]),
-      filename: "#{@image.aid}.#{image_type}"
-    )
-    @current_account.update(storage_size: @current_account.storage_size + @image.image.byte_size.to_i)
     @image.account = @current_account
+    extension = File.extname(params[:image][:image].original_filename).delete_prefix(".")
+    @image.image.attach(
+      key: "accounts/#{@current_account.aid}/images/#{@image.aid}.#{extension}",
+      io: (params[:image][:image]),
+      filename: "#{@image.aid}.#{extension}"
+    )
+    @image.name = params[:image][:image].original_filename if @image.name.blank?
+    @image.aid = unique_random_id(Image, 'aid')
     if @image.save
-      @image.resize_image(@current_account.name, @current_account.name_id, 'image')
+      @image.treat_image('image', 'image')
+      @current_account.update(storage_size: @current_account.storage_size + @image.image.byte_size.to_i)
       flash[:success] = "アップロードしました"
       redirect_to settings_storage_path
     else
-      flash[:danger] = "アップロードできませんでした"
+      flash[:danger] = "アップロードできませんでした#{@image.errors.full_messages.join(", ")}"
       redirect_to settings_storage_path
     end
   end
@@ -48,6 +44,12 @@ class ImagesController < ApplicationController
     )
   end
   def image_params
-    params.require(:image).permit(:name, :description)
+    params.require(:image).permit(
+      :name,
+      :description,
+      :sensitive,
+      :warning_message,
+      :private
+    )
   end
 end

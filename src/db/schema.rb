@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 992) do
+ActiveRecord::Schema[7.0].define(version: 993) do
   create_table "Polls", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "survey_id", null: false
@@ -36,16 +36,16 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.text "pinned_items", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.integer "score", default: 0, null: false
     t.text "achievements", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.boolean "online", default: true, null: false
     t.datetime "last_online"
     t.boolean "invisible_online", default: false, null: false
     t.boolean "foreigner", default: false, null: false
+    t.boolean "activitypub", default: false, null: false
+    t.boolean "atprotocol", default: false, null: false
     t.boolean "activated", default: false, null: false
-    t.boolean "administrator", default: false, null: false
-    t.boolean "moderator", default: false, null: false
-    t.boolean "bot", default: false, null: false
-    t.boolean "commercial", default: false, null: false
+    t.text "roles", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.string "kind", default: "", null: false
     t.boolean "discoverable", default: true, null: false
     t.boolean "manually_approves_followers", default: false, null: false
@@ -60,6 +60,7 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.boolean "silenced", default: false, null: false
     t.boolean "suspended", default: false, null: false
     t.boolean "frozen", default: false, null: false
+    t.text "defaults", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "settings", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.bigint "storage_size", default: 0, null: false
     t.bigint "storage_max_size", default: 1000000000, null: false
@@ -71,9 +72,11 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.index ["aid", "name_id", "activitypub_id"], name: "index_accounts_on_aid_and_name_id_and_activitypub_id", unique: true
     t.check_constraint "json_valid(`achievements`)", name: "achievements"
     t.check_constraint "json_valid(`cache`)", name: "cache"
+    t.check_constraint "json_valid(`defaults`)", name: "defaults"
     t.check_constraint "json_valid(`languages`)", name: "languages"
     t.check_constraint "json_valid(`meta`)", name: "meta"
     t.check_constraint "json_valid(`pinned_items`)", name: "pinned_items"
+    t.check_constraint "json_valid(`roles`)", name: "roles"
     t.check_constraint "json_valid(`settings`)", name: "settings"
   end
 
@@ -195,6 +198,8 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "references", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.boolean "permission_scope", default: false, null: false
+    t.boolean "private", default: false, null: false
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -204,6 +209,17 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.check_constraint "json_valid(`cache`)", name: "cache"
     t.check_constraint "json_valid(`meta`)", name: "meta"
     t.check_constraint "json_valid(`references`)", name: "references"
+  end
+
+  create_table "badges", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "aid", null: false
+    t.string "name", default: "", null: false
+    t.text "description", default: "", null: false
+    t.string "icon_id", default: "", null: false
+    t.bigint "counter", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["aid"], name: "index_badges_on_aid", unique: true
   end
 
   create_table "bills", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -259,11 +275,12 @@ ActiveRecord::Schema[7.0].define(version: 992) do
   create_table "emojis", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "aid", null: false
-    t.string "emoji_type", default: "", null: false
+    t.string "kind", default: "", null: false
     t.string "content", default: "", null: false
     t.string "description", default: "", null: false
     t.boolean "sensitive", default: false, null: false
     t.boolean "local", default: false, null: false
+    t.string "icon_id", default: "", null: false
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -318,6 +335,8 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "references", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.boolean "permission_scope", default: false, null: false
+    t.boolean "private", default: false, null: false
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -376,7 +395,14 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.string "kind", default: "", null: false
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.integer "score", default: 0, null: false
     t.boolean "foreign", default: false, null: false
+    t.string "reply_scopes", default: "", null: false
+    t.string "quote_scopes", default: "", null: false
+    t.boolean "private", default: false, null: false
+    t.boolean "draft", default: false, null: false
+    t.boolean "scheduled", default: false, null: false
+    t.datetime "scheduled_at"
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -588,6 +614,19 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "server_images", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", default: "", null: false
+    t.string "name_id", null: false
+    t.text "description", default: "", null: false
+    t.boolean "deleted", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_server_images_on_account_id"
+    t.index ["name_id"], name: "index_server_images_on_name_id", unique: true
+  end
+
   create_table "sessions", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "name", default: "", null: false
@@ -681,6 +720,8 @@ ActiveRecord::Schema[7.0].define(version: 992) do
     t.text "meta", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "cache", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
     t.text "references", size: :long, default: "[]", null: false, collation: "utf8mb4_bin"
+    t.boolean "permission_scope", default: false, null: false
+    t.boolean "private", default: false, null: false
     t.boolean "deleted", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -774,6 +815,7 @@ ActiveRecord::Schema[7.0].define(version: 992) do
   add_foreign_key "registrations", "accounts"
   add_foreign_key "replies", "items", column: "replied"
   add_foreign_key "replies", "items", column: "replier"
+  add_foreign_key "server_images", "accounts"
   add_foreign_key "sessions", "accounts"
   add_foreign_key "subscribers", "accounts"
   add_foreign_key "subscribers", "subscriptions"

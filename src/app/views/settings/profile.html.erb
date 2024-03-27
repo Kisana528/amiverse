@@ -8,6 +8,8 @@
     <div>
       <details>
         <summary>アイコン</summary>
+        <%= f.label :icon, 'icon' %>
+        <%= f.file_field :icon %>
         <% @images.each do |image| %>
           <div>
             <%= f.radio_button :icon_id, image.aid %>

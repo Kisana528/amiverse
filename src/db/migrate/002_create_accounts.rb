@@ -14,16 +14,16 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.json :pinned_items, null: false, default: []
       t.json :meta, null: false, default: []
       t.json :cache, null: false, default: []
+      t.integer :score, null: false, default: 0
       t.json :achievements, null: false, default: []
       t.boolean :online, null: false, default: true
       t.datetime :last_online
       t.boolean :invisible_online, null: false, default: false
       t.boolean :foreigner, null: false, default: false
+      t.boolean :activitypub, null: false, default: false
+      t.boolean :atprotocol, null: false, default: false
       t.boolean :activated, null: false, default: false
-      t.boolean :administrator, null: false, default: false
-      t.boolean :moderator, null: false, default: false
-      t.boolean :bot, null: false, default: false
-      t.boolean :commercial, null: false, default: false
+      t.json :roles, null: false, default: []
       t.string :kind, null: false, default: ''
       t.boolean :discoverable, null: false, default: true
       t.boolean :manually_approves_followers, null: false, default: false
@@ -38,6 +38,7 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
       t.boolean :silenced, null: false, default: false
       t.boolean :suspended, null: false, default: false
       t.boolean :frozen, null: false, default: false
+      t.json :defaults, null: false, default: []
       t.json :settings, null: false, default: []
       t.bigint :storage_size, null: false, default: 0
       t.bigint :storage_max_size, null: false, default: 1000000000

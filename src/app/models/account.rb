@@ -8,13 +8,20 @@ class Account < ApplicationRecord
   has_many :reactions
   has_many :messages
   has_many :notifications
+  has_one_attached :icon
+  has_one_attached :banner
   # follow
   has_many :followed, class_name: 'Follow', foreign_key: 'followed'
   has_many :follower, class_name: 'Follow', foreign_key: 'follower'
   has_many :followers, through: :followed, source: :follower
   has_many :following, through: :follower, source: :followed
-  # --- #
-  attr_accessor :remember_token, :activation_token
+  # varidate
+  validates :icon,
+    size: { less_than: 100.megabytes },
+    content_type: %w[ image/jpeg image/png image/gif image/webp ]
+  validates :banner,
+    size: { less_than: 100.megabytes },
+    content_type: %w[ image/jpeg image/png image/gif image/webp ]
   BASE_64_URL_REGEX  = /\A[a-zA-Z0-9_-]*\z/
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :aid,
@@ -47,14 +54,20 @@ class Account < ApplicationRecord
     validates_confirmation_of :password, allow_blank: true
   end
   has_secure_password validations: false
-
-  def authenticated?(uuid, token)
-    return false unless session = Session.find_by(account_id: self.id, uuid: uuid, deleted: false)
-    BCrypt::Password.new(session.session_digest).is_password?(token)
+  # other
+  def add_roles(add_roles_array)
+    add_mca_data(self, 'roles', add_roles_array)
   end
-  def forget(uuid)
-    Session.find_by(account_id: self.id, uuid: uuid, deleted: false).update(deleted: true)
+  def remove_roles(remove_roles_array)
+    remove_mca_data(self, 'roles', remove_roles_array)
   end
+  def administrator?
+    roles.include?('administrator')
+  end
+  def moderator?
+    roles.include?('moderator')
+  end
+  # --- #
   private
   def image_aid_presence
     if icon_id.present?

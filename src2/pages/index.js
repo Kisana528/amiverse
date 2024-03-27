@@ -3,8 +3,9 @@ import axios from '@/lib/axios'
 import Link from 'next/link'
 import {appContext} from '@/pages/_app'
 import ItemAccount from '@/components/item_account'
-import Hls from 'hls.js'
 import {MaterialSymbols10k, MaterialSymbolsHomeRounded, JisakuMenuBar} from '@/lib/svg'
+import HeaderText from '@/components/header_text'
+import Video from '@/components/video'
 
 export default function Home() {
   const loggedIn = useContext(appContext).loggedIn
@@ -52,32 +53,12 @@ export default function Home() {
     return () => {ignore = true}
   },[loggedIn])
 
-  const videoRef = useRef(null)
-  const video = videoRef.current
-  const videoSrc = 'http://localhost:9000/development/variants/accounts/00000000000000/videos/xho6e3zyfd5g4w/output.m3u8'
-
-  if (Hls.isSupported()) {
-    const hls = new Hls()
-    hls.loadSource(videoSrc)
-    hls.attachMedia(video)
-  }
-
   const loggedInContent = (
     <>
       <div>
-        <Link href="/@kisana">@kisana</Link>
-        <br />
-        <Link href="/items">投稿を見る</Link>
-        <br />
-
         <MaterialSymbols10k width="2em" height="2em" />
         <MaterialSymbolsHomeRounded width="2em" height="2em" />
         <JisakuMenuBar width="2em" height="2em" />
-
-        <div className="video-view" >
-          <video ref={videoRef} controls />
-        </div>
-
       </div>
       <div>
         {loadItems ?
@@ -116,40 +97,11 @@ export default function Home() {
 
   return (
     <>
-      <div className="main-header">
-        <div className="main-header-text">
-          <Link href="/">Home</Link>
-        </div>
-      </div>
-      <div className="main-container">
+      <HeaderText
+        headerText={'Home'}
+      >
         {content}
-      </div>
-      <style jsx>{`
-        .main-header {
-          height: 50px;
-          width: 100%;
-          position: sticky;
-          top: 0px;
-          display: flex;
-          justify-content: space-around;
-          align-items: center;
-          backdrop-filter: blur(3px);
-          background: var(--blur-color);
-        }
-        .main-header-text {
-          background: linear-gradient(90deg, #747eee, #d453cc 50%, #fe5597);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          font-size: 20px;
-        }
-        .main-container {
-          background: var(--main-container-background-color);
-          padding: 5px;
-        }
-        .video-view {
-          width: 100%;
-        }
-      `}</style>
+      </HeaderText>
     </>
   )
 }

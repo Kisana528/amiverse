@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
   # アカウント関連
   def admin_account
-    unless logged_in? && @current_account.administrator
+    unless logged_in? && @current_account.administrator?
       render :file => "#{Rails.root}/public/404.html",  layout: false, status: :not_found
     end
   end
@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
   def generate_varinat_image(image_aid, pre_image_aid, type)
     if image_aid.present? && pre_image_aid != image_aid
       image = Image.find_by(aid: image_aid)
-      image.resize_image(type)
+      image.treat_image(type)
     end
   end
   def name_id_host_separater(str)
@@ -104,14 +104,6 @@ class ApplicationController < ActionController::Base
       suspended: false,
       frozen: false,
       deleted: false)
-  end
-  def content_type_to_extension(type)
-    case type
-      when 'image/jpeg' then 'jpg'
-      when 'image/png'  then 'png'
-      when 'image/gif'  then 'gif'
-      when 'image/webp' then 'webp'
-    end
   end
   def paged_items(param)
     param = param.to_i
