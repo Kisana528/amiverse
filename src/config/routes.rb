@@ -183,9 +183,9 @@ Rails.application.routes.draw do
 
     # session
     post 'sessions/new' => 'sessions#new'
-    post 'logged_in' => 'sessions#logged_in'
-    post 'login' => 'sessions#create'#
-    delete 'logout' => 'sessions#logout'#
+    post 'sessions/check' => 'sessions#check'
+    post 'login' => 'sessions#login'
+    delete 'logout' => 'sessions#logout'
 
     # timeline
     post 'tl' => 'timelines#index'
@@ -199,8 +199,8 @@ Rails.application.routes.draw do
     post '@:name_id/following' => 'accounts#following', as: 'following'
 
     # signup
-    post 'check-invitation-code' => 'signup#check_invitation_code'
-    post 'signup' => 'signup#create'
+    post 'signup/check' => 'signup#check'
+    post 'signup/create' => 'signup#create'
 
     # item
     post 'items' => 'items#index', as: 'items'

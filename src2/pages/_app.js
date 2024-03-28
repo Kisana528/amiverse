@@ -8,69 +8,63 @@ import { useRouter } from 'next/router'
 export const appContext = createContext()
 export default function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(true)
-  const [loginLoading, setLoginLoading] = useState(true)
-  const [loadingStatus, setLoadingStatus] = useState('セッション作成中')
+  const [loadingMessage, setLoadingMessage] = useState('セッション作成中')
   const [loggedIn, setLoggedIn] = useState(false)
   const [account, setAccount] = useState({})
-  const [flash, setFlash] = useState('')
-  const [loginForm, setLoginForm] = useState(false)
-  const loginFormTrigger = () => setLoginForm(!loginForm)
-  const [dark, setDark] = useState(false)
-  const modeTrigger = () => setDark(!dark)
+  const [flashKind, setFlashKind] = useState('')
+  const [flashMessage, setFlashMessage] = useState('')
+  const [modal, setModal] = useState(false)
+  const modalTrigger = () => setModal(!modal)
+  const [darkThreme, setDarkThreme] = useState(false)
+  const darkThremeTrigger = () => setDarkThreme(!darkThreme)
   const router = useRouter()
   const loggedInPage = () => {
     if(!loggedIn){
-      setFlash(`${router.pathname}へアクセスするにはログインしてください`)
+      setFlashKind('info')
+      setFlashMessage(`${router.pathname}へアクセスするにはログインしてください`)
+      console.log(flash)
       router.push('/')
       return
     }
   }
   const loggedOutPage = () => {
     if(loggedIn){
-      setFlash(`ログイン済みですので${router.pathname}へアクセスできません`)
+      setFlashKind('info')
+      setFlashMessage(`ログイン済みですので${router.pathname}へアクセスできません`)
       router.push('/')
       return
     }
   }
-  let ignore = false
 
   useEffect(() => {
-    if(window.matchMedia('(prefers-color-scheme: dark)').matches === true){
-      modeTrigger()
-    }
-    if (!ignore) {
-      async function fetchAccountInfo() {
-        try {
-          await axios.post('/sessions/new')
-          setLoadingStatus('アカウント情報確認中')
-          const response = await axios.post('/logged_in')
-          const data = response.data
-          setLoadingStatus(data.logged_in ? 'ログイン中' : '未ログイン')
-          setLoading(false)
-          setLoginLoading(false)
-          setLoggedIn(data.logged_in)
-          setAccount(data)
-        } catch (error) {
-          setLoadingStatus(error.response ? 'ログインエラー' : 'サーバーエラー')
-          setLoading(false)
-          setFlash(`サーバーエラー`)
-        }
+    setDarkThreme(window.matchMedia('(prefers-color-scheme: dark)').matches)
+    async function startUp() {
+      try {
+        await axios.post('/sessions/new')
+        setLoadingMessage('アカウント情報確認中')
+        const res = await axios.post('/sessions/check')
+        setLoggedIn(res.data.logged_in)
+        setAccount(res.data.account)
+      } catch (err) {
+        setFlashKind('danger')
+        setFlashMessage(err.response ? 'アカウントエラー' : 'サーバーエラー')
       }
-      fetchAccountInfo()
+      setLoadingMessage('ロード完了')
+      setLoading(false)
     }
-    return () => {ignore = true}
+    startUp()
   },[])
 
   return (
       <appContext.Provider value={{
         loading, setLoading,
-        loginLoading, setLoginLoading,
-        loadingStatus, setLoadingStatus,
-        loginForm, setLoginForm, loginFormTrigger,
+        loadingMessage, setLoadingMessage,
         loggedIn, setLoggedIn,
         account, setAccount,
-        flash, setFlash,
-        dark, setDark, modeTrigger,
+        flashKind, setFlashKind,
+        flashMessage, setFlashMessage,
+        modal, setModal, modalTrigger,
+        darkThreme, setDarkThreme, darkThremeTrigger,
         loggedInPage, loggedOutPage
       }}>
         <Head />

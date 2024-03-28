@@ -10,20 +10,26 @@ export default function Login() {
   const setLoginForm = useContext(appContext).setLoginForm
   const setFlash = useContext(appContext).setFlash
   const [loginStatus, setLoginStatus] = useState('')
-  const [accountID, setAccountID] = useState('')
+  const [accountId, setAccountId] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
   
   const handleCancel = () => setLoginForm(false)
+  const testFunc = (e) => {
+    event.preventDefault()
+    router.reload
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     setLoginLoading(true)
-    await axios.post('/login', { 'name_id': accountID, password })
+    await axios.post('/login', { 'name_id': accountId, password })
       .then(res => {
+        router.reload
         if (res.data.logged_in) {
           setLoggedIn(true)
           router.push('/').then(() => {
+            
             setLoginStatus('ログインしました')
             setFlash('ログインしたよ')
             setLoginLoading(false)
@@ -37,13 +43,9 @@ export default function Login() {
       })
       .catch(err => {
         if (err.response.status == 401) {
-          if (!err.response.data.logged_in) {
-            setLoginStatus('情報が間違っています')
-          } else {
-            setLoginStatus('ログインできませんでした')
-          }
+          setLoginStatus('ログインエラー:正しくない情報')
         } else {
-          setLoginStatus('ログイン通信例外')
+          setLoginStatus('ログインエラー:不明')
           setLoginLoading(false)
         }
       })
@@ -54,6 +56,7 @@ export default function Login() {
       <div className="login-fullscreen" onClick={handleCancel}>
       </div>
         <div className="login-container">
+        <button onClick={testFunc} >Teast</button>
           <h1>Amiverse.netへログイン</h1>
           {loggedIn ? 't' : 'f'}
           {loginStatus}
@@ -61,7 +64,7 @@ export default function Login() {
           <form onSubmit={handleSubmit}>
             <label>
               アカウントID:
-              <input type="text" value={accountID} onChange={(e) => setAccountID(e.target.value)} />
+              <input type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
             </label>
             <br />
             <label>

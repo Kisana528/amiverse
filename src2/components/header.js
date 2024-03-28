@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import { appContext } from '@/pages/_app'
 
 export default function Header() {
-  const dark = useContext(appContext).dark
-  const modeTrigger = useContext(appContext).modeTrigger
+  const darkThreme = useContext(appContext).darkThreme
+  const darkThremeTrigger = useContext(appContext).darkThremeTrigger
 
   return (
     <header>
@@ -16,7 +16,7 @@ export default function Header() {
         </Link>
       </div>
       <div className="mode-toggle">
-        <button className={dark ? "dark-button" : "light-button"} onClick={modeTrigger}>{dark ? "🌙" : "☀️"}</button>
+        <button className={darkThreme ? "dark-button" : "light-button"} onClick={darkThremeTrigger}>{darkThreme ? "🌙" : "☀️"}</button>
       </div>
       <style jsx>{`
       header {

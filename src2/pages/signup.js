@@ -8,59 +8,64 @@ export default function Signup() {
   const setLoggedIn = useContext(appContext).setLoggedIn
   const loginStatus = useContext(appContext).loginStatus
   const setLoginStatus = useContext(appContext).setLoginStatus
-  const setFlash = useContext(appContext).setFlash
+  const setFlashMessage = useContext(appContext).setFlashMessage
   const router = useRouter()
   const [signupStatus, setSignupStatus] = useState('未確認')
-  const [invited, setInvited] = useState(false)
+  const [invitationChecked, setInvitationChecked] = useState(false)
   const [invitationCode, setInvitationCode] = useState('')
   const [name, setName] = useState('')
   const [nameID, setNameID] = useState('')
+  const [summary, setSummary] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
 
-  const checkInvitationCode = async (event) => {
-    event.preventDefault()
-    await axios.post('/check-invitation-code', { 'invitation_code': invitationCode })
-      .then(res => {
-        if (res.data.invitation_code) {
-          setSignupStatus('招待を確認済み')
-          setInvited(true)
-        } else {
-          setSignupStatus('招待が確認できませんでした')
-        }
-      })
-      .catch(err => {
-        setSignupStatus('招待確認通信例外')
-      })
+  const signupCheck = async (e) => {
+    e.preventDefault()
+    await axios.post('/signup/check', {
+      'code': invitationCode
+    })
+    .then(res => {
+      if(res.data.valid){
+        setSignupStatus('アカウントを作成してください')
+        setInvitationChecked(true)
+      } else {
+        setSignupStatus('使用不可能')
+      }
+    })
+    .catch(err => {
+      setSignupStatus('サーバーエラー')
+    })
   }
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    await axios.post('/signup', {
-      'invitation_code': invitationCode,
+  const signupCreate = async (e) => {
+    e.preventDefault()
+    await axios.post('/signup/create', {
+      'code': invitationCode,
       'name': name,
       'name_id': nameID,
+      'summary': summary,
       'password': password,
       'password_confirmation': passwordConfirmation
     })
-      .then(res => {
-        if (res.data.created) {
-          setSignupStatus('作成されました')
-          setFlash('作成したよ')
-          router.push('/')
-        } else if (!res.data.created) {
-          setSignupStatus('間違っています')
-        } else if (!res.data.invitation_code) {
-          setSignupStatus('招待が確認できませんでした')
-        } else {
-          setSignupStatus('アカウントが作成できませんでした')
-        }
-      })
-      .catch(err => {
-        setSignupStatus('アカウント作成通信例外')
-      })
+    .then(res => {
+      if (res.data.status == 'created') {
+        setSignupStatus('作成されました')
+        setFlashMessage('作成したよ')
+        router.push('/')
+      } else if (res.data.status == 'rollbacked') {
+        setSignupStatus(res.data.message)
+      } else if (res.data.status == 'invalid_code') {
+        setSignupStatus('招待が確認できませんでした')
+      } else {
+        setSignupStatus('アカウントが作成できませんでした')
+      }
+    })
+    .catch(err => {
+      setSignupStatus('アカウント作成通信例外')
+      console.log(err)
+    })
   }
   const invitationCodeForm = (
-    <form onSubmit={checkInvitationCode}>
+    <form onSubmit={signupCheck}>
       <label>
         招待コード:
         <input type="text" value={invitationCode} onChange={(e) => setInvitationCode(e.target.value)} ></input>
@@ -69,7 +74,7 @@ export default function Signup() {
     </form>
   )
   const AccountForm = (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={signupCreate}>
       <label>
         招待コード:
         <input type="text" value={invitationCode} onChange={(e) => setInvitationCode(e.target.value)} />
@@ -99,7 +104,7 @@ export default function Signup() {
     </form>
   )
   let form
-  if (invited) {
+  if (invitationChecked) {
     form = AccountForm
   } else {
     form = invitationCodeForm

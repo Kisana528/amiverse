@@ -7,11 +7,12 @@ import HeaderText from '@/components/header_text'
 import Items from '@/components/items'
 
 export default function Home() {
-  const loggedIn = useContext(appContext).loggedIn
   const loading = useContext(appContext).loading
-  const loginFormTrigger = useContext(appContext).loginFormTrigger
+  const loggedIn = useContext(appContext).loggedIn
+  const modalTrigger = useContext(appContext).modalTrigger
   const account = useContext(appContext).account
-  const setFlash = useContext(appContext).setFlash
+  const setFlashKind = useContext(appContext).setFlash
+  const setFlashMessage = useContext(appContext).setFlash
   const [loadItems, setloadItems] = useState(true)
   const [items, setItems] = useState([])
   const [page, setPage] = useState(1)
@@ -19,16 +20,17 @@ export default function Home() {
   useEffect(() => {
     if (!loading) {
       const fetchItems = async () => {
-        await axios.post('/tl/current', { 'page': page })
+        await axios.post('/tl/current', {'page': page})
           .then(res => {
             setItems(res.data)
             setloadItems(false)
           })
           .catch(err => {
-            if (err.response.status == 401) {
-              setFlash('タイムライン取得エラー:未ログイン')
+            setFlashKind('danger')
+            if (err.response) {
+              setFlashMessage('タイムライン取得エラー:未ログイン')
             } else {
-              setFlash('タイムライン取得エラー:不明')
+              setFlashMessage('タイムライン取得エラー:不明')
             }
             setloadItems(false)
           })
@@ -71,7 +73,7 @@ export default function Home() {
             return (
               <div>
                 Amiverse.netへようこそ！
-                <div onClick={loginFormTrigger}>ログイン</div>
+                <Link href="/login">ログイン</Link>
                 <Link href="/signup">サインアップ</Link>
               </div>
             )

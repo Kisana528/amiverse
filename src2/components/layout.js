@@ -4,30 +4,33 @@ import Nav from './nav'
 import Tab from './tab'
 import Login from './login'
 import { appContext } from '@/pages/_app'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 export default function Layout({ children }) {
   const loading = useContext(appContext).loading
   const setLoading = useContext(appContext).setLoading
-  const loadingStatus = useContext(appContext).loadingStatus
-  const dark = useContext(appContext).dark
-  const flash = useContext(appContext).flash
-  const setFlash = useContext(appContext).setFlash
+  const loadingMessage = useContext(appContext).loadingMessage
+  const darkThreme = useContext(appContext).darkThreme
+  const flashKind = useContext(appContext).flashKind
+  const setFlashKind = useContext(appContext).setFlashKind
+  const flashMessage = useContext(appContext).flashMessage
+  const setFlashMessage = useContext(appContext).setFlashMessage
   const loginForm = useContext(appContext).loginForm
   const [removeFlash, setRemoveFlash] = useState(false)
+  
   const handleClick = () => {
     if(removeFlash){
-      setFlash('')
+      setFlashMessage('')
       setRemoveFlash(false)
     } else {
-      setFlash(flash + '(もう一度押して削除)')
+      setFlashMessage(flashMessage + '(もう一度押して削除)')
       setRemoveFlash(true)
     }
   }
   const closeLoading = () => setLoading(false)
   
   return (
-    <div className={`all ${dark ? "dark-mode" : "light-mode"} ${loading ? "loading-top" : ""}`}>
+    <div className={`all ${darkThreme ? "dark-mode" : "light-mode"} ${loading ? "loading-top" : ""}`}>
       <div className={`${loading ? "loading" : "loading-hide"}`}>
         <div className='loading-info'>
           <div className="loading-logo">
@@ -38,7 +41,7 @@ export default function Layout({ children }) {
             <br />
             Amiverse
           </div>
-          <div className="loading-status">{loadingStatus}</div>
+          <div className="loading-status">{loadingMessage}</div>
         </div>
         <div className='loading-detail'>
           <div className='close-loading' onClick={closeLoading} >閉じる</div>
@@ -49,7 +52,7 @@ export default function Layout({ children }) {
         {loginForm ? <Login /> : ''}
         <main>
           {children}
-          {flash ? <div className="flash" onClick={handleClick}>{flash}</div> : ''}
+          {flashMessage ? <div className={`flash  flash-${flashKind}`} onClick={handleClick}>{flashMessage}</div> : ''}
         </main>
         <Tab />
       </div>
