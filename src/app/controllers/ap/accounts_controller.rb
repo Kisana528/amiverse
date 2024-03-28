@@ -16,7 +16,7 @@ class Ap::AccountsController < Ap::ApplicationController
       icon: {
         type: 'Image',
         mediaType: 'image/webp',
-        url: generate_ati_url(@account.account_id, 'icon', @account.icon_id)
+        url: image_url(@account.icon_id, 'icon')
       },
       preferredUsername: @account.name_id,
       inbox: full_api_url("ap/@#{@account.name_id}/inbox"),

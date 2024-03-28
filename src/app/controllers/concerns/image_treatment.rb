@@ -1,4 +1,13 @@
 module ImageTreatment
+  def treat_image(image_aid, type, model = Image, attachment_s = 'image')
+    image = model.where('BINARY aid = ?', image_aid).first
+    attachment = image.send(attachment_s.to_s)
+    attachment.analyze if attachment.attached?
+    attachment.variant(image_optimize(type), type).processed
+  end
+  def delete_treated_image(image_aid, type)
+  end
+  private
   def image_optimize(type)
     resize = "2048x2048>"
     extent = ""
@@ -17,7 +26,6 @@ module ImageTreatment
     )
     resized.merge(end_optimize)
   end
-  private
   def start_optimize
     {
       coalesce: true, # アニメーションシーケンスの最適化

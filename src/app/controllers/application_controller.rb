@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
+  include ImageTreatment
   include ApplicationHelper
+  include AccountsHelper
   include SessionsHelper
   require 'net/http'
   require 'net/https'
@@ -123,7 +125,7 @@ class ApplicationController < ActionController::Base
       account: {
         name_id: item.account.name_id,
         name: item.account.name,
-        icon_url: generate_ati_url(item.account.account_id, 'icon', item.account.icon_id)
+        icon_url: image_url(item.account.icon_id, 'icon')
       },
       reactions: item.reactions.group(:reaction_id).count.map { |key, value| {
         reaction_id: key,

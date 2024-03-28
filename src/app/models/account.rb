@@ -28,31 +28,30 @@ class Account < ApplicationRecord
     presence: true,
     length: { in: 5..25, allow_blank: true },
     uniqueness: { case_sensitive: false }
-  with_options unless: -> { validation_context == :skip } do
-    validates :name_id,
-      presence: true,
-      length: { in: 5..50, allow_blank: true },
-      format: { with: BASE_64_URL_REGEX, allow_blank: true },
-      uniqueness: { case_sensitive: false }
-    validate :image_aid_presence
-    validates :icon_id,
-      format: { with: BASE_64_URL_REGEX, allow_blank: true }
-    validates :banner_id,
-      format: { with: BASE_64_URL_REGEX, allow_blank: true }
-    validates :email,
-      length: { maximum: 255, allow_blank: true },
-      format: { with: VALID_EMAIL_REGEX, allow_blank: true },
-      uniqueness: { case_sensitive: false, allow_blank: true }
-    validates :password,
-      presence: true,
-      length: { in: 8..63, allow_blank: true },
-      allow_nil: true
-    validate do |record|
-      record.errors.add(:password, :blank) unless record.password_digest.present?
-    end
-    validates_length_of :password, maximum: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED
-    validates_confirmation_of :password, allow_blank: true
+  # with_options unless: -> { validation_context == :skip } do ???
+  validates :name_id,
+    presence: true,
+    length: { in: 5..50, allow_blank: true },
+    format: { with: BASE_64_URL_REGEX, allow_blank: true },
+    uniqueness: { case_sensitive: false }
+  validate :valid_images
+  validates :icon_id,
+    format: { with: BASE_64_URL_REGEX, allow_blank: true }
+  validates :banner_id,
+    format: { with: BASE_64_URL_REGEX, allow_blank: true }
+  validates :email,
+    length: { maximum: 255, allow_blank: true },
+    format: { with: VALID_EMAIL_REGEX, allow_blank: true },
+    uniqueness: { case_sensitive: false, allow_blank: true }
+  validates :password,
+    presence: true,
+    length: { in: 8..63, allow_blank: true },
+    allow_nil: true
+  validate do |record|
+    record.errors.add(:password, :blank) unless record.password_digest.present?
   end
+  validates_length_of :password, maximum: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED
+  validates_confirmation_of :password, allow_blank: true
   has_secure_password validations: false
   # other
   def add_roles(add_roles_array)
@@ -69,16 +68,8 @@ class Account < ApplicationRecord
   end
   # --- #
   private
-  def image_aid_presence
-    if icon_id.present?
-      unless Image.exists?(aid: icon_id)
-        errors.add(:base, '存在しないicon')
-      end
-    end
-    if banner_id.present?
-      unless Image.exists?(aid: banner_id)
-        errors.add(:base, '存在しないbanner')
-      end
-    end
+  def valid_images
+    validate_using_image(self, icon_id, self.id)
+    validate_using_image(self, banner_id, self.id)
   end
 end

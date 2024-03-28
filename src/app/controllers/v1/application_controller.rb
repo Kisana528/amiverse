@@ -29,7 +29,7 @@ class V1::ApplicationController < ApplicationController
     response.set_header('X-CSRF-Token', form_authenticity_token)
   end
   def login_account_data(account)
-    account.as_json(only: [
+    return account.as_json(only: [
       :aid,
       :name,
       :name_id,
@@ -44,7 +44,31 @@ class V1::ApplicationController < ApplicationController
     ])
   end
   def account_data(account)
-    account.as_json(only: [
+    account_data_json = account.as_json(only: [
+      :aid,
+      :name,
+      :name_id,
+      :icon_id,
+      :banner_id,
+      :summary,
+      :location,
+      :followers_counter,
+      :following_counter,
+      :items_counter,
+      :birthday,
+      :created_at,
+      :meta,
+      :cache,
+      :bot,
+      :kind
+    ])
+    account_data_json['icon_url'] = image_url(account.icon_id, 'icon')
+    account_data_json['banner_url'] = image_url(account.banner_id, 'banner')
+    account_data_json['items'] = items_data(account.items)
+    return account_data_json
+  end
+  def with_account_data(account)
+    account_data_json = account.as_json(only: [
       :aid,
       :name,
       :name_id,
@@ -55,6 +79,9 @@ class V1::ApplicationController < ApplicationController
       :bot,
       :kind
     ])
+    account_data_json['icon_url'] = image_url(account.icon_id, 'icon')
+    account_data_json['banner_url'] = image_url(account.banner_id, 'banner')
+    return account_data_json
   end
   def item_data(item)
     item_data_json = item.as_json(only: [
@@ -70,7 +97,7 @@ class V1::ApplicationController < ApplicationController
       :updated_at,
     ])
     # account
-    account_data_json = account_data(item.account)
+    account_data_json = with_account_data(item.account)
     item_data_json['account'] = account_data_json
     # image
     images_array_json = []
@@ -85,7 +112,7 @@ class V1::ApplicationController < ApplicationController
       else
         # 削除された画像
       end
-      image_data_json['url'] = generate_ati_url(image_data.account.aid, 'images', image)
+      image_data_json['url'] = image_url(image_data.aid)
       images_array_json << image_data_json
     end
     item_data_json['images'] = images_array_json
@@ -95,8 +122,13 @@ class V1::ApplicationController < ApplicationController
     # other
     return item_data_json
   end
+  def items_data(items)
+    return items.map {|item|
+      item_data(item)
+    }
+  end
   def image_data(image)
-    image.as_json(only: [
+    return image.as_json(only: [
       :aid,
       :name,
       :description,

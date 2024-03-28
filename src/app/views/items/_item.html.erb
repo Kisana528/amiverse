@@ -3,7 +3,7 @@
     <%= link_to account_path(item.account.name_id) do %>
       <div class="item-whose">
         <% if !item.account.icon_id.blank? %>
-          <%= image_tag generate_ati_url(item.account.aid, 'icon', item.account.icon_id), class: 'item_account_image' %>
+          <%= image_tag image_url(item.account.icon_id, 'icon'), class: 'item_account_image' %>
         <% else %>
           <%= image_tag 'icon.webp', class: 'item_account_image' %>
         <% end %>
@@ -35,7 +35,7 @@
   <% end %>
     <div class="item-media">
       <%# item.images.each do |image| %>
-        <%# image_tag generate_ati_url(image.account.aid, 'images', image.aid), class: 'item-image' %>
+        <%# image_tag image_url(image.account.aid, 'images', image.aid), class: 'item-image' %>
       <%# end %>
       <% if false %>
         <video controls class='video-view' id='video-<%= video.video_id %>'></video>

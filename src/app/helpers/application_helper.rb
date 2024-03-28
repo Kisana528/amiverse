@@ -8,17 +8,17 @@ module ApplicationHelper
       page_title + " | " + base_title
     end
   end
-  def generate_key_url(key, format = '.webp') # imageがあるとき用
-    dir = File.dirname(key)
-    name = File.basename(key, '.*') + format
-    true_key = File.join(dir, name)
-    return generate_normal_url(true_key)
-  end
-  def generate_ati_url(account_aid, type, image_aid, format = ".webp") # accountとimageのaidがあるとき
-    dir = "accounts/#{account_aid}/#{type}"
-    name = image_aid + format
-    true_key = File.join(dir, name)
-    return generate_normal_url(true_key)
+  def image_url(image_aid, type = 'images', format = '.webp')
+    case type
+    when 'icon'
+      type = 'icons'
+    when 'banner'
+      type = 'banners'
+    else
+      type = 'images'
+    end
+    image_path = File.join(type, image_aid + format)
+    return object_url(image_path)
   end
   def full_api_url(path)
     return File.join(ENV["API_URL"], path)
@@ -36,13 +36,13 @@ module ApplicationHelper
     session[:forwarding_url] = request.original_url if request.get?
   end
   private
-  def generate_normal_url(true_key)
-    variant_key = File.join('variants', true_key)
+  def object_url(path_key)
+    variant_key = File.join('variants', path_key)
     bucket_key = File.join(ENV["S3_BUCKET"], variant_key)
     url = File.join(ENV["S3_ENDPOINT_1"], bucket_key)
     return url
   end
-  def generate_signed_url(true_key)
+  def signed_object_url(path_key)
     s3 = Aws::S3::Client.new(
       endpoint: ENV["S3_ENDPOINT_1"],
       region: ENV["S3_REGION"],
@@ -54,8 +54,9 @@ module ApplicationHelper
     url = signer.presigned_url(
       :get_object,
       bucket: ENV["S3_BUCKET"],
-      key: "variants/#{true_key}",
-      expires_in: 12,)
+      key: "variants/#{path_key}",
+      expires_in: 12
+    )
     return url
   end
 end

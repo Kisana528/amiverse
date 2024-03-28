@@ -1,8 +1,8 @@
 class ItemsChannel < ApplicationCable::Channel
   include SessionsHelper
   def subscribed
-    stream_from "items_channel"
-    Rails.logger.info(current_account.name_id)
+    #stream_from "items_channel"
+    #Rails.logger.info(current_account.name_id)
   end
 
   def unsubscribed

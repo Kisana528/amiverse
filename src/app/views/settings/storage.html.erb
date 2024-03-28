@@ -32,7 +32,7 @@
         ID:<%= image.aid %>
         説明:<%= image.description %>
         <% if image.image.attached? %>
-          <%= image_tag generate_key_url(image.image.key), class: 'storage-images-image' %>
+          <%= image_tag image_url(image.aid), class: 'storage-images-image' %>
         <% else %>
           <div>のいまげ</div>
         <% end %>

@@ -26,9 +26,9 @@ class ActiveStorage::VariantWithRecord
         prefix = "variants"
         dir = File.dirname(blob.key)
         if @key_suffix == 'icon'
-          dir.sub!(/images/, 'icon')
+          dir.sub!(/images/, 'icons')
         elsif @key_suffix == 'banner'
-          dir.sub!(/images/, 'banner')
+          dir.sub!(/images/, 'banners')
         end
         name = "#{File.basename(blob.key, '.*')}.#{variation.format.downcase}"
         pre_key = File.join(dir, name)

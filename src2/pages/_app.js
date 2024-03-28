@@ -5,9 +5,6 @@ import axios from '@/lib/axios'
 import React, { useState, useEffect, createContext } from 'react'
 import { useRouter } from 'next/router'
 
-const loggedOutPaths = ['/login','/signup']//ログイン中はアクセスできない
-const loggedInPaths = ['/items']//ログイン中でないとアクセスできない
-
 export const appContext = createContext()
 export default function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(true)
@@ -20,17 +17,22 @@ export default function App({ Component, pageProps }) {
   const loginFormTrigger = () => setLoginForm(!loginForm)
   const [dark, setDark] = useState(false)
   const modeTrigger = () => setDark(!dark)
+  const router = useRouter()
   const loggedInPage = () => {
-    if(loggedIn){
-      return
-    } else {
+    if(!loggedIn){
       setFlash(`${router.pathname}へアクセスするにはログインしてください`)
       router.push('/')
       return
     }
   }
+  const loggedOutPage = () => {
+    if(loggedIn){
+      setFlash(`ログイン済みですので${router.pathname}へアクセスできません`)
+      router.push('/')
+      return
+    }
+  }
   let ignore = false
-  const router = useRouter()
 
   useEffect(() => {
     if(window.matchMedia('(prefers-color-scheme: dark)').matches === true){
@@ -50,29 +52,18 @@ export default function App({ Component, pageProps }) {
           setAccount(data)
         } catch (error) {
           setLoadingStatus(error.response ? 'ログインエラー' : 'サーバーエラー')
-          //setLoading(false)
+          setLoading(false)
+          setFlash(`サーバーエラー`)
         }
       }
       fetchAccountInfo()
     }
     return () => {ignore = true}
   },[])
-  useEffect(() => {
-    if(!loading && !loginLoading){
-      if(loggedInPaths.includes(router.pathname)){
-        loggedInPage()
-      }
-      if(loggedIn && loggedInPaths.includes(router.pathname)) return
-      if(!loggedOutPaths.includes(router.pathname)) return
-      if(loggedIn){
-        setFlash(`ログイン済みですので${router.pathname}へアクセスできません`)
-        router.push('/')
-        return
-      }
-    }
-  },[router.pathname, loggedIn])
+
   return (
-      <appContext.Provider value={{loading, setLoading,
+      <appContext.Provider value={{
+        loading, setLoading,
         loginLoading, setLoginLoading,
         loadingStatus, setLoadingStatus,
         loginForm, setLoginForm, loginFormTrigger,
@@ -80,7 +71,7 @@ export default function App({ Component, pageProps }) {
         account, setAccount,
         flash, setFlash,
         dark, setDark, modeTrigger,
-        loggedInPage
+        loggedInPage, loggedOutPage
       }}>
         <Head />
         <Layout>

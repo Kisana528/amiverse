@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { appContext } from '@/pages/_app'
 import Link from 'next/link'
 import Image from 'next/image'
-import Item from '@/components/item'
+import Items from '@/components/items'
 import FullAppUrl from '@/components/full_app_url'
 
 export async function getServerSideProps({req, res, context, query}) {
@@ -94,53 +94,52 @@ export async function getServerSideProps({req, res, context, query}) {
 
 export default function Account({ isActivity }) {
   if(!isActivity){
+    const setFlash = useContext(appContext).setFlash
     const loggedIn = useContext(appContext).loggedIn
     const { query = {} } = useRouter()
     const [account, setAccount] = useState({})
-    const [items, setItems] = useState([])
     const [scrollY, setScrollY] = useState(1)
     const [fixedHeader, setFixedHeader] = useState(false)
-    const [icon, setIcon] = useState('')
-    const [banner, setBanner] = useState('')
 
-    if(process.browser){}
+    let ignore = false
     useEffect(() => {
-      const handleScroll = () => {
-        const newScrollY = window.scrollY / 2000 + 1
-        setScrollY(newScrollY > 1.5 ? 1.5 : newScrollY)
-      }
-      const observer = new IntersectionObserver(entries => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setFixedHeader(false)
-          } else {
-            setFixedHeader(true)
-          }
+      if (!ignore) {
+        const handleScroll = () => {
+          const newScrollY = window.scrollY / 2000 + 1
+          setScrollY(newScrollY > 1.5 ? 1.5 : newScrollY)
         }
-      })
-      window.addEventListener('scroll', handleScroll)
-      observer.observe(document.getElementById('name-before'))
-      return () => {
-        window.removeEventListener('scroll', handleScroll)
-        observer.disconnect()
+        const observer = new IntersectionObserver(entries => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              setFixedHeader(false)
+            } else {
+              setFixedHeader(true)
+            }
+          }
+        })
+        window.addEventListener('scroll', handleScroll)
+        observer.observe(document.getElementById('name-before'))
+        const fetchAccount = async () => {
+          await axios.post('/@' + query.name_id)
+            .then(res => {
+              setAccount(res.data)
+              //setLoadAccount(false)
+            })
+            .catch(err => {
+              setFlash('アカウント取得エラー')
+              //setLoadAccount(false)
+            })
+        }
+        if (query.name_id) {
+          fetchAccount()
+        }
+        return () => {
+          window.removeEventListener('scroll', handleScroll)
+          observer.disconnect()
+        }
       }
-    }, [])
-    useEffect(() => {
-      if (query.name_id) {
-        axios.post('/@' + query.name_id)
-          .then(res => {
-            setAccount(res.data)
-            setItems(res.data.items)
-            setIcon(res.data.icon_url)
-            setBanner(res.data.banner_url)
-
-            console.log(account.items.map)
-          })
-          .catch(err => {
-            //アカウント取得例外
-          })
-      }
-    }, [query])
+      return () => {ignore = true}
+    },[])
 
     return (
       <>
@@ -149,7 +148,7 @@ export default function Account({ isActivity }) {
             <div className="banner-container" id="banner-container" style={{ transform: `scale(${scrollY})` }}>
               <img
                 className="account-banner"
-                src={banner}
+                src={account.banner_url}
                 alt='banner'
               />
             </div>
@@ -159,7 +158,7 @@ export default function Account({ isActivity }) {
             <div className="icon-container">
               <img
                 className="account-icon"
-                src={icon}
+                src={account.icon_url}
                 alt='icon'
               />
             </div>
@@ -169,14 +168,13 @@ export default function Account({ isActivity }) {
               {/* フォローボタンor編集ボタン */}
             </div>
           </div>
-
           <div className="profile-container">
-            <div><span>紹介:</span>{account.bio}</div>
+            <div><span>紹介:</span>{account.summary}</div>
             <div><span>場所:</span>{account.location}</div>
             <div><span>誕生日:</span>{account.birthday}</div>
-            <div><span>フォロワー:</span>{account.followers}</div>
-            <div><span>フォロー:</span>{account.following}</div>
-            <div><span>投稿数:</span>{account.items_count}</div>
+            <div><span>フォロワー:</span>{account.followers_counter}</div>
+            <div><span>フォロー:</span>{account.following_counter}</div>
+            <div><span>投稿数:</span>{account.items_counter}</div>
             <div><span>参加日:</span>{account.created_at}</div>
           </div>
           <div className="account-tab-container">
@@ -186,11 +184,8 @@ export default function Account({ isActivity }) {
             <div>リアクション</div>
           </div>
           <div className="content-container">
-            {isActivity ? <p>含まれている</p> : <p>含まれておりません</p> }
             <p>開始</p>
-            {items.map(item => (
-              <Item key={item.item_id} item={item} />
-            ))}
+            <Items items={account.items} />
             <p>終了</p>
           </div>
         </div>

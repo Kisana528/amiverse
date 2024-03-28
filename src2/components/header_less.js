@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function Default({ children }) {
+export default function HeaderLess({ children }) {
   return (
     <>
       <div className="main-container">

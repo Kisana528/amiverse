@@ -1,6 +1,9 @@
 class V1::AccountsController < V1::ApplicationController
   before_action :set_account, only: %i[ show followers following ]
   def show
+    render json: account_data(@account)
+  end
+  def show_old
     render json: {
       name_id: @account.name_id,
       name: @account.name,

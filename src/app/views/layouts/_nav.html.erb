@@ -55,7 +55,7 @@
         <%= link_to account_path(@current_account.name_id), style: "width: 100%;" do %>
           <div class="nav-list-container">
             <% if !@current_account.icon_id.blank? %>
-              <%= image_tag generate_ati_url(@current_account.aid, 'icon', @current_account.icon_id), class: 'nav-list-image-icon' %>
+              <%= image_tag image_url(@current_account.icon_id, 'icon'), class: 'nav-list-image-icon' %>
             <% else %>
               <%= image_tag 'icon.webp', class: 'nav-list-image-icon' %>
             <% end %>

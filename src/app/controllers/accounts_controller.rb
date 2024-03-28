@@ -1,5 +1,4 @@
 class AccountsController < ApplicationController
-  include DataStream
   include ActivityPub
   before_action :set_account, except: %i[ show ]
   before_action :logged_in_account, except: %i[ show ]
@@ -48,16 +47,13 @@ class AccountsController < ApplicationController
   end
   def update
     @account = @current_account
-    pre_icon_id = @account.icon_id
-    pre_banner_id = @account.banner_id
     if @account.update(account_update_params)
-      generate_varinat_image(params[:account][:icon_id], pre_icon_id, 'icon')
-      generate_varinat_image(params[:account][:banner_id], pre_banner_id, 'banner')
-      @account.treat_image('icon', 'icon') if params[:account][:icon].present?
+      treat_image(@account.icon_id, 'icon') if @account.icon_id.present? # 更新されたときのみ実行が好ましい
+      treat_image(@account.banner_id, 'banner') if @account.banner_id.present? # 更新されたときのみ実行が好ましい
       flash[:success] = "更新しました"
       redirect_to account_path(@account.name_id)
     else
-      flash[:danger] = "更新できませんでした"
+      flash[:danger] = "更新できませんでした#{@account.errors.full_messages.join(", ")}"
       redirect_to settings_account_path
     end
   end
